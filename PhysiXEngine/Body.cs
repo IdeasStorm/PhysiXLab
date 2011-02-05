@@ -196,6 +196,8 @@ namespace PhysiXEngine
 
         public Body(float mass = 1f)
         {
+            _GUID = GUIDCounter;
+            GUIDCounter++;
             InertiaTensor = Matrix.Identity;
             Mass = mass;
             Awake();
@@ -232,6 +234,15 @@ namespace PhysiXEngine
             onSituationChanged(); //trigger situation changed
             clearAccumulators();
             // add damping 
+        }
+
+        public virtual void Update(string S)
+        {
+            string[] Info = S.Split('|');
+            position.X = float.Parse(Info[0]);
+            position.Y = float.Parse(Info[1]);
+            position.Z = float.Parse(Info[2]);
+            orientation.W = float.Parse(Info[3]);
         }
 
         public void AddScaledOrientation(Vector3 rotation,float scale=1)
