@@ -307,7 +307,7 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        public int velocityIterations = 8;
+        public int velocityIterations = 1;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
@@ -384,16 +384,9 @@ namespace PhysiXEngine
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
                 //contactDataList[index].FixPenetration(duration);
-                try
-                {
+                
                     contactDataList[index].applyPositionChange(linearChange, angularChange, max);
-                }
-                catch (Exception)
-                {
-
-                    contactDataList[index].revertState();
-                    continue;
-                }
+                
                 foreach (Contact contact in contactDataList)
                 {
                     for (int b = 0; b < 2; b++)
