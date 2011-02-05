@@ -10,6 +10,35 @@ namespace PhysiXEngine
 {
     public class Body
     {
+        private static UInt32 GUIDCounter = 0;
+        private UInt32 _GUID;
+
+        public UInt32 GUID
+        {
+            private set
+            {
+                _GUID = value;
+            }
+            get
+            {
+                return _GUID;
+            }
+        }
+
+        public override string ToString()
+        {
+            return "IM=" + inverseMass.ToString() + '|' + GUID.ToString();
+        }
+
+        public Body(string S)
+        {
+            string[] Temp = S.Split('|');
+            this._GUID = UInt32.Parse(Temp[Temp.Length - 1]);
+            if (GUIDCounter <= _GUID)
+                GUIDCounter = _GUID + 1;
+            this.InverseMass = float.Parse(Temp[Temp.Length - 2].Substring(3));
+        }
+
         public bool HasFiniteMass { get; private set; }
         private float inverseMass;
         public float InverseMass

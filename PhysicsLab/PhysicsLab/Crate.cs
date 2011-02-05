@@ -27,7 +27,24 @@ namespace PhysicsLab
         public Crate(Vector3 halfSize)
             : base(halfSize)
         {
+            // TODO Add Mass Change Code
+        }
 
+        public Crate(Model model, Texture2D Texture, string S)
+            : base(S)
+        {
+            this.Texture = Texture;
+            this.model = model;
+            Vector3 squaredSize = HalfSize * HalfSize;
+            this.setInertiaTensorCoeffs(
+                0.3f * Mass * (squaredSize.Y + squaredSize.Z),
+                0.3f * Mass * (squaredSize.X + squaredSize.Z),
+                0.3f * Mass * (squaredSize.X + squaredSize.Y));
+        }
+
+        public override string ToString()
+        {
+            return "Crate|" + base.ToString();
         }
 
         public void LoadContent(ContentManager content)

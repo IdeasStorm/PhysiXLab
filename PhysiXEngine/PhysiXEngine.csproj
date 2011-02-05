@@ -47,6 +47,8 @@
     <Compile Include="Box.cs" />
     <Compile Include="Cable.cs" />
     <Compile Include="CollisionDetector.cs" />
+    <Compile Include="Helpers\XMLPlayer.cs" />
+    <Compile Include="Helpers\XMLRecorder.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="ContactData.cs" />
     <Compile Include="Helpers\BVHNode.cs" />

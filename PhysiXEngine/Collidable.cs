@@ -8,6 +8,16 @@ namespace PhysiXEngine
 {
     public abstract class Collidable : Body
     {
+
+        public Collidable()
+        {
+        }
+
+        public Collidable(string S)
+            : base(S)
+        {
+        }
+        
         /// <summary>
         /// generates contact information for this collidable body with another one 
         /// </summary>
