@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="8984b98d-a11f-4bf6-a1c5-787f0c86698a" name="UMLClassDiagram1" linkedPackageId="2d3f0452-83de-4160-9d5c-830823e4f629" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="f4a63173-e9c8-4eb7-83df-f247ae35dfe8">
+      <profileInstance Id="4621b7ba-c0d6-4879-958e-8a167a08c1b0" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="04d379f3-bd10-4928-9139-c8138fadb9c0">
+      <profileInstance Id="b7bb3cd7-8573-46a8-929c-50ecfb09cafe" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="b83b8b4b-ccef-496e-ad7c-a685e5fe51be" name="Body" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="692f8530-48c0-42b9-a433-e31362f38fff" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="edced5f4-84b0-41d6-b3fc-d6e44ab8bd27" name="Link" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="d8be76ad-1ca9-4505-83a6-a11c13e5e009" />
+        <generalsInternal>
+          <generalization Id="e21e2cb1-7825-4915-bb00-a6842b0958fe" isSubstitutable="false">
+            <classMoniker Id="7fcb5f18-8b53-4bd5-be35-783988365fcd" LastKnownName="ImpulseGenerator" />
+            <elementDefinition Id="9170a67e-c0e6-4abe-b3cd-7103d817691d" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="b74cedff-8a3c-4c91-be67-3be982da471f" name="CollisionDetector" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="2268a463-d0d3-453d-b2c0-fc099de94fdb" />
+        <generalsInternal>
+          <generalization Id="a309a8a6-8819-4301-bd6a-cd4757ef1ba3" isSubstitutable="false">
+            <classMoniker Id="7fcb5f18-8b53-4bd5-be35-783988365fcd" LastKnownName="ImpulseGenerator" />
+            <elementDefinition Id="6b6af91a-f80e-4f69-924a-ef2b374c1d1a" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="f59d99c5-03ee-4bc8-b60e-dea5e1520335" name="Effect" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="6e04a666-be07-4fc0-8dd8-e1ffa0187292" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="cba15801-111b-4547-af24-1f498343c78a" name="ForceGenerator" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="2c56511c-6ea6-4f12-a07b-5637b279b3e5" />
+        <generalsInternal>
+          <generalization Id="d2723953-db3a-47e6-8555-780448347eb4" isSubstitutable="false">
+            <classMoniker Id="f59d99c5-03ee-4bc8-b60e-dea5e1520335" LastKnownName="Effect" />
+            <elementDefinition Id="d2eea78e-729b-4466-b9ba-2cabee71f53b" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="7fcb5f18-8b53-4bd5-be35-783988365fcd" name="ImpulseGenerator" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="500f8aa1-fdbc-4d74-8ab6-66b7bdd1077a" />
+        <generalsInternal>
+          <generalization Id="8153e9c5-f238-4be3-bb76-834c652c4d12" isSubstitutable="false">
+            <classMoniker Id="f59d99c5-03ee-4bc8-b60e-dea5e1520335" LastKnownName="Effect" />
+            <elementDefinition Id="612f0b8e-2274-404b-9752-e879b61afae4" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="d30e3581-8adb-408b-9ae0-0dc3755a8418" name="Constaint" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="e16024b4-b02c-49e1-9b06-c5a8b028bc04" />
+        <generalsInternal>
+          <generalization Id="6ee4b262-9c4c-4ea9-8168-1a9c11939083" isSubstitutable="false">
+            <classMoniker Id="cba15801-111b-4547-af24-1f498343c78a" LastKnownName="ForceGenerator" />
+            <elementDefinition Id="d8d194a4-f027-49a5-bee8-002c6aadeeac" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="1fe56078-51ee-432b-90c1-f33ede331493" name="Field" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="f2d7fc44-d6cb-4c25-a93c-fabe473323dd" />
+        <generalsInternal>
+          <generalization Id="996403f9-7a09-424c-b610-4a9d9266e237" isSubstitutable="false">
+            <classMoniker Id="cba15801-111b-4547-af24-1f498343c78a" LastKnownName="ForceGenerator" />
+            <elementDefinition Id="248a6bb1-dc52-4bc6-99c5-5d90418fab00" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="a17b0669-563e-4b69-928f-1fd4ac8517e3" name="Ball" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="cd02e58a-41db-4830-b4c7-8869899b3ce4" />
+        <suppliersInternal>
+          <interfaceRealization Id="91e77a02-3b48-4d13-9965-1a339d70ffb1">
+            <interfaceMoniker Id="716374b2-5321-4f63-947c-683f57ed9df2" LastKnownName="Collidable" />
+            <elementDefinition Id="1de1107c-7943-4eac-bc97-4f860c01a43b" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="f7b41c84-51bb-4982-958f-d50da0249689" isSubstitutable="false">
+            <classMoniker Id="0006ef3a-14c9-4052-8970-45a50197216a" LastKnownName="Sphere" />
+            <elementDefinition Id="56d2b706-7059-4ffa-8c75-e0f0fb2e3bcf" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="3b1c1105-cba1-49dc-9f9a-d1dea984c06d" name="Box" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="b64eaf8c-40b7-4d60-9a7b-225815f550c7" />
+        <suppliersInternal>
+          <interfaceRealization Id="d5cf951f-6895-4707-9f19-9d498fcb6249">
+            <interfaceMoniker Id="716374b2-5321-4f63-947c-683f57ed9df2" LastKnownName="Collidable" />
+            <elementDefinition Id="ded37dba-2165-4440-9e48-891a2e7ea152" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="9bd4ddfa-1acf-48a1-a280-fdaaeb087f70" isSubstitutable="false">
+            <classMoniker Id="567035ef-250c-4b0f-bfcc-f2693a3e6232" LastKnownName="cuboid‏" />
+            <elementDefinition Id="247f50ed-ccdb-451c-9899-830b749850f2" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="716374b2-5321-4f63-947c-683f57ed9df2" name="Collidable" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="d537a249-5120-4dd6-806b-c0c9ec1fa8f7" />
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="0006ef3a-14c9-4052-8970-45a50197216a" name="Sphere" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="b72e27cc-d034-4193-af98-eda033379189" />
+        <generalsInternal>
+          <generalization Id="7b049555-ae69-48a7-93f1-993ac35941ff" isSubstitutable="false">
+            <classMoniker Id="b83b8b4b-ccef-496e-ad7c-a685e5fe51be" LastKnownName="Body" />
+            <elementDefinition Id="9e42a62c-a36f-40a4-b553-1f7f569da764" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="567035ef-250c-4b0f-bfcc-f2693a3e6232" name="cuboid‏" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="f37638ae-56f4-405f-9e84-45137291b5f9" />
+        <generalsInternal>
+          <generalization Id="c27c19e9-3d6c-4226-870f-76ec86c5326d" isSubstitutable="false">
+            <classMoniker Id="b83b8b4b-ccef-496e-ad7c-a685e5fe51be" LastKnownName="Body" />
+            <elementDefinition Id="6c6de35d-c83a-48cb-8676-77d83c9931c5" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+  </packagedElements>
+  <package Id="2d3f0452-83de-4160-9d5c-830823e4f629" name="PhysicsLabDesign">
+    <elementDefinition Id="3c1ae091-eaf2-4d36-85f6-10ea8da07fac" />
+  </package>
+</logicalClassDesignerModel>
