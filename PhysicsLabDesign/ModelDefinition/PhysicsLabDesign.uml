@@ -32,7 +32,17 @@
         name="Effect"
         isAbstract="true"
         isLeaf="false"
-        isActiveClass="false" />
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="f763ccbe-efd6-4f95-83b6-62cb9c0d385c">
+            <classMoniker
+              Id="b746e29f-56d1-4624-9972-d9a637a65947"
+              LastKnownName="GeneralForce"
+              LastKnownLocation="PhysicsLabDesign.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
       <class
@@ -248,6 +258,14 @@
           </generalization>
         </generalsInternal>
       </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="b746e29f-56d1-4624-9972-d9a637a65947"
+        name="GeneralForce"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
     </packageHasNamedElement>
   </packagedElements>
   <primitiveType

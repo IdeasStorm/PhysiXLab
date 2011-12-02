@@ -1,19 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="8984b98d-a11f-4bf6-a1c5-787f0c86698a" name="UMLClassDiagram1" linkedPackageId="2d3f0452-83de-4160-9d5c-830823e4f629" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="f4a63173-e9c8-4eb7-83df-f247ae35dfe8">
-      <profileInstance Id="4621b7ba-c0d6-4879-958e-8a167a08c1b0" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="04d379f3-bd10-4928-9139-c8138fadb9c0">
-      <profileInstance Id="b7bb3cd7-8573-46a8-929c-50ecfb09cafe" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <logicalClassDesignerModelHasTypes>
       <class Id="b83b8b4b-ccef-496e-ad7c-a685e5fe51be" name="Body" isAbstract="true" isLeaf="false" isActiveClass="false">
@@ -45,6 +31,12 @@
     <logicalClassDesignerModelHasTypes>
       <class Id="f59d99c5-03ee-4bc8-b60e-dea5e1520335" name="Effect" isAbstract="true" isLeaf="false" isActiveClass="false">
         <elementDefinition Id="6e04a666-be07-4fc0-8dd8-e1ffa0187292" />
+        <suppliersInternal>
+          <dependency Id="9fbd91ed-4e69-4c75-9023-db3deb4bf1f8">
+            <classMoniker Id="98f15b8e-c8a1-4adb-b756-42ffd25c48f5" LastKnownName="GeneralForce" />
+            <elementDefinition Id="f763ccbe-efd6-4f95-83b6-62cb9c0d385c" />
+          </dependency>
+        </suppliersInternal>
       </class>
     </logicalClassDesignerModelHasTypes>
     <logicalClassDesignerModelHasTypes>
@@ -152,8 +144,27 @@
         </generalsInternal>
       </class>
     </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="98f15b8e-c8a1-4adb-b756-42ffd25c48f5" name="GeneralForce" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="b746e29f-56d1-4624-9972-d9a637a65947" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
   </packagedElements>
   <package Id="2d3f0452-83de-4160-9d5c-830823e4f629" name="PhysicsLabDesign">
     <elementDefinition Id="3c1ae091-eaf2-4d36-85f6-10ea8da07fac" />
+    <profileInstances>
+      <packageHasProfileInstances Id="f4a63173-e9c8-4eb7-83df-f247ae35dfe8">
+        <profileInstance Id="4621b7ba-c0d6-4879-958e-8a167a08c1b0" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="04d379f3-bd10-4928-9139-c8138fadb9c0">
+        <profileInstance Id="b7bb3cd7-8573-46a8-929c-50ecfb09cafe" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </logicalClassDesignerModel>
