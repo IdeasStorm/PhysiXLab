@@ -33,15 +33,16 @@
         isAbstract="true"
         isLeaf="false"
         isActiveClass="false">
-        <suppliersInternal>
-          <dependency
-            Id="f763ccbe-efd6-4f95-83b6-62cb9c0d385c">
-            <classMoniker
-              Id="b746e29f-56d1-4624-9972-d9a637a65947"
-              LastKnownName="GeneralForce"
-              LastKnownLocation="PhysicsLabDesign.uml" />
-          </dependency>
-        </suppliersInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="f91e65f7-b4fe-4cb4-99c3-69b9a5cb3704"
+            name="frameInit"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
       </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
@@ -127,6 +128,7 @@
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
+        <description>rods and cables</description>
         <generalsInternal>
           <generalization
             Id="9170a67e-c0e6-4abe-b3cd-7103d817691d"
@@ -142,7 +144,7 @@
     <packageHasNamedElement>
       <class
         Id="2268a463-d0d3-453d-b2c0-fc099de94fdb"
-        name="CollisionDetector"
+        name="CollisionGenerator"
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
@@ -156,6 +158,31 @@
               LastKnownLocation="PhysicsLabDesign.uml" />
           </generalization>
         </generalsInternal>
+        <ownedAttributesInternal>
+          <property
+            Id="b03c5562-0f47-427a-88de-bde8e9736920"
+            name="CollisonList"
+            visibility="Private"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false" />
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="d53b19d6-111a-4906-8400-2366d48368d1"
+            name="generateTree"
+            visibility="Private"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
       </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
@@ -261,8 +288,8 @@
     </packageHasNamedElement>
     <packageHasNamedElement>
       <class
-        Id="b746e29f-56d1-4624-9972-d9a637a65947"
-        name="GeneralForce"
+        Id="df17cf27-3406-4d31-b2b6-cb9ef5c19614"
+        name="World"
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false" />

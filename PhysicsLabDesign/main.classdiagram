@@ -8,6 +8,7 @@
     </logicalClassDesignerModelHasTypes>
     <logicalClassDesignerModelHasTypes>
       <class Id="edced5f4-84b0-41d6-b3fc-d6e44ab8bd27" name="Link" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <description>rods and cables</description>
         <elementDefinition Id="d8be76ad-1ca9-4505-83a6-a11c13e5e009" />
         <generalsInternal>
           <generalization Id="e21e2cb1-7825-4915-bb00-a6842b0958fe" isSubstitutable="false">
@@ -18,7 +19,7 @@
       </class>
     </logicalClassDesignerModelHasTypes>
     <logicalClassDesignerModelHasTypes>
-      <class Id="b74cedff-8a3c-4c91-be67-3be982da471f" name="CollisionDetector" isAbstract="false" isLeaf="false" isActiveClass="false">
+      <class Id="b74cedff-8a3c-4c91-be67-3be982da471f" name="CollisionGenerator" isAbstract="false" isLeaf="false" isActiveClass="false">
         <elementDefinition Id="2268a463-d0d3-453d-b2c0-fc099de94fdb" />
         <generalsInternal>
           <generalization Id="a309a8a6-8819-4301-bd6a-cd4757ef1ba3" isSubstitutable="false">
@@ -26,17 +27,26 @@
             <elementDefinition Id="6b6af91a-f80e-4f69-924a-ef2b374c1d1a" />
           </generalization>
         </generalsInternal>
+        <ownedAttributesInternal>
+          <property Id="ef34b8a9-72eb-46a4-b811-d0648e6759ac" name="CollisonList" visibility="Private" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="b03c5562-0f47-427a-88de-bde8e9736920" />
+          </property>
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation Id="a56536d2-85c5-4dda-81e4-627540f0dd40" name="generateTree" visibility="Private" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="d53b19d6-111a-4906-8400-2366d48368d1" />
+          </operation>
+        </ownedOperationsInternal>
       </class>
     </logicalClassDesignerModelHasTypes>
     <logicalClassDesignerModelHasTypes>
       <class Id="f59d99c5-03ee-4bc8-b60e-dea5e1520335" name="Effect" isAbstract="true" isLeaf="false" isActiveClass="false">
         <elementDefinition Id="6e04a666-be07-4fc0-8dd8-e1ffa0187292" />
-        <suppliersInternal>
-          <dependency Id="9fbd91ed-4e69-4c75-9023-db3deb4bf1f8">
-            <classMoniker Id="98f15b8e-c8a1-4adb-b756-42ffd25c48f5" LastKnownName="GeneralForce" />
-            <elementDefinition Id="f763ccbe-efd6-4f95-83b6-62cb9c0d385c" />
-          </dependency>
-        </suppliersInternal>
+        <ownedOperationsInternal>
+          <operation Id="b624a698-6a15-45cb-8db2-6885f5754dff" name="frameInit" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="f91e65f7-b4fe-4cb4-99c3-69b9a5cb3704" />
+          </operation>
+        </ownedOperationsInternal>
       </class>
     </logicalClassDesignerModelHasTypes>
     <logicalClassDesignerModelHasTypes>
@@ -142,11 +152,6 @@
             <elementDefinition Id="6c6de35d-c83a-48cb-8676-77d83c9931c5" />
           </generalization>
         </generalsInternal>
-      </class>
-    </logicalClassDesignerModelHasTypes>
-    <logicalClassDesignerModelHasTypes>
-      <class Id="98f15b8e-c8a1-4adb-b756-42ffd25c48f5" name="GeneralForce" isAbstract="false" isLeaf="false" isActiveClass="false">
-        <elementDefinition Id="b746e29f-56d1-4624-9972-d9a637a65947" />
       </class>
     </logicalClassDesignerModelHasTypes>
   </packagedElements>
