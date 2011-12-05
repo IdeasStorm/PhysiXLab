@@ -24,7 +24,75 @@
         name="Body"
         isAbstract="true"
         isLeaf="false"
-        isActiveClass="false" />
+        isActiveClass="false">
+        <targetEnds>
+          <association
+            Id="5046dc63-91d3-4e31-8b23-165dd3ce1322"
+            isDerived="false"
+            sourceEndRoleName="Body"
+            targetEndRoleName="Effect"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="6e04a666-be07-4fc0-8dd8-e1ffa0187292"
+              LastKnownName="Effect"
+              LastKnownLocation="PhysicsLabDesign.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="93745467-ab95-4d99-88d5-dd9d5475ffd3"
+                  name="Body"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="8fbd2d29-7255-415b-8ada-7bc77c1f07b4"
+                      name="Lower"
+                      value="0" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="0a35bedb-a9ce-46f6-b889-6342eecf38fe"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="bc2794aa-2137-495f-860b-6d67a7b73fa7"
+                  name="Effect"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="d680321d-8212-4e75-b0e5-4bac2b5b2b29"
+                      name="Lower"
+                      value="0" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="872e66f8-2d53-4bdc-9003-7f9ecef4098e"
+                      name="Upper"
+                      value="n" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
       <class
@@ -42,6 +110,24 @@
             isAbstract="false"
             concurrency="Sequential"
             isQuery="false" />
+          <operation
+            Id="45663024-2f96-4df2-bfe7-b080071fc6c0"
+            name="affect"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="945b6b5f-4fe7-49fc-9c17-eb9a32eae77e"
+                  name="Body"
+                  direction="In"
+                  isUnique="false" />
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
         </ownedOperationsInternal>
       </class>
     </packageHasNamedElement>
@@ -211,6 +297,16 @@
               LastKnownLocation="PhysicsLabDesign.uml" />
           </generalization>
         </generalsInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="043645cc-640f-45d2-8ad7-d640f3b13c61"
+            name="CollidesWith"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
       </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
@@ -239,6 +335,16 @@
               LastKnownLocation="PhysicsLabDesign.uml" />
           </generalization>
         </generalsInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="7eff7223-5e4d-4830-95bd-923e71b954f4"
+            name="CollidesWith"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
       </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
@@ -246,7 +352,18 @@
         Id="d537a249-5120-4dd6-806b-c0c9ec1fa8f7"
         name="Collidable"
         isAbstract="false"
-        isLeaf="false" />
+        isLeaf="false">
+        <ownedOperations>
+          <operation
+            Id="07f1257e-776f-4162-976e-43e140d12f60"
+            name="CollidesWith"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="true"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperations>
+      </Interface>
     </packageHasNamedElement>
     <packageHasNamedElement>
       <class
