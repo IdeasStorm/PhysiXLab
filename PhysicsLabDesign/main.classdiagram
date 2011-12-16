@@ -217,6 +217,39 @@
         </generalsInternal>
       </class>
     </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="4b72f7b3-31dc-4fca-a4b7-3f4ea365f98f" name="Gravity" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="7c8e21ad-cff6-40b4-a1c0-36b86e1b3b22" />
+        <generalsInternal>
+          <generalization Id="5624a14a-d70d-4e58-a2dc-db8a95c3ddd1" isSubstitutable="false">
+            <classMoniker Id="1fe56078-51ee-432b-90c1-f33ede331493" LastKnownName="Field" />
+            <elementDefinition Id="7d425113-ab31-41f3-807e-cc781024ec91" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="1e0eb635-32f5-40a7-b846-9c4d0359214d" name="Friction" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="ec04ad8d-bf3e-43fe-92fb-dadc26ce7c8a" />
+        <generalsInternal>
+          <generalization Id="ad94a392-8093-4d3a-9bbf-778d2793939c" isSubstitutable="false">
+            <classMoniker Id="cba15801-111b-4547-af24-1f498343c78a" LastKnownName="ForceGenerator" />
+            <elementDefinition Id="ac97d4d0-6483-4f3f-af17-79b162692b3d" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="017bfc30-3788-43ef-99a9-8ae94c8d2a94" name="Spring" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="665ce556-1f50-4e1a-b870-70c17ffcc263" />
+        <generalsInternal>
+          <generalization Id="87c50452-2091-49a4-bf8c-29865b8b0ea8" isSubstitutable="false">
+            <classMoniker Id="cba15801-111b-4547-af24-1f498343c78a" LastKnownName="ForceGenerator" />
+            <elementDefinition Id="e9a67903-05d3-4a2b-9249-9235a046c932" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
   </packagedElements>
   <package Id="2d3f0452-83de-4160-9d5c-830823e4f629" name="PhysicsLabDesign">
     <elementDefinition Id="3c1ae091-eaf2-4d36-85f6-10ea8da07fac" />

@@ -411,6 +411,63 @@
         isLeaf="false"
         isActiveClass="false" />
     </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="7c8e21ad-cff6-40b4-a1c0-36b86e1b3b22"
+        name="Gravity"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="7d425113-ab31-41f3-807e-cc781024ec91"
+            isSubstitutable="false">
+            <classMoniker
+              Id="f2d7fc44-d6cb-4c25-a93c-fabe473323dd"
+              LastKnownName="Field"
+              LastKnownLocation="PhysicsLabDesign.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="ec04ad8d-bf3e-43fe-92fb-dadc26ce7c8a"
+        name="Friction"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="ac97d4d0-6483-4f3f-af17-79b162692b3d"
+            isSubstitutable="false">
+            <classMoniker
+              Id="2c56511c-6ea6-4f12-a07b-5637b279b3e5"
+              LastKnownName="ForceGenerator"
+              LastKnownLocation="PhysicsLabDesign.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="665ce556-1f50-4e1a-b870-70c17ffcc263"
+        name="Spring"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="e9a67903-05d3-4a2b-9249-9235a046c932"
+            isSubstitutable="false">
+            <classMoniker
+              Id="2c56511c-6ea6-4f12-a07b-5637b279b3e5"
+              LastKnownName="ForceGenerator"
+              LastKnownLocation="PhysicsLabDesign.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
   </packagedElements>
   <primitiveType
     Id="220a3521-e091-4221-bae9-3ef9018e845c"
