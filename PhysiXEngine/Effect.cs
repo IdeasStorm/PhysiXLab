@@ -10,25 +10,25 @@ namespace PhysiXEngine
     {
         protected HashSet<Body> bodies;
 
-        public void addBody(Body body)
+        public void AddBody(Body body)
         {
             bodies.Add(body);
         }
 
-        public void removeBody(Body body)
+        public void RemoveBody(Body body)
         {
             bodies.Remove(body);
         }
 
-        public void update(float time)
+        public void Update(float time)
         {
             foreach (Body body in bodies)
             {
-                affect(body);
+                Affect(body);
             }
         }
 
-        public void affect(Body body);
+        public void Affect(Body body);
 
 
     }

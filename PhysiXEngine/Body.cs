@@ -59,7 +59,7 @@ namespace PhysiXEngine
         /// updates the body to the next state
         /// </summary>
         /// <param name="duration">the time elapsed from the past frame</param>
-        public void update(float duration)
+        public void Update(float duration)
         {
             acceleration = forceAccumulator * inverseMass;
             velocity += acceleration;
