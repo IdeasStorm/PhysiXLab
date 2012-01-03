@@ -5,3 +5,4 @@
 - use "ClassName { }" for classes
 - use "memberName" for private members
 - use "PropertyName" for public members/properties
+- use "paramName" for parameters
