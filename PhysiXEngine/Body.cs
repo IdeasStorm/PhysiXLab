@@ -66,11 +66,19 @@ namespace PhysiXEngine
             position += velocity;
         }
 
+        /// <summary>
+        /// Adds a force to force accumulator
+        /// </summary>
+        /// <param name="force">the force to be added </param>
         public void AddForce(Vector3 force)
         {
             forceAccumulator += force;
         }
 
+        /// <summary>
+        /// Adds a Velocity vector to the current velocity
+        /// </summary>
+        /// <param name="velocity"></param>
         public void AddVelocity(Vector3 velocity)
         {
             velocity += velocity;
