@@ -36,6 +36,11 @@ namespace PhysiXEngine
         /// </summary>
         Vector3 rotation;
 
+        /// <summary>
+        /// the matrix that converts a vector from the body space to the world space
+        /// </summary>
+        Matrix transformMatrix;
+
         //TODO add angular/linear damping if needed
         //TODO add sleep support
         /// <summary>
