@@ -27,6 +27,15 @@ namespace PhysiXEngine
         /// warning : this is in the body space
         /// </summary>
         Matrix inverseInertiaTensor;
+
+        /// <summary>
+        /// holds the inertia (independent of the axis)
+        /// in the world space
+        /// </summary>
+        Matrix inverseInertiaTensorWorld;
+
+        //TODO above matrices should be 3x3
+
         /// <summary>
         /// Angular orientation in world space
         /// </summary>
