@@ -18,19 +18,24 @@ namespace PhysiXEngine
         /**
          * Holds the position of the contact in world coordinates.
          */
-        private Vector3 contactPoint;
+        public Vector3 contactPoint { public get; protected set; }
 
         /**
          * Holds the direction of the contact in world coordinates.
          */
-        private Vector3 contactNormal;
+        public Vector3 contactNormal { public get; protected set; }
 
         /**
          * Holds the depth of penetration at the contact point. If both
          * bodies are specified then the contact point should be midway
          * between the inter-penetrating points.
          */
-        private double penetration;
+        public double penetration { public get; protected set; }
+
+        public float restitution { public get; protected set; }
+        public Vector3 contactVelocity { public get; protected set; }
+        public Vector3 deltaVelocity { public get; protected set; }
+
 
         public ContactData(Collidable firstBody, Collidable secondBody)
         {
@@ -78,5 +83,64 @@ namespace PhysiXEngine
 
             contactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
         }
+
+        public void BoxAndSphere()
+        {
+            Box box = (Box)body[0];
+            Sphere sphere = (Sphere)body[1];
+            
+        }
+
+        public void BoxHalfSpace()
+        {
+            Box box = (Box)body[0];
+            Plane plane = (Plane)body[1];
+
+            // We have an intersection, so find the intersection points. We can make
+            // do with only checking vertices. If the box is resting on a plane
+            // or on an edge, it will be reported as four or two contact points.
+
+            // Go through each combination of + and - for each half-size
+            double[,] mults = new double[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
+                                       {1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}};    
+            
+
+            //Contact* contact = data->contacts;
+            //unsigned contactsUsed = 0;
+            for (int i = 0; i < 8; i++) {
+
+                // Calculate the position of each vertex
+                Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
+
+                //vertexPos.componentProductUpdate(box.halfSize);
+                //vertexPos = box.transform.transform(vertexPos);
+
+                ///>BoxPlaneTestOne
+                // Calculate the distance from the plane
+                double vertexDistance = Vector3.Dot(vertexPos, plane.direction);
+
+                // Compare this to the plane's distance
+                if (vertexDistance <= plane.offset)
+                {
+                    // The contact point is halfway between the vertex and the
+                    // plane - we multiply the direction by half the separation 
+                    // distance and add the vertex location.
+                    contactPoint = plane.direction;
+                    contactPoint = Vector3.Multiply(contactPoint,(float)(vertexDistance - plane.offset));
+                    contactPoint += vertexPos;
+                    contactNormal = plane.direction;
+                    penetration = plane.offset - vertexDistance;
+
+                }
+            }
+        }
+
+        public void BoxAndBox()
+        {
+            Box box = (Box)body[0];
+            Plane sphere = (Plane)body[1];
+
+        }
     }
+
 }

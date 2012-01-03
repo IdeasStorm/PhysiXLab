@@ -11,13 +11,21 @@ namespace PhysiXEngine
 
         public ContactData generateContacts(Collidable other) 
         {
-            ContactData contactData = new ContactData(this, other);
-            if (other as Sphere != null) {
+            ContactData contactData = null;
+            if (other as Sphere != null)
+            {
+                contactData = new ContactData(this, other);
                 contactData.SphereAndSphere();
             }
             if (other as Plane != null)
             {
+                contactData = new ContactData(this, other);
                 contactData.SphereAndPlane();
+            }
+            if (other as Box != null)
+            {
+                contactData = new ContactData(this, other);
+                contactData.BoxAndSphere();
             }
             return contactData;
         }
