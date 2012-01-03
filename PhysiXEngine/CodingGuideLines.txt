@@ -1,0 +1,7 @@
+﻿'''PhysiXLab Engine - coding guide line'''
+
+''Naming strategy''
+- use "MethodName()" for methods 
+- use "ClassName { }" for classes
+- use "memberName" for private members
+- use "PropertyName" for public members/properties
