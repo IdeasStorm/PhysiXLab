@@ -43,9 +43,7 @@
   <ItemGroup>
     <Compile Include="Body.cs" />
     <Compile Include="Collidable.cs" />
-    <Compile Include="CollisionData.cs" />
     <Compile Include="Constaint.cs" />
-    <Compile Include="Contact.cs" />
     <Compile Include="ContactData.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Field.cs" />
