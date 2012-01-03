@@ -71,6 +71,7 @@ namespace PhysiXEngine
             Position += Velocity;
             orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y,rotation.X,rotation.Z);
             clearAccumulators();
+            //TODO add sleep capablilty
         }
 
         private void clearAccumulators()
