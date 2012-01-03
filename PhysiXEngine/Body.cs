@@ -15,13 +15,13 @@ namespace PhysiXEngine
             get { return 1.0f / invertMass; }
             set { invertMass = 1.0f / invertMass; }
         }
-        Vector3 position;
-        Vector3 velocity;
-        Vector3 acceleration;
+        Vector3 position { public get; protected set; }
+        Vector3 velocity { public get; protected set; }
+        Vector3 acceleration { public get; protected set; }
 
         Vector3 forceAccumulator;
         Vector3 torqueAccumulator;
-
+        
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
@@ -44,7 +44,7 @@ namespace PhysiXEngine
         /// <param name="duration">the time elapsed from the past frame</param>
         public void update(float duration)
         {
-            
+
         }
 
         public void AddForce(Vector3 force)
