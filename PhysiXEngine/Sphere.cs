@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
 
-namespace Physix
+namespace PhysiXEngine
 {
-    class Sphere : Primitive
+    class Sphere : Body, Collidable
     {
-        public Double radius;
+        public ContactData generateContacts(Collidable other) {
+            ContactData contactData = new ContactData(this, (Body)other);
+            //TODO Add inormation of this Contacts
+            return contactData;
+        }
     }
 }
