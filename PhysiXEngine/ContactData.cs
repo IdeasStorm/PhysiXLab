@@ -41,8 +41,8 @@ namespace PhysiXEngine
         public void SphereAndSphere()
         {
             //Cache the sphere positions
-            Vector3 positionOne = ((Body)body[0]).position;
-            Vector3 positionTwo = ((Body)body[1]).position;
+            Vector3 positionOne = ((Sphere)body[0]).Position;
+            Vector3 positionTwo = ((Sphere)body[1]).Position;
 
             // Find the vector between the objects
             Vector3 midline = positionOne - positionTwo;
@@ -53,6 +53,30 @@ namespace PhysiXEngine
             contactNormal = Vector3.Multiply(midline,(float)(1.0f/size));
             contactPoint = positionOne + Vector3.Multiply(midline,0.5f);
             penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
+        }
+
+        public void SphereAndPlane()
+        {
+            Sphere sphere = (Sphere)body[0];
+            Plane plane = (Plane)body[1];
+
+            // Cache the sphere position
+            Vector3 position = sphere.Position;
+
+            // Find the distance from the plane
+            double centreDistance = Vector3.Dot(plane.direction, position) - plane.offset;
+
+            // Check which side of the plane we're on
+            contactNormal = plane.direction;
+            penetration = -centreDistance;
+            if (centreDistance < 0)
+            {
+                contactNormal *= -1;
+                penetration = -penetration;
+            }
+            penetration += sphere.radius;
+
+            contactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
         }
     }
 }

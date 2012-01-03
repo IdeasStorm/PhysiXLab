@@ -5,14 +5,19 @@ using System.Text;
 
 namespace PhysiXEngine
 {
-    class Sphere : Body, Collidable
+    class Sphere : Collidable
     {
         public double radius { public get; protected set; }
 
-        public ContactData generateContacts(Collidable other) {
+        public ContactData generateContacts(Collidable other) 
+        {
             ContactData contactData = new ContactData(this, other);
             if (other as Sphere != null) {
                 contactData.SphereAndSphere();
+            }
+            if (other as Plane != null)
+            {
+                contactData.SphereAndPlane();
             }
             return contactData;
         }
