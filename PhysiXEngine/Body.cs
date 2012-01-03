@@ -89,8 +89,20 @@ namespace PhysiXEngine
 
             Position += Velocity;
             orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y,rotation.X,rotation.Z);
+            calculateDerivedData();
             clearAccumulators();
             //TODO add sleep capablilty
+        }
+
+        private void calculateDerivedData()
+        {
+            orientation.Normalize();
+
+            // Calculate the transform matrix for the body.
+            transformMatrix = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(Position);
+            
+            // Calculate the inertiaTensor in world space.
+            inverseInertiaTensorWorld = inverseInertiaTensor * transformMatrix;
         }
 
         private void clearAccumulators()
