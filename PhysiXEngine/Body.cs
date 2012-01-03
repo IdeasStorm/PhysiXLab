@@ -70,6 +70,13 @@ namespace PhysiXEngine
 
             Position += Velocity;
             orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y,rotation.X,rotation.Z);
+            clearAccumulators();
+        }
+
+        private void clearAccumulators()
+        {
+            forceAccumulator = Vector3.Zero;
+            torqueAccumulator = Vector3.Zero;
         }
 
         /// <summary>
