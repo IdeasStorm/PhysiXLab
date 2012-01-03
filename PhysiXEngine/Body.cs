@@ -10,24 +10,27 @@ namespace PhysiXEngine
     public class Body
     {
         public bool HasFinitMass { public get; private set; }
-        public float inverseMass
+        private float _inverseMass;
+        public float InverseMass
         {
             get;
             set
             {
                 HasFinitMass = (value != 0.0f);
-                inverseMass = value;
+                _inverseMass = value;
             }
         }
         public float mass 
         {
-            get { return 1.0f / inverseMass; }
+            get { return 1.0f / _inverseMass; }
             set 
             {
                 HasFinitMass = !float.IsInfinity(value);
-                inverseMass = 1.0f / inverseMass;
+                _inverseMass = 1.0f / _inverseMass;
             }
         }
+
+
 
         public Vector3 Position { public get; protected set; }
         public Vector3 Velocity { public get; protected set; }
@@ -76,7 +79,7 @@ namespace PhysiXEngine
         /// <param name="duration">the time elapsed from the past frame</param>
         public void Update(float duration)
         {
-            Acceleration = forceAccumulator * inverseMass;
+            Acceleration = forceAccumulator * _inverseMass;
             AngularAcceleration = Vector3.Transform(AngularAcceleration,inverseInertiaTensorWorld);
 
             Velocity += Acceleration * duration;
