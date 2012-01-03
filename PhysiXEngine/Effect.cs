@@ -9,6 +9,7 @@ namespace PhysiXEngine
     abstract class Effect
     {
         protected HashSet<Body> bodies;
+        protected float duration;
 
         public void AddBody(Body body)
         {
@@ -22,14 +23,15 @@ namespace PhysiXEngine
 
         public void Update(float time)
         {
+            duration = time;
             foreach (Body body in bodies)
             {
-                Affect(body,time);
+                Affect(body);
             }
         }
 
-        public void Affect(Body body, float duration);
-        public void Affect(Body body1, Body body2, float duration);
+        public void Affect(Body body);
+        public void Affect(ContactData contacData);
 
     }
 }

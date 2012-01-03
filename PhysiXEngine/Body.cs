@@ -9,12 +9,26 @@ namespace PhysiXEngine
 {
     public class Body
     {
-        public float inverseMass { get; set; }
+        public bool HasFinitMass { public get; private set; }
+        public float inverseMass
+        {
+            get;
+            set
+            {
+                HasFinitMass = (value != 0.0f);
+                inverseMass = value;
+            }
+        }
         public float mass 
         {
             get { return 1.0f / inverseMass; }
-            set { inverseMass = 1.0f / inverseMass; }
+            set 
+            {
+                HasFinitMass = !float.IsInfinity(value);
+                inverseMass = 1.0f / inverseMass;
+            }
         }
+
         public Vector3 Position { public get; protected set; }
         public Vector3 Velocity { public get; protected set; }
         public Vector3 Acceleration { public get; protected set; }

@@ -8,29 +8,16 @@ namespace PhysiXEngine
 {
     class ImpulseGenerator : Effect
     {
-        protected Dictionary<Body, Body> ContactsList;
+        protected LinkedList<ContactData> contactDataLinkedList;
 
-        public ImpulseGenerator()
+        public void AddContactData(ContactData contactdata)
         {
-            ContactsList = new Dictionary<Body, Body>();
+            contactDataLinkedList.AddLast(contactdata);
         }
 
-        /// <summary>
-        /// add new pair of Body will colliding
-        /// </summary>
-        /// <param name="body1"></param>
-        /// <param name="body2"></param>
-        public void addCotactPair(Body body1, Body body2)
+        public void ClearContactData()
         {
-            ContactsList.Add(body1, body2);
-        }
-
-        /// <summary>
-        /// delete all information in the contacts list
-        /// </summary>
-        public void clearContactList()
-        {
-            ContactsList.Clear();
+            contactDataLinkedList.Clear();
         }
 
         /// <summary>
@@ -40,21 +27,49 @@ namespace PhysiXEngine
         /// <param name="time"></param>
         public override void update(float time)
         {
-            foreach (KeyValuePair<Body, Body> contactsPair in ContactsList)
+            duration = time;
+            foreach (ContactData contactData in contactDataLinkedList)
             {
-                Affect(contactsPair.Key, contactsPair.Value, time);
+                Affect(contactData);
             }
         }
 
-        public override void Affect(Body body1, Body body2, float duration)
+        public override void Affect(ContactData contactData)
         {
-            
-        }
-
-        private void calculateDesiredDeltaVelocity(float duration)
-        { 
 
         }
 
+        /// <summary>
+        /// Calculates and sets the internal value for the delta velocity.
+        /// </summary>
+        /// <param name="duration"></param>
+        public void calculateDeltaVelocity(ContactData contactData)
+        {
+            Body body1;
+            Body body2;
+
+            const float velocityLimit = (float)0.25f;
+
+            ///>NewVelocityCalculation
+            // Calculate the acceleration induced velocity accumulated this frame
+            float velocityFromAcc = body1.getLastFrameAcceleration() * duration * contactData.contactNormal;
+
+            if (body2 != null)
+            {
+                velocityFromAcc -= body2.getLastFrameAcceleration() * duration * contactData.contactNormal;
+            }
+
+            // If the velocity is very slow, limit the restitution
+            float thisRestitution = contactData.restitution;
+            if (Math.Sqrt(contactData.contactVelocity.X) < velocityLimit)
+            {
+                thisRestitution = (float)0.0f;
+            }
+
+            // Combine the bounce velocity with the removed
+            // acceleration velocity.
+            contactData.deltaVelocity.X = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
+            ///<NewVelocityCalculation            
+        }
     }
 }
