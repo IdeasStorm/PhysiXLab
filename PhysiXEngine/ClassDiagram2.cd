@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PhysiXEngine.Body" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Body.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysiXEngine.Constaint" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Constaint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysiXEngine.Effect" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Effect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysiXEngine.Field" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Field.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysiXEngine.ForceGenerator" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ForceGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysiXEngine.Gravity" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Gravity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysiXEngine.ImpulseGenerator" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImpulseGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysiXEngine.Spring" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Spring.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Physix.CollisionData" Collapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>CollisionData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Physix.Contact" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAgAAAAAAEABAAAIAAEgAAAAQEAAAAAAAAAUAJAAAA=</HashCode>
+      <FileName>Contact.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Physix.Plane" Collapsed="true">
+    <Position X="7.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plane.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Physix.Primitive" Collapsed="true">
+    <Position X="6.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Primitive.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Physix.RigidBody" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAIIAAAAAAAAAAIAAAAAAAAAAABABAAAAAAAAAAAA=</HashCode>
+      <FileName>RigidBody.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Physix.Sphere" Collapsed="true">
+    <Position X="5.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sphere.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -42,12 +42,18 @@ namespace PhysiXEngine
         {
             foreach (KeyValuePair<Body, Body> contactsPair in ContactsList)
             {
-                affect(contactsPair.Key, contactsPair.Value, time);
+                Affect(contactsPair.Key, contactsPair.Value, time);
             }
         }
 
-        public override void affect(Body body1, Body body2, float duration)
+        public override void Affect(Body body1, Body body2, float duration)
         {
+            
+        }
+
+        private void calculateDesiredDeltaVelocity(float duration)
+        { 
+
         }
 
     }
