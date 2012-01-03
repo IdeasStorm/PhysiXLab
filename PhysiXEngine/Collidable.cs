@@ -5,8 +5,9 @@ using System.Text;
 
 namespace PhysiXEngine
 {
-    interface Collidable
+    abstract class Collidable
     {
         public ContactData generateContacts(Collidable other);
+        public Boolean CollidesWith(Collidable other);
     }
 }
