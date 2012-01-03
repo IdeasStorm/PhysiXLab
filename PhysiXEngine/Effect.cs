@@ -24,12 +24,12 @@ namespace PhysiXEngine
         {
             foreach (Body body in bodies)
             {
-                Affect(body);
+                Affect(body,time);
             }
         }
 
-        public void Affect(Body body);
-
+        public void Affect(Body body, float duration);
+        public void Affect(Body body1, Body body2, float duration);
 
     }
 }
