@@ -15,10 +15,10 @@ namespace PhysiXEngine
             get { return 1.0f / inverseMass; }
             set { inverseMass = 1.0f / inverseMass; }
         }
-        Vector3 Position { public get; protected set; }
-        Vector3 Velocity { public get; protected set; }
-        Vector3 Acceleration { public get; protected set; }
-        Vector3 AngularAcceleration {public get;protected set;}
+        public Vector3 Position { public get; protected set; }
+        public Vector3 Velocity { public get; protected set; }
+        public Vector3 Acceleration { public get; protected set; }
+        public Vector3 AngularAcceleration { public get; protected set; }
 
         private Vector3 forceAccumulator;
         private Vector3 torqueAccumulator;
@@ -27,13 +27,13 @@ namespace PhysiXEngine
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
         /// </summary>
-        Matrix inverseInertiaTensor { public get; protected set; }
+        public Matrix inverseInertiaTensor { public get; protected set; }
 
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// in the world space
         /// </summary>
-        Matrix inverseInertiaTensorWorld;
+        public Matrix inverseInertiaTensorWorld { public get; protected set; }
 
         //TODO above matrices should be 3x3
 
@@ -44,12 +44,12 @@ namespace PhysiXEngine
         /// <summary>
         /// the angular velocity
         /// </summary>
-        Vector3 rotation;
+        public Vector3 rotation { public get; protected set; }
 
         /// <summary>
         /// the matrix that converts a vector from the body space to the world space
         /// </summary>
-        Matrix transformMatrix;
+        public Matrix transformMatrix { public get; protected set; }
 
         //TODO add angular/linear damping if needed
         //TODO add sleep support
