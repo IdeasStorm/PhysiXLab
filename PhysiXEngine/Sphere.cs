@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace PhysiXEngine
     {
         public double radius { public get; protected set; }
 
-        public ContactData generateContacts(Collidable other)
+        public ContactData generateContacts(Collidable other) 
         {
             ContactData contactData = null;
             if (other as Sphere != null)

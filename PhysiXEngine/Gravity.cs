@@ -28,7 +28,7 @@ namespace PhysiXEngine
         /// </summary>
         /// <param name="body"></param>
         /// <param name="duration"></param>
-        public override void Affect(Body body,float duration)
+        public override void Affect(Body body)
         {
 
             if (body.hasFiniteMass())
