@@ -7,9 +7,13 @@ namespace PhysiXEngine
 {
     class Sphere : Body, Collidable
     {
+        public double radius { public get; protected set; }
+
         public ContactData generateContacts(Collidable other) {
-            ContactData contactData = new ContactData(this, (Body)other);
-            //TODO Add inormation of this Contacts
+            ContactData contactData = new ContactData(this, other);
+            if (other as Sphere != null) {
+                contactData.SphereAndSphere();
+            }
             return contactData;
         }
     }
