@@ -15,18 +15,19 @@ namespace PhysiXEngine
             get { return 1.0f / inverseMass; }
             set { inverseMass = 1.0f / inverseMass; }
         }
-        Vector3 position { public get; protected set; }
-        Vector3 velocity { public get; protected set; }
-        Vector3 acceleration { public get; protected set; }
+        Vector3 Position { public get; protected set; }
+        Vector3 Velocity { public get; protected set; }
+        Vector3 Acceleration { public get; protected set; }
+        Vector3 AngularAcceleration {public get;protected set;}
 
-        Vector3 forceAccumulator;
-        Vector3 torqueAccumulator;
+        private Vector3 forceAccumulator;
+        private Vector3 torqueAccumulator;
         
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
         /// </summary>
-        Matrix inverseInertiaTensor;
+        Matrix inverseInertiaTensor { public get; protected set; }
 
         /// <summary>
         /// holds the inertia (independent of the axis)
@@ -61,9 +62,14 @@ namespace PhysiXEngine
         /// <param name="duration">the time elapsed from the past frame</param>
         public void Update(float duration)
         {
-            acceleration = forceAccumulator * inverseMass;
-            velocity += acceleration;
-            position += velocity;
+            Acceleration = forceAccumulator * inverseMass;
+            AngularAcceleration = Vector3.Transform(AngularAcceleration,inverseInertiaTensorWorld);
+
+            Velocity += Acceleration * duration;
+            rotation += AngularAcceleration;
+
+            Position += Velocity;
+            orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y,rotation.X,rotation.Z);
         }
 
         /// <summary>
