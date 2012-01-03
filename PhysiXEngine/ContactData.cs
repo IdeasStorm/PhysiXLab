@@ -34,7 +34,7 @@ namespace PhysiXEngine
 
         public float restitution { public get; protected set; }
         public Vector3 contactVelocity { public get; protected set; }
-        public Vector3 deltaVelocity { public get; protected set; }
+        public Vector3  { public get; protected set; }
 
 
         public ContactData(Collidable firstBody, Collidable secondBody)
