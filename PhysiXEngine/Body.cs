@@ -35,6 +35,7 @@ namespace PhysiXEngine
         public Vector3 Position { public get; protected set; }
         public Vector3 Velocity { public get; protected set; }
         public Vector3 Acceleration { public get; protected set; }
+        public Vector3 LastFrameAcceleration { public get; protected set; }
         public Vector3 AngularAcceleration { public get; protected set; }
 
         private Vector3 forceAccumulator;
@@ -79,7 +80,8 @@ namespace PhysiXEngine
         /// <param name="duration">the time elapsed from the past frame</param>
         public void Update(float duration)
         {
-            Acceleration = forceAccumulator * _inverseMass;
+            LastFrameAcceleration = Acceleration;
+            LastFrameAcceleration += forceAccumulator * _inverseMass;
             AngularAcceleration = Vector3.Transform(AngularAcceleration,inverseInertiaTensorWorld);
 
             Velocity += Acceleration * duration;

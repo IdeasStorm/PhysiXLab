@@ -52,11 +52,11 @@ namespace PhysiXEngine
 
             ///>NewVelocityCalculation
             // Calculate the acceleration induced velocity accumulated this frame
-            float velocityFromAcc = body1.getLastFrameAcceleration() * duration * contactData.contactNormal;
+            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.contactNormal) * duration ;
 
             if (body2 != null)
             {
-                velocityFromAcc -= body2.getLastFrameAcceleration() * duration * contactData.contactNormal;
+                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, contactData.contactNormal) * duration;
             }
 
             // If the velocity is very slow, limit the restitution
