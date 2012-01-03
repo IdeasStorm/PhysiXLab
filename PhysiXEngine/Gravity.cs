@@ -29,10 +29,16 @@ namespace PhysiXEngine
         /// <param name="body"></param>
         /// <param name="duration"></param>
         public override void Affect(Body body,float duration)
-        {            
+        {
+
+            if (body.hasFiniteMass())
+                return;
+
             Vector3 velocity=Vector3.Multiply(gravity,body.mass);
             velocity=Vector3.Multiply(velocity,duration);
             body.AddVelocity(velocity);                        
+
+            body.AddForce(Vector3.Multiply(gravity,body.mass));
         }
     }
 }
