@@ -9,11 +9,11 @@ namespace PhysiXEngine
 {
     public class Body
     {
-        public float invertMass { get; set; }
+        public float inverseMass { get; set; }
         public float mass 
         {
-            get { return 1.0f / invertMass; }
-            set { invertMass = 1.0f / invertMass; }
+            get { return 1.0f / inverseMass; }
+            set { inverseMass = 1.0f / inverseMass; }
         }
         Vector3 position { public get; protected set; }
         Vector3 velocity { public get; protected set; }
@@ -43,13 +43,18 @@ namespace PhysiXEngine
 
         //TODO add angular/linear damping if needed
         //TODO add sleep support
+        
+
+
         /// <summary>
         /// updates the body to the next state
         /// </summary>
         /// <param name="duration">the time elapsed from the past frame</param>
         public void update(float duration)
         {
-
+            acceleration = forceAccumulator * inverseMass;
+            velocity += acceleration;
+            position += velocity;
         }
 
         public void AddForce(Vector3 force)
