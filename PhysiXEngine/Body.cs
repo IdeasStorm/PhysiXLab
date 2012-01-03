@@ -103,6 +103,8 @@ namespace PhysiXEngine
             
             // Calculate the inertiaTensor in world space.
             inverseInertiaTensorWorld = inverseInertiaTensor * transformMatrix;
+
+            //TODO rem 3x3 4x4 problems
         }
 
         private void clearAccumulators()
