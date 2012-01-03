@@ -9,10 +9,11 @@ namespace PhysiXEngine
     class ImpulseGenerator : Effect
     {
         protected LinkedList<ContactData> contactDataLinkedList;
-
+        protected Vector3 deltaVelocity;
         public void AddContactData(ContactData contactdata)
         {
             contactDataLinkedList.AddLast(contactdata);
+            deltaVelocity = new Vector3();
         }
 
         public void ClearContactData()
@@ -45,12 +46,13 @@ namespace PhysiXEngine
         /// <param name="duration"></param>
         public void calculateDeltaVelocity(ContactData contactData)
         {
-            Body body1;
-            Body body2;
+            //Temp ***************
+            Body body1=new Body();
+            Body body2=new Body();
 
             const float velocityLimit = (float)0.25f;
 
-            ///>NewVelocityCalculation
+            // NewVelocityCalculation
             // Calculate the acceleration induced velocity accumulated this frame
             float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.contactNormal) * duration ;
 
@@ -68,7 +70,7 @@ namespace PhysiXEngine
 
             // Combine the bounce velocity with the removed
             // acceleration velocity.
-            contactData.deltaVelocity.X = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
+            deltaVelocity.X = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
             ///<NewVelocityCalculation            
         }
     }
