@@ -10,6 +10,12 @@ namespace PhysiXEngine
     {
         protected LinkedList<ContactData> contactDataLinkedList;
         protected Vector3 deltaVelocity;
+
+        public ImpulseGenerator()
+        {
+            contactDataLinkedList = new LinkedList<ContactData>();
+        }
+
         public void AddContactData(ContactData contactdata)
         {
             contactDataLinkedList.AddLast(contactdata);
@@ -26,7 +32,7 @@ namespace PhysiXEngine
         /// to affect each body by the another
         /// </summary>
         /// <param name="time"></param>
-        public override void update(float time)
+        public override void Update(float time)
         {
             duration = time;
             foreach (ContactData contactData in contactDataLinkedList)
@@ -35,7 +41,7 @@ namespace PhysiXEngine
             }
         }
 
-        public override void Affect(ContactData contactData)
+        public void Affect(ContactData contactData)
         {
 
         }
@@ -54,11 +60,11 @@ namespace PhysiXEngine
 
             // NewVelocityCalculation
             // Calculate the acceleration induced velocity accumulated this frame
-            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.contactNormal) * duration ;
+            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.ContactNormal) * duration ;
 
             if (body2 != null)
             {
-                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, contactData.contactNormal) * duration;
+                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, contactData.ContactNormal) * duration;
             }
 
             // If the velocity is very slow, limit the restitution

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    class Constaint : ForceGenerator
-    {
-    }
+    //class Constaint : ForceGenerator
+    //{
+    //}
 }

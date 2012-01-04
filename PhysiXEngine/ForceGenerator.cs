@@ -6,7 +6,34 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    class ForceGenerator : Effect
+    abstract class ForceGenerator : Effect
     {
+        protected HashSet<Body> bodies;
+
+        public ForceGenerator() 
+        {
+            bodies = new HashSet<Body>();
+        }
+
+        public void AddBody(Body body)
+        {
+            bodies.Add(body);
+        }
+
+        public void RemoveBody(Body body)
+        {
+            bodies.Remove(body);
+        }
+
+        public override void Update(float duration)
+        {
+            foreach (Body body in bodies)
+            {
+                Affect(body);
+            }
+        }
+
+        public abstract void Affect(Body other);
+        
     }
 }

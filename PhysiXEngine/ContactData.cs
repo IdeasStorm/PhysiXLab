@@ -18,24 +18,25 @@ namespace PhysiXEngine
         /**
          * Holds the position of the contact in world coordinates.
          */
-        public Vector3 contactPoint { public get; protected set; }
+        public Vector3 ContactPoint { get; protected set; }
 
         /**
          * Holds the direction of the contact in world coordinates.
          */
-        public Vector3 contactNormal { public get; protected set; }
+        public Vector3 ContactNormal {  get; protected set; }
 
         /**
          * Holds the depth of penetration at the contact point. If both
          * bodies are specified then the contact point should be midway
          * between the inter-penetrating points.
          */
-        public double penetration { public get; protected set; }
+        public double Penetration {  get; protected set; }
 
-        public Matrix ContactToWorld { public get; private set; }
+        public Matrix ContactToWorld {  get; private set; }
 
-        public float restitution { public get; protected set; }
-        public Vector3 contactVelocity { public get; protected set; }
+        public float restitution {  get; protected set; }
+        public Vector3 contactVelocity {  get; protected set; }
+        //TODO remoce the var above me
 
 
         public ContactData(Collidable firstBody, Collidable secondBody)
@@ -56,9 +57,9 @@ namespace PhysiXEngine
 
             // We manually create the normal, because we have the
             // size to hand.
-            contactNormal = Vector3.Multiply(midline,(float)(1.0f/size));
-            contactPoint = positionOne + Vector3.Multiply(midline,0.5f);
-            penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
+            ContactNormal = Vector3.Multiply(midline,(float)(1.0f/size));
+            ContactPoint = positionOne + Vector3.Multiply(midline,0.5f);
+            Penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
         }
 
         public void SphereAndPlane()
@@ -73,16 +74,16 @@ namespace PhysiXEngine
             double centreDistance = Vector3.Dot(plane.direction, position) - plane.offset;
 
             // Check which side of the plane we're on
-            contactNormal = plane.direction;
-            penetration = -centreDistance;
+            ContactNormal = plane.direction;
+            Penetration = -centreDistance;
             if (centreDistance < 0)
             {
-                contactNormal *= -1;
-                penetration = -penetration;
+                ContactNormal *= -1;
+                Penetration = -Penetration;
             }
-            penetration += sphere.radius;
+            Penetration += sphere.radius;
 
-            contactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
+            ContactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
         }
 
         public void BoxAndSphere()
@@ -126,11 +127,11 @@ namespace PhysiXEngine
                     // The contact point is halfway between the vertex and the
                     // plane - we multiply the direction by half the separation 
                     // distance and add the vertex location.
-                    contactPoint = plane.direction;
-                    contactPoint = Vector3.Multiply(contactPoint,(float)(vertexDistance - plane.offset));
-                    contactPoint += vertexPos;
-                    contactNormal = plane.direction;
-                    penetration = plane.offset - vertexDistance;
+                    ContactPoint = plane.direction;
+                    ContactPoint = Vector3.Multiply(ContactPoint,(float)(vertexDistance - plane.offset));
+                    ContactPoint += vertexPos;
+                    ContactNormal = plane.direction;
+                    Penetration = plane.offset - vertexDistance;
 
                 }
             }
@@ -156,40 +157,40 @@ namespace PhysiXEngine
             Vector3[] contactTangent = new Vector3[2];
 
             // Check whether the Z-axis is nearer to the X or Y axis
-            if (Math.Abs(contactNormal.X) > Math.Abs(contactNormal.Y))
+            if (Math.Abs(ContactNormal.X) > Math.Abs(ContactNormal.Y))
             {
                 // Scaling factor to ensure the results are normalised
-                double s = 1.0 / Math.Sqrt(contactNormal.Z * contactNormal.Z + contactNormal.X * contactNormal.X);
+                double s = 1.0 / Math.Sqrt(ContactNormal.Z * ContactNormal.Z + ContactNormal.X * ContactNormal.X);
 
                 // The new X-axis is at right angles to the world Y-axis
-                contactTangent[0].X = contactNormal.Z * (float)s;
+                contactTangent[0].X = ContactNormal.Z * (float)s;
                 contactTangent[0].Y = 0.0f;
-                contactTangent[0].Z = -contactNormal.X * (float)s;
+                contactTangent[0].Z = -ContactNormal.X * (float)s;
 
                 // The new Y-axis is at right angles to the new X- and Z- axes
-                contactTangent[1].X = contactNormal.Y * contactTangent[0].X;
-                contactTangent[1].Y = contactNormal.Z * contactTangent[0].X - contactNormal.X * contactTangent[0].Z;
-                contactTangent[1].Z = -contactNormal.Y * contactTangent[0].X;
+                contactTangent[1].X = ContactNormal.Y * contactTangent[0].X;
+                contactTangent[1].Y = ContactNormal.Z * contactTangent[0].X - ContactNormal.X * contactTangent[0].Z;
+                contactTangent[1].Z = -ContactNormal.Y * contactTangent[0].X;
             }
             else
             {
                 // Scaling factor to ensure the results are normalised
-                double s = 1.0 / Math.Sqrt(contactNormal.Z * contactNormal.Z +
-                    contactNormal.Y * contactNormal.Y);
+                double s = 1.0 / Math.Sqrt(ContactNormal.Z * ContactNormal.Z +
+                    ContactNormal.Y * ContactNormal.Y);
 
                 // The new X-axis is at right angles to the world X-axis
                 contactTangent[0].X = 0;
-                contactTangent[0].Y = -contactNormal.Z * (float)s;
-                contactTangent[0].Z = contactNormal.Y * (float)s;
+                contactTangent[0].Y = -ContactNormal.Z * (float)s;
+                contactTangent[0].Z = ContactNormal.Y * (float)s;
 
                 // The new Y-axis is at right angles to the new X- and Z- axes
-                contactTangent[1].X = contactNormal.Y * contactTangent[0].Z - contactNormal.Z * contactTangent[0].Y;
-                contactTangent[1].Y = -contactNormal.X * contactTangent[0].Z;
-                contactTangent[1].Z = contactNormal.X * contactTangent[0].Y;
+                contactTangent[1].X = ContactNormal.Y * contactTangent[0].Z - ContactNormal.Z * contactTangent[0].Y;
+                contactTangent[1].Y = -ContactNormal.X * contactTangent[0].Z;
+                contactTangent[1].Z = ContactNormal.X * contactTangent[0].Y;
             }
 
             // Make a matrix from the three vectors.
-            ContactToWorld = Matrix.CreateWorld(contactNormal, contactTangent[0], contactTangent[1]);
+            ContactToWorld = Matrix.CreateWorld(ContactNormal, contactTangent[0], contactTangent[1]);
             
             
             //return new axis

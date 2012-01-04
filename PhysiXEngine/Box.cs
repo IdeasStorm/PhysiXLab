@@ -7,7 +7,7 @@ namespace PhysiXEngine
 {
     class Box : Collidable
     {
-        public ContactData generateContacts(Collidable other)
+        public override ContactData generateContacts(Collidable other)
         {
             ContactData contactData = null;
             if (other as Box != null)
@@ -26,6 +26,11 @@ namespace PhysiXEngine
                 contactData.BoxHalfSpace();
             }
             return contactData;
+        }
+
+        public override Boolean CollidesWith(Collidable other)
+        {
+            return false;
         }
     }
 }

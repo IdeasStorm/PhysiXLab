@@ -26,16 +26,19 @@ namespace PhysiXEngine
         /// </summary>
         /// <param name="k1"></param>
         /// <param name="k2"></param>
-        Friction(double k1, double k2);
+        Friction(double k1, double k2)
+        {
+            //TODO add init code
+        }
 
         /// <summary>
         /// Applies the drag force to the given particle.
         /// </summary>
         /// <param name="body"></param>
-        public override void affect(Body body)
-        {     
+        public override void Affect(Body body)
+        {
+            //TODO add affect Code
         }
 
-    };
     }
 }

@@ -31,7 +31,7 @@ namespace PhysiXEngine
         public override void Affect(Body body)
         {
 
-            if (body.hasFiniteMass())
+            if (body.HasFiniteMass)
                 return;
 
             Vector3 velocity=Vector3.Multiply(gravity,body.mass);

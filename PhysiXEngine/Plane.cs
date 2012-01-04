@@ -8,10 +8,10 @@ namespace PhysiXEngine
 {
     class Plane : Collidable
     {
-        public Vector3 direction { public get; protected set; }
-        public double offset { public get; protected set; }
+        public Vector3 direction { get; protected set; }
+        public double offset { get; protected set; }
 
-        public ContactData generateContacts(Collidable other)
+        public override ContactData generateContacts(Collidable other)
         {
             ContactData contactData = null;
             if (other as Sphere != null)
@@ -25,6 +25,10 @@ namespace PhysiXEngine
                 contactData.BoxHalfSpace();
             }
             return contactData;
+        }
+        public override Boolean CollidesWith(Collidable other)
+        {
+            return false;
         }
     }
 }

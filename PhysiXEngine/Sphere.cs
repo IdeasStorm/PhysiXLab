@@ -7,9 +7,9 @@ namespace PhysiXEngine
 {
     class Sphere : Collidable
     {
-        public double radius { public get; protected set; }
+        public double radius { get; protected set; }
 
-        public ContactData generateContacts(Collidable other) 
+        public override ContactData generateContacts(Collidable other) 
         {
             ContactData contactData = null;
             if (other as Sphere != null)
@@ -28,6 +28,12 @@ namespace PhysiXEngine
                 contactData.BoxAndSphere();
             }
             return contactData;
+        }
+
+        public override Boolean CollidesWith(Collidable other)
+        {
+            //TODO add Detection logic
+            return false;
         }
     }
 }

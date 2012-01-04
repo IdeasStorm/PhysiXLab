@@ -8,5 +8,10 @@ namespace PhysiXEngine
 {
     class Spring : ForceGenerator
     {
+        public override void Affect(Body other)
+        {
+            //TODO add Affect Code
+        }
+        
     }
 }

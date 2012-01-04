@@ -9,14 +9,17 @@ namespace PhysiXEngine
 {
     public class Body
     {
-        public bool HasFinitMass { public get; private set; }
+        public bool HasFiniteMass { get; private set; }
         private float _inverseMass;
         public float InverseMass
         {
-            get;
+            get
+            {
+                return _inverseMass;
+            }
             set
             {
-                HasFinitMass = (value != 0.0f);
+                HasFiniteMass = (value != 0.0f);
                 _inverseMass = value;
             }
         }
@@ -25,18 +28,18 @@ namespace PhysiXEngine
             get { return 1.0f / _inverseMass; }
             set 
             {
-                HasFinitMass = !float.IsInfinity(value);
+                HasFiniteMass = !float.IsInfinity(value);
                 _inverseMass = 1.0f / _inverseMass;
             }
         }
 
 
 
-        public Vector3 Position { public get; protected set; }
-        public Vector3 Velocity { public get; protected set; }
-        public Vector3 Acceleration { public get; protected set; }
-        public Vector3 LastFrameAcceleration { public get; protected set; }
-        public Vector3 AngularAcceleration { public get; protected set; }
+        public Vector3 Position {  get; protected set; }
+        public Vector3 Velocity {  get; protected set; }
+        public Vector3 Acceleration {  get; protected set; }
+        public Vector3 LastFrameAcceleration {  get; protected set; }
+        public Vector3 AngularAcceleration {  get; protected set; }
 
         private Vector3 forceAccumulator;
         private Vector3 torqueAccumulator;
@@ -45,13 +48,13 @@ namespace PhysiXEngine
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
         /// </summary>
-        public Matrix inverseInertiaTensor { public get; protected set; }
+        public Matrix InverseInertiaTensor { get; protected set; }
 
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// in the world space
         /// </summary>
-        public Matrix inverseInertiaTensorWorld { public get; protected set; }
+        public Matrix InverseInertiaTensorWorld { get; protected set; }
 
         //TODO above matrices should be 3x3
 
@@ -62,12 +65,12 @@ namespace PhysiXEngine
         /// <summary>
         /// the angular velocity
         /// </summary>
-        public Vector3 rotation { public get; protected set; }
+        public Vector3 Rotation { get; protected set; }
 
         /// <summary>
         /// the matrix that converts a vector from the body space to the world space
         /// </summary>
-        public Matrix transformMatrix { public get; protected set; }
+        public Matrix TransformMatrix { get; protected set; }
 
         //TODO add angular/linear damping if needed
         //TODO add sleep support
@@ -82,13 +85,13 @@ namespace PhysiXEngine
         {
             LastFrameAcceleration = Acceleration;
             LastFrameAcceleration += forceAccumulator * _inverseMass;
-            AngularAcceleration = Vector3.Transform(AngularAcceleration,inverseInertiaTensorWorld);
+            AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
 
             Velocity += Acceleration * duration;
-            rotation += AngularAcceleration;
+            Rotation += AngularAcceleration;
 
             Position += Velocity;
-            orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y,rotation.X,rotation.Z);
+            orientation += Quaternion.CreateFromYawPitchRoll(Rotation.Y,Rotation.X,Rotation.Z);
             calculateDerivedData();
             clearAccumulators();
             //TODO add sleep capablilty
@@ -99,10 +102,10 @@ namespace PhysiXEngine
             orientation.Normalize();
 
             // Calculate the transform matrix for the body.
-            transformMatrix = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(Position);
+            TransformMatrix = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
-            inverseInertiaTensorWorld = inverseInertiaTensor * transformMatrix;
+            InverseInertiaTensorWorld = InverseInertiaTensor * TransformMatrix;
 
             //TODO rem 3x3 4x4 problems
         }

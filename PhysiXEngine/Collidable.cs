@@ -7,7 +7,7 @@ namespace PhysiXEngine
 {
     abstract class Collidable : Body
     {
-        public ContactData generateContacts(Collidable other);
-        public Boolean CollidesWith(Collidable other);
+        public abstract ContactData generateContacts(Collidable other);
+        public abstract Boolean CollidesWith(Collidable other);
     }
 }
