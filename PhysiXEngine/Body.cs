@@ -74,8 +74,12 @@ namespace PhysiXEngine
 
         //TODO add angular/linear damping if needed
         //TODO add sleep support
-        
 
+
+        public Body()
+        {
+            calculateDerivedData();
+        }
 
         /// <summary>
         /// updates the body to the next state
@@ -85,7 +89,7 @@ namespace PhysiXEngine
         {
             LastFrameAcceleration = Acceleration;
             LastFrameAcceleration += forceAccumulator * _inverseMass;
-            AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
+            //AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
 
             Velocity += Acceleration * duration;
             Rotation += AngularAcceleration;
