@@ -19,6 +19,8 @@ namespace PhysiXLab
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Ball ball;
+
         public Camera camera { get; protected set; }
 
         public Lab()
@@ -36,10 +38,14 @@ namespace PhysiXLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, new Vector3(0, 0, 10),
+            camera = new Camera(this, new Vector3(0, 0, 100),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
 
+            ball = new Ball(10f);
+            ball.AddForce(new Vector3(10, 0, 0));
+            //BoundingSphereRenderer.InitializeGraphics(GraphicsDevice, 10^100);
+            
             base.Initialize();
         }
 
@@ -53,6 +59,7 @@ namespace PhysiXLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            ball.model = Content.Load<Model>(@"Ball");
         }
 
         /// <summary>
@@ -76,6 +83,7 @@ namespace PhysiXLab
                 this.Exit();
 
             // TODO: Add your update logic here
+            ball.Update(10f);
 
             base.Update(gameTime);
         }
@@ -89,7 +97,10 @@ namespace PhysiXLab
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            ball.Draw(camera);
+            //sphere.Draw(camera);
+            //BoundingSphereRenderer.Render(new BoundingSphere(Vector3.Zero, 10f), GraphicsDevice,
+            //    camera.view, camera.projection, Color.Red);
             base.Draw(gameTime);
         }
     }

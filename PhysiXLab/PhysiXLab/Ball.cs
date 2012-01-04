@@ -10,7 +10,7 @@ namespace PhysiXLab
 {
     class Ball : Sphere
     {
-        public Model model { get; protected set; }
+        public Model model { get; set; }
 
         public Ball(float radius) 
             : base(radius)
@@ -25,7 +25,7 @@ namespace PhysiXLab
                 foreach (BasicEffect be in mesh.Effects)
                 {
                     be.EnableDefaultLighting();
-                    be.World = mesh.ParentBone.Transform * TransformMatrix;
+                    be.World = mesh.ParentBone.Transform;
                     be.View = camera.view;
                     be.Projection = camera.projection;
                 }

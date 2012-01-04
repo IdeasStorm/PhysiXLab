@@ -120,15 +120,11 @@ namespace PhysiXLab
             cameraDirection = Vector3.Transform(cameraDirection
                 , Matrix.CreateFromAxisAngle(Vector3.Cross(cameraUp, cameraDirection)
                 , (MathHelper.PiOver4 / 100) * (Mouse.GetState().Y - prevMouseState.Y)));
-            cameraUp = Vector3.Transform(cameraUp
-                , Matrix.CreateFromAxisAngle(Vector3.Cross(cameraUp, cameraDirection)
-                , (MathHelper.PiOver4 / 100) * (Mouse.GetState().Y - prevMouseState.Y)));
 
 
             cameraDirection = Vector3.Transform(cameraDirection
                 , Matrix.CreateFromAxisAngle(Vector3.Cross(cameraUp, cameraDirection)
                 , (MathHelper.PiOver4 / 180) * (Mouse.GetState().Y - prevMouseState.Y)));
-            cameraPosition += new Vector3(0, 1, 0) * (Mouse.GetState().Y - prevMouseState.Y);
 
 
 
