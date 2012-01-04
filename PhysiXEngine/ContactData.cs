@@ -101,20 +101,18 @@ namespace PhysiXEngine
             // We have an intersection, so find the intersection points. We can make
             // do with only checking vertices. If the box is resting on a plane
             // or on an edge, it will be reported as four or two contact points.
-
+            Vector3[] cornars = box.box.GetCorners();
             // Go through each combination of + and - for each half-size
             double[,] mults = new double[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
                                        {1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}};    
             
-
-            //Contact* contact = data->contacts;
-            //unsigned contactsUsed = 0;
             for (int i = 0; i < 8; i++) {
 
                 // Calculate the position of each vertex
-                Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
-
-                //vertexPos.componentProductUpdate(box.halfSize);
+                //Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
+                Vector3 vertexPos;
+                vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
+                
                 //vertexPos = box.transform.transform(vertexPos);
 
                 ///>BoxPlaneTestOne
