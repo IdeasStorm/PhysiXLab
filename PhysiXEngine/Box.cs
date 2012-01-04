@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
     class Box : Collidable
     {
+        public Vector3 HalfSize { get; private set; }
+        public BoundingBox box { get; private set; }
+
         public override ContactData generateContacts(Collidable other)
         {
             ContactData contactData = null;
