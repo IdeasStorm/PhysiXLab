@@ -103,8 +103,8 @@ namespace PhysiXEngine
             // or on an edge, it will be reported as four or two contact points.
             Vector3[] cornars = box.box.GetCorners();
             // Go through each combination of + and - for each half-size
-            double[,] mults = new double[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
-                                       {1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}};    
+            /*double[,] mults = new double[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
+                                       {1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}};*/
             
             for (int i = 0; i < 8; i++) {
 
