@@ -19,6 +19,8 @@ namespace PhysiXLab
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public Camera camera { get; protected set; }
+
         public Lab()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,6 +36,9 @@ namespace PhysiXLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            camera = new Camera(this, new Vector3(0, 0, 10),
+                Vector3.Zero, Vector3.Up);
+            Components.Add(camera);
 
             base.Initialize();
         }
