@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ball.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Lab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,6 +103,10 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PhysiXEngine\PhysiXEngine.csproj">
+      <Project>{14604323-9A03-42D6-8C2E-D443B2BC9733}</Project>
+      <Name>PhysiXEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PhysiXLabContent\PhysiXLabContent.contentproj">
       <Name>PhysiXLabContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

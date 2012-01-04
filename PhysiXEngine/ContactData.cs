@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    class ContactData
+    public class ContactData
     {
         /**
          * Holds the bodies that are involved in the contact. The
