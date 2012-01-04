@@ -51,6 +51,7 @@
     <Compile Include="ForceGenerator.cs" />
     <Compile Include="Friction.cs" />
     <Compile Include="Gravity.cs" />
+    <Compile Include="Helpers\Matrix3.cs" />
     <Compile Include="ImpulseGenerator.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,6 +61,7 @@
   <ItemGroup>
     <None Include="ClassDiagram2.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
