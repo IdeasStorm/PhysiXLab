@@ -12,7 +12,7 @@ namespace PhysiXEngine.Helpers
     ///damping coefficients to make the 12-element characteristics array
     ///of a rigid body.
     ///</summary>
-    class Matrix3
+    public class Matrix3
     {
         ///<summary>
         ///Holds the tensor matrix data in array form.
