@@ -21,6 +21,20 @@ namespace PhysiXLab
         //Camera matrices
         public Matrix view { get; protected set; }
         public Matrix projection { get; protected set; }
+        public bool locked { get; set; }
+        private Vector3 target;
+        public Vector3 Target
+        {
+            set { target = value; locked = true; }
+            get { return target; }
+        }
+
+        /// <summary>
+        /// frees the target so the camera depends on direction
+        /// </summary>
+        public void freeTarget() {
+            locked = false;
+        }
 
         // Camera vectors to rotate and Move Camera
         public Vector3 cameraPosition { get; protected set; }
@@ -43,18 +57,22 @@ namespace PhysiXLab
         //define new view matrix
         private void CreateLookAt()
         {
-            view = Matrix.CreateLookAt(cameraPosition, cameraPosition + cameraDirection, cameraUp);
+            if (!locked)
+                target = cameraPosition + cameraDirection;
+            view = Matrix.CreateLookAt(cameraPosition, target, cameraUp);
         }
 
-        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up)
+        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up,bool locked =false)
             : base(game)
         {
             //view = Matrix.CreateLookAt(pos, target, up);
             // Build camera view matrix
             cameraPosition = pos;
+            this.target = target;
             cameraDirection = target - pos;
             cameraDirection.Normalize();
             cameraUp = up;
+            this.locked = locked;
             CreateLookAt();
 
             projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
