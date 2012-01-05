@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using PhysiXEngine;
 
 namespace PhysiXLab
 {
@@ -16,11 +17,13 @@ namespace PhysiXLab
     /// </summary>
     public class Lab : Microsoft.Xna.Framework.Game
     {
+        bool paused = true;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        LinkedList<Ball> balls = new LinkedList<Ball>();
         Ball ball;
-
+        Ball dummy;
+        Gravity g;
         public Camera camera { get; protected set; }
 
         public Lab()
@@ -43,7 +46,10 @@ namespace PhysiXLab
             Components.Add(camera);
 
             ball = new Ball(10f);
-            
+            dummy = new Ball(10f);
+            g = new Gravity(Vector3.Down * 0.01f);
+            g.AddBody(ball);
+            //TODO determine which is down for the world
             //BoundingSphereRenderer.InitializeGraphics(GraphicsDevice, 10^100);
             
             base.Initialize();
@@ -60,6 +66,7 @@ namespace PhysiXLab
 
             // TODO: use this.Content to load your game content here
             ball.model = Content.Load<Model>(@"Ball");
+            dummy.model = ball.model;
         }
 
         /// <summary>
@@ -70,7 +77,7 @@ namespace PhysiXLab
         {
             // TODO: Unload any non ContentManager content here
         }
-
+        bool spaceDown;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -81,10 +88,31 @@ namespace PhysiXLab
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            ball.AddForce(new Vector3(0.0001f, 0, 0));
-            // TODO: Add your update logic here
-            ball.Update(gameTime.ElapsedGameTime.Milliseconds);
+            if (Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.P))
+                paused = !paused;
+            if (!paused)
+            {
+                                    
+                if (Keyboard.GetState(PlayerIndex.One).IsKeyDown(Keys.Space))
+                {
+                    spaceDown = true;
+                }
+                if (spaceDown && (Keyboard.GetState(PlayerIndex.One).IsKeyUp(Keys.Space))) 
+                {
+                    spaceDown = false;
+                    Ball b = new Ball(10f);
+                    b.model = ball.model;
+                    g.AddBody(b);
+                    balls.AddLast(b);
+                    b.AddForce(new Vector3(2f, 1f, 0));
+                }
+                g.Update(gameTime.ElapsedGameTime.Milliseconds);
 
+                // TODO: Add your update logic here
+                ball.Update(gameTime.ElapsedGameTime.Milliseconds);
+                foreach (Ball b in balls)
+                    b.Update(gameTime.ElapsedGameTime.Milliseconds);
+            }
             base.Update(gameTime);
         }
 
@@ -95,8 +123,11 @@ namespace PhysiXLab
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            foreach (Ball b in balls)
+            {
+                b.Draw(camera);
+            }
+            dummy.Draw(camera);
             ball.Draw(camera);
             //sphere.Draw(camera);
             //BoundingSphereRenderer.Render(new BoundingSphere(Vector3.Zero, 10f), GraphicsDevice,
