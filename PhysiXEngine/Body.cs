@@ -140,5 +140,23 @@ namespace PhysiXEngine
             velocity += velocity;
         }
 
+
+        public Vector3 GetPointInWorldSpace(Vector3 point)
+        {
+            //TODO return Point in world Space
+            return point;
+            
+            //(*this) * vector;
+            //return Vector3.Multiply(;
+            //return TransformMatrix * point;
+        }
+
+        public void AddForceAtPoint(Vector3 force, Vector3 point)
+        {
+            // Convert to coordinates relative to center of mass.
+            Vector3 pt = point;
+            pt -= Position;
+            //TODO Add Force force at Point point
+        }
     }
 }

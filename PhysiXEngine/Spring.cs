@@ -49,8 +49,8 @@ namespace PhysiXEngine
         public override void Affect(Body body, float duration)
         {
             // Calculate the two ends in world space
-            Vector3 lws = body.getPointInWorldSpace(connectionPoint);
-            Vector3 ows = other.getPointInWorldSpace(otherConnectionPoint);
+            Vector3 lws = body.GetPointInWorldSpace(connectionPoint);
+            Vector3 ows = other.GetPointInWorldSpace(otherConnectionPoint);
 
             // Calculate the vector of the spring
             Vector3 force = lws - ows;
@@ -63,7 +63,7 @@ namespace PhysiXEngine
             // Calculate the final force and apply it
             force.Normalize();
             force *= -magnitude;
-            body.addForceAtPoint(force, lws);
+            body.AddForceAtPoint(force, lws);
         }
     }
 }
