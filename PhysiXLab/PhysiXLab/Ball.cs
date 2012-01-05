@@ -25,7 +25,7 @@ namespace PhysiXLab
                 foreach (BasicEffect be in mesh.Effects)
                 {
                     be.EnableDefaultLighting();
-                    be.World = mesh.ParentBone.Transform;
+                    be.World = mesh.ParentBone.Transform * TransformMatrix;
                     be.View = camera.view;
                     be.Projection = camera.projection;
                 }
