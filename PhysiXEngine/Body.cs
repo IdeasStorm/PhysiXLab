@@ -23,13 +23,13 @@ namespace PhysiXEngine
                 _inverseMass = value;
             }
         }
-        public float mass 
+        public float Mass 
         {
             get { return 1.0f / _inverseMass; }
             set 
             {
                 HasFiniteMass = !float.IsInfinity(value);
-                _inverseMass = 1.0f / _inverseMass;
+                _inverseMass = 1.0f / value;
             }
         }
 
@@ -78,6 +78,7 @@ namespace PhysiXEngine
 
         public Body()
         {
+            Mass = 1;
             calculateDerivedData();
         }
 
@@ -91,7 +92,7 @@ namespace PhysiXEngine
             LastFrameAcceleration += forceAccumulator * _inverseMass;
             //AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
 
-            Velocity += Acceleration * duration;
+            Velocity += LastFrameAcceleration * duration;
             Rotation += AngularAcceleration;
 
             Position += Velocity;
@@ -106,7 +107,7 @@ namespace PhysiXEngine
             orientation.Normalize();
 
             // Calculate the transform matrix for the body.
-            TransformMatrix = Matrix.CreateFromQuaternion(orientation) * Matrix.CreateTranslation(Position);
+            TransformMatrix = /*Matrix.CreateFromQuaternion(orientation) */ Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
             InverseInertiaTensorWorld = InverseInertiaTensor * TransformMatrix;
