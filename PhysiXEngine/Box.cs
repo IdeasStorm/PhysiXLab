@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    class Box : Collidable
+    public class Box : Collidable
     {
         public Vector3 HalfSize { get; private set; }
         public BoundingBox box { get; private set; }

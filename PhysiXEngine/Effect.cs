@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    abstract class Effect
+    public abstract class Effect
     {
         protected float duration;
 

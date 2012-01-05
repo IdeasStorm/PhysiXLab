@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    abstract class Field : ForceGenerator
+    public abstract class Field : ForceGenerator
     {
     }
 }

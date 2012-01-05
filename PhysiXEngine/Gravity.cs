@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    class Gravity:Field
+    public class Gravity:Field
     {                
         /// <summary>
         /// acceleration of the gravity
@@ -17,7 +17,7 @@ namespace PhysiXEngine
         /// Creates the effect with the given acceleration 
         /// </summary>
         /// <param name="?"></param>
-        Gravity(Vector3 gravity)
+        public Gravity(Vector3 gravity)
         {
             this.gravity = gravity;
         }
@@ -34,9 +34,10 @@ namespace PhysiXEngine
             if (body.HasFiniteMass)
                 return;
 
-            Vector3 velocity=Vector3.Multiply(gravity,body.Mass);
-            velocity=Vector3.Multiply(velocity,duration);
-            body.AddVelocity(velocity);                        
+            //Vector3 velocity=Vector3.Multiply(gravity,body.Mass);
+            //velocity=Vector3.Multiply(velocity,duration);
+            //body.AddVelocity(velocity);                        
+            //TODO delete above lines @Adnan
 
             body.AddForce(Vector3.Multiply(gravity,body.Mass));
         }

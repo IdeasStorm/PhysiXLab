@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    class ImpulseGenerator : Effect
+    public class ImpulseGenerator : Effect
     {
         protected LinkedList<ContactData> contactDataLinkedList;
         protected Vector3 deltaVelocity;

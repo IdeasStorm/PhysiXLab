@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    class Plane : Collidable
+    public class Plane : Collidable
     {
         public Vector3 direction { get; protected set; }
         public double offset { get; protected set; }

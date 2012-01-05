@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    abstract class ForceGenerator : Effect
+    public abstract class ForceGenerator : Effect
     {
         protected HashSet<Body> bodies;
 

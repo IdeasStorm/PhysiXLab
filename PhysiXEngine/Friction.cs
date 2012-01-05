@@ -9,7 +9,7 @@ namespace PhysiXEngine
     /// <summary>
     /// calculate body friction 
     /// </summary>
-    class Friction : ForceGenerator
+    public class Friction : ForceGenerator
     {
         /// <summary>
         /// Holds the velocity drag coeffificent.
