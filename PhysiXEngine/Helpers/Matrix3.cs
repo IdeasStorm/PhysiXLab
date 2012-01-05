@@ -28,6 +28,50 @@ namespace PhysiXEngine.Helpers
                 data[6] = data[7] = data[8] = 0;
         }
 
+        /// <summary>
+        /// Constructs a Matrix3x3 from a Matrix4x4
+        /// </summary>
+        /// <param name="m">Matrix to copy from</param>
+        public Matrix3(Matrix m)
+        {
+            this.data[0] = m.M11;
+            this.data[1] = m.M12;
+            this.data[2] = m.M13;
+
+            this.data[3] = m.M21;
+            this.data[4] = m.M22;
+            this.data[5] = m.M23;
+
+            this.data[6] = m.M31;
+            this.data[7] = m.M32;
+            this.data[8] = m.M33;
+        }
+
+        public static explicit operator Matrix3 (Matrix instance)
+        {
+            return new Matrix3(instance);
+        }
+
+        public static implicit operator Matrix(Matrix3 instance)
+        {
+            Matrix m = new Matrix();
+            m.M11 = instance.data[0];
+            m.M12 = instance.data[1];
+            m.M13 = instance.data[2];
+
+            m.M21 = instance.data[3];
+            m.M22 = instance.data[4];
+            m.M23 = instance.data[5];
+
+            m.M31 = instance.data[6];
+            m.M32 = instance.data[7];
+            m.M33 = instance.data[8];
+
+            m.M44 = 1;
+            //TODO be sure of this method (is it correct ?!)
+            return m;
+        }
+
         ///<summary>
         ///Creates a new matrix with the given three vectors making
         ///up its columns.
