@@ -35,7 +35,7 @@ namespace PhysiXEngine
 
 
 
-        public Vector3 Position {  get; protected set; }
+        public Vector3 Position {  get; set; }
         public Vector3 Velocity {  get; protected set; }
         public Vector3 Acceleration {  get; protected set; }
         public Vector3 LastFrameAcceleration {  get; protected set; }
