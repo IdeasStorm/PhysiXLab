@@ -43,7 +43,7 @@ namespace PhysiXLab
             Components.Add(camera);
 
             ball = new Ball(10f);
-            ball.AddForce(new Vector3(10, 0, 0));
+            
             //BoundingSphereRenderer.InitializeGraphics(GraphicsDevice, 10^100);
             
             base.Initialize();
@@ -81,9 +81,9 @@ namespace PhysiXLab
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            ball.AddForce(new Vector3(0.0001f, 0, 0));
             // TODO: Add your update logic here
-            ball.Update(10f);
+            ball.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }
