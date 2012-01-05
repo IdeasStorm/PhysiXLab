@@ -34,11 +34,11 @@ namespace PhysiXEngine
             if (body.HasFiniteMass)
                 return;
 
-            Vector3 velocity=Vector3.Multiply(gravity,body.mass);
+            Vector3 velocity=Vector3.Multiply(gravity,body.Mass);
             velocity=Vector3.Multiply(velocity,duration);
             body.AddVelocity(velocity);                        
 
-            body.AddForce(Vector3.Multiply(gravity,body.mass));
+            body.AddForce(Vector3.Multiply(gravity,body.Mass));
         }
     }
 }
