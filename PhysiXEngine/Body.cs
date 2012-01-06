@@ -96,6 +96,7 @@ namespace PhysiXEngine
         public Body()
         {
             Mass = 1;
+            InertiaTensor = Matrix.Identity;
             calculateDerivedData();
         }
 
@@ -119,7 +120,7 @@ namespace PhysiXEngine
             //TODO add sleep capablilty
         }
 
-        private void calculateDerivedData()
+        protected void calculateDerivedData()
         {
             orientation.Normalize();
 
