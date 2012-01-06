@@ -48,11 +48,11 @@ namespace PhysiXLab
             Components.Add(camera);
             ball = new Ball(10f);
             dummy = new Ball(10f);
-            dummy.InverseMass = 0;
+            //dummy.InverseMass = 0;
             //dummy.InverseInertiaTensor = new Matrix3();
             spring = new Spring(dummy, dummy.Position, 0.3f, 20.0f);
             //spring.AddBody(ball);
-            g = new Gravity(Vector3.Down * 0.01f);
+            g = new Gravity(Vector3.Down * 10f);
             g.AddBody(ball);
             //TODO determine which is down for the world
             //BoundingSphereRenderer.InitializeGraphics(GraphicsDevice, 10^100);
@@ -108,10 +108,10 @@ namespace PhysiXLab
                     spaceDown = false;
                     Ball b = new Ball(10f);
                     b.model = ball.model;
-                    g.AddBody(b);
+                    //g.AddBody(b);
                     balls.AddLast(b);
-                    b.AddForce(new Vector3(10f, 5f, 0));
                     b.Position = new Vector3(0, -100f, 0);
+                    //b.AddForce(new Vector3(10f, 5f, 0));
                     spring.AddBody(b);
                 }
                 g.Update(duration);

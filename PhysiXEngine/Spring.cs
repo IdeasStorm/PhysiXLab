@@ -38,7 +38,7 @@ namespace PhysiXEngine
         {
             // Calculate the two ends in world space
             Vector3 lws = body.GetPointInWorldSpace(body.Position);
-            Vector3 ows = other.GetPointInWorldSpace(otherConnectionPoint);
+            Vector3 ows = other.GetPointInWorldSpace(other.Position);
 
             // Calculate the vector of the spring
             Vector3 force = lws - ows;
@@ -50,8 +50,10 @@ namespace PhysiXEngine
 
             // Calculate the final force and apply it
             force.Normalize();
-            force *= -magnitude;
-            body.AddForce(force, lws);
+            Vector3 secondforce = force * -magnitude;
+            body.AddForce(secondforce, lws);
+            force *= magnitude;
+            other.AddForce(force, ows);
         }
     }
 }
