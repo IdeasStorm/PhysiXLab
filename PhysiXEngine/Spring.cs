@@ -30,7 +30,7 @@ namespace PhysiXEngine
         public float restLength { get; private set; }
 
         /** Creates a new spring with the given parameters. */
-        Spring(Vector3 localConnectionPoint, Body other,
+        public Spring(Vector3 localConnectionPoint, Body other,
                Vector3 otherConnectionPoint, float springConstant,
                float restLength)
         {
