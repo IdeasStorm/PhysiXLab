@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using PhysiXEngine.Helpers;
 using PhysiXEngine;
 
 namespace PhysiXLab
@@ -47,8 +48,11 @@ namespace PhysiXLab
             Components.Add(camera);
             ball = new Ball(10f);
             dummy = new Ball(10f);
-            spring = new Spring(Vector3.Zero, ball, dummy.Position, 0.3f, 20.0f);
-            g = new Gravity(Vector3.Down * 0.01f);
+            dummy.InverseMass = 0;
+            dummy.InverseInertiaTensor = new Matrix3();
+            spring = new Spring(Vector3.Zero, dummy, dummy.Position, 0.3f, 20.0f);
+            spring.AddBody(ball);
+            g = new Gravity(Vector3.Down * 10f);
             g.AddBody(ball);
             //TODO determine which is down for the world
             //BoundingSphereRenderer.InitializeGraphics(GraphicsDevice, 10^100);
@@ -86,6 +90,7 @@ namespace PhysiXLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -105,14 +110,15 @@ namespace PhysiXLab
                     b.model = ball.model;
                     g.AddBody(b);
                     balls.AddLast(b);
-                    b.AddForce(new Vector3(2f, 1f, 0));
+                    b.AddForce(new Vector3(10f, 5f, 0));
                 }
-                g.Update(gameTime.ElapsedGameTime.Milliseconds);
-                spring.Update(gameTime.ElapsedGameTime.Milliseconds);
+                g.Update(duration);
+                spring.Update(duration);
                 // TODO: Add your update logic here
-                ball.Update(gameTime.ElapsedGameTime.Milliseconds);
+                ball.Update(duration);
+                dummy.Update(duration);
                 foreach (Ball b in balls)
-                    b.Update(gameTime.ElapsedGameTime.Milliseconds);
+                    b.Update(duration);
             }
             base.Update(gameTime);
         }
