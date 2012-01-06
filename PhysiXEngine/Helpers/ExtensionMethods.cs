@@ -20,7 +20,7 @@ namespace PhysiXEngine.Helpers
                 case 3:
                     return new Vector3(matrix.M13, matrix.M23, matrix.M33);
                 default:
-                    return new Vector3(0,0,0);
+                    return null;
             }
         }
            
