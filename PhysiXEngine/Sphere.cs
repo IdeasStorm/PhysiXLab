@@ -19,6 +19,7 @@ namespace PhysiXEngine
             this.radius = radius;
             float coeff = 0.4f * Mass * radius * radius;
             setInertiaTensorCoeffs(coeff, coeff, coeff);
+            calculateDerivedData();
         }
 
         public override ContactData generateContacts(Collidable other) 
