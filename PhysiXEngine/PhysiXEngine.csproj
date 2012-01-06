@@ -55,7 +55,6 @@
     <Compile Include="Gravity.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\Matrix3.cs" />
-    <Compile Include="ImpulseGenerator.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sphere.cs" />
