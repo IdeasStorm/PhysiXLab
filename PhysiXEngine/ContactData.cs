@@ -108,8 +108,7 @@ namespace PhysiXEngine
                 //Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
                 Vector3 vertexPos;
                 vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
-
-                //vertexPos = box.transform.transform(vertexPos);
+                vertexPos = Vector3.Transform(vertexPos, box.TransformMatrix);
 
                 ///>BoxPlaneTestOne
                 // Calculate the distance from the plane
