@@ -47,12 +47,13 @@ namespace PhysiXEngine.Helpers
             this.data[8] = m.M33;
         }
 
-        public static explicit operator Matrix3 (Matrix instance)
+
+        public static implicit operator Matrix3 (Matrix instance)
         {
             return new Matrix3(instance);
         }
 
-        public static implicit operator Matrix(Matrix3 instance)
+        public static explicit operator Matrix(Matrix3 instance)
         {
             Matrix m = new Matrix();
             m.M11 = instance.data[0];

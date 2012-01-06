@@ -24,6 +24,10 @@ namespace PhysiXEngine
                 _inverseMass = value;
             }
         }
+
+        /// <summary>
+        /// the Mass of the body in Kg
+        /// </summary>
         public float Mass 
         {
             get { return 1.0f / _inverseMass; }
@@ -49,13 +53,25 @@ namespace PhysiXEngine
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
         /// </summary>
-        public Matrix InverseInertiaTensor { get; protected set; }
+        public Matrix3 InverseInertiaTensor { get; protected set; }
+
+        public Matrix3 InertiaTensor 
+        {
+            get
+            {
+                return InverseInertiaTensor.inverse();
+            }
+            set
+            {
+                InverseInertiaTensor.setInverse(value);
+            }
+        }
 
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// in the world space
         /// </summary>
-        public Matrix InverseInertiaTensorWorld { get; protected set; }
+        public Matrix3 InverseInertiaTensorWorld { get; protected set; }
 
         //TODO above matrices should be 3x3
 
@@ -140,5 +156,40 @@ namespace PhysiXEngine
             velocity += velocity;
         }
 
+
+        public Vector3 GetPointInWorldSpace(Vector3 point)
+        {
+            return Vector3.Transform(point, TransformMatrix);            
+        }
+
+        public void AddForceAtPoint(Vector3 force, Vector3 point)
+        {
+            // Convert to coordinates relative to center of mass.
+            Vector3 pt = point;
+            pt -= Position;            
+
+            forceAccumulator += force;
+            torqueAccumulator += Vector3.Cross(pt , force);
+        }
+
+        /// <summary>
+        /// an alias of AddForceAtPoint 
+        /// </summary>
+        /// <see cref="AddForceAtPoint"/>
+        /// <param name="force"></param>
+        /// <param name="point"></param>
+        public void AddForce(Vector3 force, Vector3 point)
+        {
+            AddForceAtPoint(force, point);
+        }
+
+        /// <summary>
+        /// Sets the value of the matrix from inertia tensor values.
+        /// </summary>
+        protected void setInertiaTensorCoeffs(float ix, float iy, float iz,
+            float ixy = 0, float ixz = 0, float iyz = 0)
+        {
+            InertiaTensor.setInertiaTensorCoeffs(ix, iy, iz, ixy, ixz, iyz);
+        }
     }
 }
