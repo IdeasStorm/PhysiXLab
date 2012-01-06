@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    public class Gravity:Field
+    public class Gravity : Field
     {                
         /// <summary>
         /// acceleration of the gravity

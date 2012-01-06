@@ -6,13 +6,16 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    public class Spring : ForceGenerator
+    public class Spring : Constaint
     {
         /**
          * The point of connection of the spring to the other object,
          * in that object's local coordinates.
          */
         public Vector3 otherConnectionPoint { get; private set; }
+
+        /** The particle at the first end of the spring. */
+        public Body first { get; private set; }
 
         /** The particle at the other end of the spring. */
         public Body other { get; private set; }
@@ -24,9 +27,10 @@ namespace PhysiXEngine
         public float restLength { get; private set; }
 
         /** Creates a new spring with the given parameters. */
-        public Spring(Body other, Vector3 otherConnectionPoint,
-            float springConstant, float restLength)
+        public Spring(Body first, Body other, Vector3 otherConnectionPoint,
+            float springConstant, float restLength) : base(first, other)
         {
+            this.first = first;
             this.other = other;
             this.otherConnectionPoint = otherConnectionPoint;
             this.springConstant = springConstant;
@@ -34,10 +38,10 @@ namespace PhysiXEngine
         }
 
         /** Applies the spring force to the given rigid body. */
-        protected override void Affect(Body body)
+        protected override void Affect()
         {
             // Calculate the two ends in world space
-            Vector3 lws = body.GetPointInWorldSpace(body.Position);
+            Vector3 lws = first.GetPointInWorldSpace(first.Position);
             Vector3 ows = other.GetPointInWorldSpace(other.Position);
 
             // Calculate the vector of the spring
@@ -51,7 +55,7 @@ namespace PhysiXEngine
             // Calculate the final force and apply it
             force.Normalize();
             Vector3 secondforce = force * -magnitude;
-            body.AddForce(secondforce, lws);
+            first.AddForce(secondforce, lws);
             force *= magnitude;
             other.AddForce(force, ows);
         }
