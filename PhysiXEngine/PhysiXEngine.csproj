@@ -53,6 +53,7 @@
     <Compile Include="ForceGenerator.cs" />
     <Compile Include="Friction.cs" />
     <Compile Include="Gravity.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\Matrix3.cs" />
     <Compile Include="ImpulseGenerator.cs" />
     <Compile Include="Plane.cs" />

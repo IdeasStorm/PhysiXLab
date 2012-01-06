@@ -10,6 +10,7 @@ namespace PhysiXEngine
     {
         public Vector3 HalfSize { get; private set; }
         public BoundingBox box { get; private set; }
+        public Matrix transform{ get; private set; }
 
         public override ContactData generateContacts(Collidable other)
         {
