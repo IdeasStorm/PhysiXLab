@@ -49,13 +49,13 @@ namespace PhysiXEngine
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
         /// </summary>
-        public Matrix InverseInertiaTensor { get; protected set; }
+        public Matrix3 InverseInertiaTensor { get; protected set; }
 
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// in the world space
         /// </summary>
-        public Matrix InverseInertiaTensorWorld { get; protected set; }
+        public Matrix3 InverseInertiaTensorWorld { get; protected set; }
 
         //TODO above matrices should be 3x3
 
