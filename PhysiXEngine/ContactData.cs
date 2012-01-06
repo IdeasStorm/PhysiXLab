@@ -226,7 +226,7 @@ namespace PhysiXEngine
         }
 
         /// <summary>
-        /// 
+        /// fill contact data between box and point
         /// </summary>
         /// <param name="box"></param>
         /// <param name="point"></param>
@@ -351,5 +351,31 @@ namespace PhysiXEngine
             //friction    = TODO;
             return true;
         }
+
+        public bool BoxAndBox()
+        {
+            Box one = (Box)body[0];
+            Box two = (Box)body[1];
+
+            Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
+            
+            return true;
+        }
+
+        public static float penetrationOnAxis(Box one, Box two, Vector3 axis, Vector3 toCentre)
+        {
+            // Project the half-size of one onto axis
+            //float oneProject = transformToAxis(one, axis);
+            //float twoProject = transformToAxis(two, axis);
+
+            // Project this onto the axis
+            float distance = Math.Abs(Vector3.Dot(toCentre,axis));
+
+            // Return the overlap (i.e. positive indicates
+            // overlap, negative indicates separation).
+            //return oneProject + twoProject - distance;
+            return 0;
+        }
+
     }
 }
