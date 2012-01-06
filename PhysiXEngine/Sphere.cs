@@ -9,9 +9,16 @@ namespace PhysiXEngine
     {
         public float radius { get; protected set; }
 
-        public Sphere(float radius)
+        /// <summary>
+        /// Creates a sphere
+        /// </summary>
+        /// <param name="radius">the radius of a sphere</param>
+        /// <param name="mass">the mass of sphere</param>
+        public Sphere(float radius, float mass=1)
         {
             this.radius = radius;
+            float coeff = 0.4f * Mass * radius * radius;
+            setInertiaTensorCoeffs(coeff, coeff, coeff);
         }
 
         public override ContactData generateContacts(Collidable other) 

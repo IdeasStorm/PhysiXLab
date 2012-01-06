@@ -170,7 +170,7 @@ namespace PhysiXEngine
         /// <summary>
         /// Sets the value of the matrix from inertia tensor values.
         /// </summary>
-        void setInertiaTensorCoeffs(float ix, float iy, float iz,
+        protected void setInertiaTensorCoeffs(float ix, float iy, float iz,
             float ixy = 0, float ixz = 0, float iyz = 0)
         {
             InverseInertiaTensor.setInertiaTensorCoeffs(ix, iy, iz, ixy, ixz, iyz);
