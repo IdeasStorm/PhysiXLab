@@ -48,22 +48,31 @@ namespace PhysiXEngine
 
         private Vector3 forceAccumulator;
         private Vector3 torqueAccumulator;
-        
+
+        private Matrix3 _inverseInertiaTensor = new Matrix3();
+
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
         /// </summary>
-        public Matrix3 InverseInertiaTensor { get; protected set; }
+        public Matrix3 InverseInertiaTensor {
+            get{
+                return _inverseInertiaTensor;
+            }
+            set{
+                _inverseInertiaTensor = value;
+            }
+        }
 
         public Matrix3 InertiaTensor 
         {
             get
             {
-                return InverseInertiaTensor.inverse();
+                return _inverseInertiaTensor.inverse();
             }
             set
             {
-                InverseInertiaTensor.setInverse(value);
+                _inverseInertiaTensor.setInverse(value);
             }
         }
 
@@ -97,7 +106,7 @@ namespace PhysiXEngine
         {
             Mass = 1;
             InertiaTensor = Matrix.Identity;
-            calculateDerivedData();
+            calculateDerivedData(); //TODO this must not be here!!
         }
 
         /// <summary>
