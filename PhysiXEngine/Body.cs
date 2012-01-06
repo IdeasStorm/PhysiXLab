@@ -150,8 +150,21 @@ namespace PhysiXEngine
         {
             // Convert to coordinates relative to center of mass.
             Vector3 pt = point;
-            pt -= Position;
-            //TODO Add Force force at Point point
+            pt -= Position;            
+
+            forceAccumulator += force;
+            torqueAccumulator += Vector3.Cross(pt , force);
+        }
+
+        /// <summary>
+        /// an alias of AddForceAtPoint 
+        /// </summary>
+        /// <see cref="AddForceAtPoint"/>
+        /// <param name="force"></param>
+        /// <param name="point"></param>
+        public void AddForce(Vector3 force, Vector3 point)
+        {
+            AddForceAtPoint(force, point);
         }
     }
 }
