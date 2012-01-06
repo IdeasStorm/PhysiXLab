@@ -24,19 +24,19 @@ namespace PhysiXEngine
         /**
          * Holds the direction of the contact in world coordinates.
          */
-        public Vector3 ContactNormal {  get; protected set; }
+        public Vector3 ContactNormal { get; protected set; }
 
         /**
          * Holds the depth of penetration at the contact point. If both
          * bodies are specified then the contact point should be midway
          * between the inter-penetrating points.
          */
-        public double Penetration {  get; protected set; }
+        public double Penetration { get; protected set; }
 
-        public Matrix ContactToWorld {  get; private set; }
+        public Matrix ContactToWorld { get; private set; }
 
-        public float restitution {  get; protected set; }
-        public Vector3 contactVelocity {  get; protected set; }
+        public float restitution { get; protected set; }
+        public Vector3 contactVelocity { get; protected set; }
         //TODO remoce the var above me
 
 
@@ -58,8 +58,8 @@ namespace PhysiXEngine
 
             // We manually create the normal, because we have the
             // size to hand.
-            ContactNormal = Vector3.Multiply(midline,(float)(1.0f/size));
-            ContactPoint = positionOne + Vector3.Multiply(midline,0.5f);
+            ContactNormal = Vector3.Multiply(midline, (float)(1.0f / size));
+            ContactPoint = positionOne + Vector3.Multiply(midline, 0.5f);
             Penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
         }
 
@@ -87,13 +87,6 @@ namespace PhysiXEngine
             ContactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
         }
 
-        public void BoxAndSphere()
-        {
-            Box box = (Box)body[0];
-            Sphere sphere = (Sphere)body[1];
-            
-        }
-
         public void BoxHalfSpace()
         {
             Box box = (Box)body[0];
@@ -106,14 +99,15 @@ namespace PhysiXEngine
             // Go through each combination of + and - for each half-size
             /*double[,] mults = new double[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
                                        {1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}};*/
-            
-            for (int i = 0; i < 8; i++) {
+
+            for (int i = 0; i < 8; i++)
+            {
 
                 // Calculate the position of each vertex
                 //Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
                 Vector3 vertexPos;
                 vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
-                
+
                 //vertexPos = box.transform.transform(vertexPos);
 
                 ///>BoxPlaneTestOne
@@ -127,7 +121,7 @@ namespace PhysiXEngine
                     // plane - we multiply the direction by half the separation 
                     // distance and add the vertex location.
                     ContactPoint = plane.direction;
-                    ContactPoint = Vector3.Multiply(ContactPoint,(float)(vertexDistance - plane.offset));
+                    ContactPoint = Vector3.Multiply(ContactPoint, (float)(vertexDistance - plane.offset));
                     ContactPoint += vertexPos;
                     ContactNormal = plane.direction;
                     Penetration = plane.offset - vertexDistance;
@@ -226,8 +220,8 @@ namespace PhysiXEngine
 
             // Make a matrix from the three vectors.
             ContactToWorld = Matrix.CreateWorld(ContactNormal, contactTangent[0], contactTangent[1]);
-            
-            
+
+
             //return new axis
         }
 
@@ -248,7 +242,7 @@ namespace PhysiXEngine
             // Check each axis looking for the axis on which the penetration is least deep.
 
             #region X axis
-            float minDepth = box.Position.X / 2 - Math.Abs(pointToBoxCor.X);
+            float minDepth = box.HalfSize.X - Math.Abs(pointToBoxCor.X);
 
             if (minDepth < 0)
                 return false;
@@ -256,7 +250,7 @@ namespace PhysiXEngine
             normal = box.GetAxis(0) * ((pointToBoxCor.X < 0) ? -1 : 1);
             #endregion
             #region Y axis
-            float depth = box.Position.Y / 2 - Math.Abs(pointToBoxCor.Y);
+            float depth = box.HalfSize.Y - Math.Abs(pointToBoxCor.Y);
 
             if (depth < 0)
                 return false;
@@ -268,7 +262,7 @@ namespace PhysiXEngine
                 }
             #endregion
             #region Z axis
-            depth = box.Position.Z - Math.Abs(pointToBoxCor.Z);
+            depth = box.HalfSize.Z - Math.Abs(pointToBoxCor.Z);
 
             if (depth < 0)
                 return false;
@@ -294,7 +288,52 @@ namespace PhysiXEngine
             return true;
         }
 
+        public int BoxAndSphere(Box box, Sphere sphere)
+        {
+            // Transform the centre of the sphere into box coordinates
+  
+            Vector3 spherToBoxCor =Vector3.Transform(sphere.GetAxis(3),Matrix.Invert(box.TransformMatrix));
 
+            // Early out check to see if we can exclude the contact
+            if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X ||Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
+                return 0;
+
+            Vector3 closestPt=new Vector3();
+            float dist;
+
+            // Clamp each coordinate to the box.
+            dist = spherToBoxCor.X;
+            if (dist > box.HalfSize.X) dist = box.HalfSize.X;
+            if (dist < -box.HalfSize.X) dist = -box.HalfSize.X;
+            closestPt.X = dist;
+
+            dist = spherToBoxCor.Y;
+            if (dist > box.HalfSize.Y) dist = box.HalfSize.Y;
+            if (dist < -box.HalfSize.Y) dist = -box.HalfSize.Y;
+            closestPt.Y = dist;
+
+            dist = spherToBoxCor.Z;
+            if (dist > box.HalfSize.Z) dist = box.HalfSize.Z;
+            if (dist < -box.HalfSize.Z) dist = -box.HalfSize.Z;
+            closestPt.Z = dist;
+
+            // Check we're in contact
+            dist = (closestPt - spherToBoxCor).squareMagnitude();
+            if (dist > sphere.radius * sphere.radius) return 0;
+
+            // Compile the contact
+            Vector3 closestPtWorld = box.transform.transform(closestPt);
+
+            Contact* contact = data->contacts;
+            contact->contactNormal = (closestPtWorld - centre);
+            contact->contactNormal.normalise();
+            contact->contactPoint = closestPtWorld;
+            contact->penetration = sphere.radius - real_sqrt(dist);
+            contact->setBodyData(box.body, sphere.body,
+                data->friction, data->restitution);
+
+            data->addContacts(1);
+            return 1;
+        }
     }
-
 }

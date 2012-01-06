@@ -17,8 +17,10 @@ namespace PhysiXEngine.Helpers
                     return new Vector3(matrix.M11,matrix.M21,matrix.M31);
                 case 1:
                     return new Vector3(matrix.M12, matrix.M22, matrix.M32);
-                case 3:
+                case 2:
                     return new Vector3(matrix.M13, matrix.M23, matrix.M33);
+                case 3:
+                    return new Vector3(matrix.M14, matrix.M24, matrix.M34);
                 default:
                     return new Vector3();
             }

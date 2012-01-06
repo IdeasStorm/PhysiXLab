@@ -201,5 +201,15 @@ namespace PhysiXEngine
         {
             InertiaTensor.setInertiaTensorCoeffs(ix, iy, iz, ixy, ixz, iyz);
         }
+
+        /// <summary>
+        /// gets a vector of an axis by index (from 0 to 2)      
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Vector3 GetAxis(int index)
+        {
+            return TransformMatrix.GetAxisVector(index);
+        }
     }
 }
