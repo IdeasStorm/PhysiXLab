@@ -27,13 +27,14 @@ namespace PhysiXEngine
 
         public override void Update(float duration)
         {
+            frameDuration = duration;
             foreach (Body body in bodies)
             {
                 Affect(body);
             }
         }
 
-        public abstract void Affect(Body other);
+        protected abstract void Affect(Body other);
         
     }
 }
