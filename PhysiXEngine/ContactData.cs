@@ -288,8 +288,21 @@ namespace PhysiXEngine
             return true;
         }
 
-        public int BoxAndSphere(Box box, Sphere sphere)
+        public int BoxAndSphere()
         {
+            Box box;
+            Sphere sphere;
+            if (body[0] is Box)
+            {
+                box = (Box)body[0];
+                sphere = (Sphere)body[1];
+            }
+            else
+            {
+                box = (Box)body[1];
+                sphere = (Sphere)body[0];
+            }
+            
             // Transform the centre of the sphere into box coordinates
   
             Vector3 spherToBoxCor =Vector3.Transform(sphere.GetAxis(3),Matrix.Invert(box.TransformMatrix));
@@ -317,22 +330,22 @@ namespace PhysiXEngine
             if (dist < -box.HalfSize.Z) dist = -box.HalfSize.Z;
             closestPt.Z = dist;
 
-            // Check we're in contact
-            dist = (closestPt - spherToBoxCor).squareMagnitude();
-            if (dist > sphere.radius * sphere.radius) return 0;
+            //// Check we're in contact
+            //dist = (closestPt - spherToBoxCor).squareMagnitude();
+            //if (dist > sphere.radius * sphere.radius) return 0;
 
-            // Compile the contact
-            Vector3 closestPtWorld = box.transform.transform(closestPt);
+            //// Compile the contact
+            //Vector3 closestPtWorld = box.transform.transform(closestPt);
 
-            Contact* contact = data->contacts;
-            contact->contactNormal = (closestPtWorld - centre);
-            contact->contactNormal.normalise();
-            contact->contactPoint = closestPtWorld;
-            contact->penetration = sphere.radius - real_sqrt(dist);
-            contact->setBodyData(box.body, sphere.body,
-                data->friction, data->restitution);
+            //Contact* contact = data->contacts;
+            //contact->contactNormal = (closestPtWorld - centre);
+            //contact->contactNormal.normalise();
+            //contact->contactPoint = closestPtWorld;
+            //contact->penetration = sphere.radius - real_sqrt(dist);
+            //contact->setBodyData(box.body, sphere.body,
+            //    data->friction, data->restitution);
 
-            data->addContacts(1);
+            //data->addContacts(1);
             return 1;
         }
     }
