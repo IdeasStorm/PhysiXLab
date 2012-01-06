@@ -288,7 +288,7 @@ namespace PhysiXEngine
             return true;
         }
 
-        public int BoxAndSphere()
+        public bool BoxAndSphere()
         {
             Box box;
             Sphere sphere;
@@ -303,13 +303,15 @@ namespace PhysiXEngine
                 sphere = (Sphere)body[0];
             }
             
-            // Transform the centre of the sphere into box coordinates
-  
+            // Transform the centre of the sphere into box coordinates  
+            Vector3 centre = sphere.GetAxis(3);
+            //TODO not sure !!
             Vector3 spherToBoxCor =Vector3.Transform(sphere.GetAxis(3),Matrix.Invert(box.TransformMatrix));
+            // cpp statement 
 
             // Early out check to see if we can exclude the contact
             if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X ||Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
-                return 0;
+                return false;
 
             Vector3 closestPt=new Vector3();
             float dist;
@@ -330,23 +332,24 @@ namespace PhysiXEngine
             if (dist < -box.HalfSize.Z) dist = -box.HalfSize.Z;
             closestPt.Z = dist;
 
-            //// Check we're in contact
-            //dist = (closestPt - spherToBoxCor).squareMagnitude();
-            //if (dist > sphere.radius * sphere.radius) return 0;
+            // Check we're in contact
+            dist = (closestPt - spherToBoxCor).Length();
+            dist *= dist;
 
-            //// Compile the contact
-            //Vector3 closestPtWorld = box.transform.transform(closestPt);
+            if (dist > sphere.radius * sphere.radius)
+                return false;
 
-            //Contact* contact = data->contacts;
-            //contact->contactNormal = (closestPtWorld - centre);
-            //contact->contactNormal.normalise();
-            //contact->contactPoint = closestPtWorld;
-            //contact->penetration = sphere.radius - real_sqrt(dist);
-            //contact->setBodyData(box.body, sphere.body,
-            //    data->friction, data->restitution);
+            Vector3 closestPtWorld = Vector3.Transform(closestPt,box.TransformMatrix);
+            
+            ContactNormal = (closestPtWorld - centre);
+            ContactNormal.Normalize();
+            ContactPoint = closestPtWorld;
+            Penetration = sphere.radius - Math.Sqrt(dist);
 
-            //data->addContacts(1);
-            return 1;
+            //TOdo
+            //restitution = TODO;
+            //friction    = TODO;
+            return true;
         }
     }
 }
