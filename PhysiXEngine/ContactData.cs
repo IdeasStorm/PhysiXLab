@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
+    using PhysiXEngine.Helpers;
     public class ContactData
     {
         /**
@@ -137,9 +138,28 @@ namespace PhysiXEngine
 
         public void BoxAndBox()
         {
-            Box box = (Box)body[0];
-            Plane sphere = (Plane)body[1];
+            Box box1 = (Box)body[0];
+            Box box2 = (Box)body[1];
 
+            Vector3 midLine = box2.Position - box1.Position;
+
+            Matrix adn=new Matrix();
+            adn.getAxisVector(3);
+
+        }
+
+        /// <summary>
+        /// Todo write a summry abou this method :)
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="axis"></param>
+        /// <returns></returns>
+        public float transformToAxis(Box box, Vector3 axis)
+        {
+            return
+            box.HalfSize.X * Vector3.Dot(axis, box.TransformMatrix.getAxisVector(0)) +
+            box.HalfSize.Y * Vector3.Dot(axis, box.TransformMatrix.getAxisVector(1)) +
+            box.HalfSize.Z * Vector3.Dot(axis, box.TransformMatrix.getAxisVector(2));
         }
 
         /// <summary>
