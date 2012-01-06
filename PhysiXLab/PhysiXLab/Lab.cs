@@ -50,7 +50,7 @@ namespace PhysiXLab
             dummy = new Ball(10f);
             //dummy.InverseMass = 0;
             //dummy.InverseInertiaTensor = new Matrix3();
-            spring = new Spring(dummy, dummy.Position, 0.3f, 20.0f);
+            //spring = new Spring(ball, dummy, dummy.Position, 0.3f, 20.0f);
             //spring.AddBody(ball);
             g = new Gravity(Vector3.Down * 10f);
             g.AddBody(ball);
@@ -112,10 +112,12 @@ namespace PhysiXLab
                     balls.AddLast(b);
                     b.Position = new Vector3(0, -100f, 0);
                     //b.AddForce(new Vector3(10f, 5f, 0));
-                    spring.AddBody(b);
+                    //spring.AddBody(b);
+                    spring = new Spring(b, dummy, dummy.Position, 0.3f, 20f);
                 }
                 g.Update(duration);
-                spring.Update(duration);
+                if (spring != null)
+                    spring.Update(duration);
                 // TODO: Add your update logic here
                 ball.Update(duration);
                 dummy.Update(duration);
