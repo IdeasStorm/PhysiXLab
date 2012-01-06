@@ -35,7 +35,7 @@ namespace PhysiXEngine
         /// Applies the drag force to the given particle.
         /// </summary>
         /// <param name="body"></param>
-        public override void Affect(Body body)
+        protected override void Affect(Body body)
         {
             //TODO add affect Code
         }

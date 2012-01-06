@@ -41,12 +41,8 @@ namespace PhysiXEngine
             this.restLength = restLength;
         }
 
-        public override void Affect(Body other)
-        {
-        }
-
         /** Applies the spring force to the given rigid body. */
-        public override void Affect(Body body, float duration)
+        protected override void Affect(Body body)
         {
             // Calculate the two ends in world space
             Vector3 lws = body.GetPointInWorldSpace(connectionPoint);
