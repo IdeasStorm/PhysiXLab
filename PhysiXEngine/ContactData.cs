@@ -342,29 +342,79 @@ namespace PhysiXEngine
             return true;
         }
 
-        public bool BoxAndBox()
+        private bool tryAxis(Box one, Box two, Vector3 axis, Vector3 toCentre, UInt32 index,
+            // These values may be updated
+            ref float smallestPenetration, ref UInt32 smallestCase)
+        {
+            float penetration = penetrationOnAxis(one, two, axis, toCentre);
+            if (penetration < 0) return false;
+            if (penetration < smallestPenetration) {
+                smallestPenetration = penetration;
+                smallestCase = index;
+            }
+            return true;
+        }
+
+        public ulong BoxAndBox()
         {
             Box one = (Box)body[0];
             Box two = (Box)body[1];
 
-            Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
+            Vector3 toCentre = two.Position - one.Position;
+            // We start assuming there is no contact
+            float pen = float.MaxValue;
+            UInt32 best = 0xffffff;
+            for (int i = 0; i < 3; i++)
+            {
+                if (!tryAxis(one, two, one.GetAxis(i), toCentre, (UInt32)i, ref pen, ref best))
+                    return 0;
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!tryAxis(one, two, two.GetAxis(i), toCentre, (UInt32)i, ref pen, ref best))
+                    return 0;
+            }
+
+            // Store the best axis-major, in case we run into almost
+            // parallel edge collisions later
+            UInt32 bestSingleAxis = best;
+
+            for (int i = 0, j = 0, k = 0, w = 6; w < 15; i++, k++, w++)
+            {
+                if (i % 3 == 0 && i != 0)
+                {
+                    j++;
+                    j = 0;
+                }
+                if (!tryAxis(one, two, Vector3.Cross(one.GetAxis(j), two.GetAxis(k)),
+                    toCentre, (UInt32)w, ref pen, ref best))
+                    return 0;
+            }
             
-            return true;
+            return 0;
         }
 
         public static float penetrationOnAxis(Box one, Box two, Vector3 axis, Vector3 toCentre)
         {
             // Project the half-size of one onto axis
-            //float oneProject = transformToAxis(one, axis);
-            //float twoProject = transformToAxis(two, axis);
+            float oneProject = transformToAxis(one, axis);
+            float twoProject = transformToAxis(two, axis);
 
             // Project this onto the axis
-            float distance = Math.Abs(Vector3.Dot(toCentre,axis));
+            float distance = Math.Abs(Vector3.Dot(toCentre, axis));
 
             // Return the overlap (i.e. positive indicates
             // overlap, negative indicates separation).
-            //return oneProject + twoProject - distance;
-            return 0;
+            return oneProject + twoProject - distance;
+        }
+
+        private static float transformToAxis(Box box, Vector3 axis)
+        {
+            return 
+                box.HalfSize.X * Math.Abs(Vector3.Dot(axis,box.GetAxis(0))) +
+                box.HalfSize.Y * Math.Abs(Vector3.Dot(axis, box.GetAxis(1))) +
+                box.HalfSize.Z * Math.Abs(Vector3.Dot(axis, box.GetAxis(2)));
         }
 
         public void InitializeAtMoment(float duration)
