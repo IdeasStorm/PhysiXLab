@@ -143,9 +143,6 @@ namespace PhysiXEngine
 
             Vector3 midLine = box2.Position - box1.Position;
 
-            Matrix adn=new Matrix();
-            adn.getAxisVector(3);
-
         }
 
         /// <summary>
@@ -154,12 +151,32 @@ namespace PhysiXEngine
         /// <param name="box"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public float transformToAxis(Box box, Vector3 axis)
+        public float TransformToAxis(Box box, Vector3 axis)
         {
             return
-            box.HalfSize.X * Vector3.Dot(axis, box.TransformMatrix.getAxisVector(0)) +
-            box.HalfSize.Y * Vector3.Dot(axis, box.TransformMatrix.getAxisVector(1)) +
-            box.HalfSize.Z * Vector3.Dot(axis, box.TransformMatrix.getAxisVector(2));
+            box.HalfSize.X * Math.Abs(Vector3.Dot(axis, box.GetAxis(0))) +
+            box.HalfSize.Y * Math.Abs(Vector3.Dot(axis, box.GetAxis(1))) +
+            box.HalfSize.Z * Math.Abs(Vector3.Dot(axis, box.GetAxis(2)));
+        }
+
+        /// <summary>
+        ///  return true if the two boxes are overlaping in each other
+        /// </summary>
+        /// <param name="one"></param>
+        /// <param name="two"></param>
+        /// <param name="axis"></param>
+        /// <returns></returns>
+        bool OverlapOnAxis(Box one, Box two, Vector3 axis)
+        {
+            // Project the half-size of one onto axis.
+            float oneProject = TransformToAxis(one, axis);
+            float twoProject = TransformToAxis(two, axis);
+            // Find the vector between the two centers.
+            Vector3 toCenter = two.GetAxis(3) - one.GetAxis(3);
+            // Project this onto the axis.
+            float distance = Vector3.Dot(toCenter, axis);
+            // Check for overlap.
+            return (distance < oneProject + twoProject);
         }
 
         /// <summary>
@@ -213,6 +230,70 @@ namespace PhysiXEngine
             
             //return new axis
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool BoxAndPoint(Box box, Vector3 point)
+        {
+            // Transform the point into box coordinates.
+
+            Vector3 pointToBoxCor = Vector3.Transform(point, Matrix.Invert(box.TransformMatrix));
+
+            Vector3 normal;
+
+            // Check each axis looking for the axis on which the penetration is least deep.
+
+            #region X axis
+            float minDepth = box.Position.X / 2 - Math.Abs(pointToBoxCor.X);
+
+            if (minDepth < 0)
+                return false;
+
+            normal = box.GetAxis(0) * ((pointToBoxCor.X < 0) ? -1 : 1);
+            #endregion
+            #region Y axis
+            float depth = box.Position.Y / 2 - Math.Abs(pointToBoxCor.Y);
+
+            if (depth < 0)
+                return false;
+            else
+                if (depth < minDepth)
+                {
+                    minDepth = depth;
+                    normal = box.GetAxis(1) * ((pointToBoxCor.Y < 0) ? -1 : 1);
+                }
+            #endregion
+            #region Z axis
+            depth = box.Position.Z - Math.Abs(pointToBoxCor.Z);
+
+            if (depth < 0)
+                return false;
+            else if (depth < minDepth)
+            {
+                minDepth = depth;
+                normal = box.GetAxis(2) * ((pointToBoxCor.Z < 0) ? -1 : 1);
+            }
+            #endregion
+
+            //filling data
+            ContactNormal = normal;
+            ContactPoint = point;
+            Penetration = minDepth;
+
+            body[0] = box;
+
+            body[1] = null;
+
+            //TOdo
+            //restitution = TODO;
+            //friction    = TODO;
+            return true;
+        }
+
 
     }
 

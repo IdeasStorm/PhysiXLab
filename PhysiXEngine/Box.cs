@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
+    using PhysiXEngine.Helpers;
     public class Box : Collidable
     {
         public Vector3 HalfSize { get; private set; }
@@ -36,6 +37,16 @@ namespace PhysiXEngine
         public override Boolean CollidesWith(Collidable other)
         {
             return false;
+        }
+
+        /// <summary>
+        /// gets a vector of an axis by index (from 0 to 2)      
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Vector3 GetAxis(int index)
+        {
+            return TransformMatrix.GetAxisVector(index);
         }
     }
 }

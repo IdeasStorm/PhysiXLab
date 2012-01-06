@@ -9,7 +9,7 @@ namespace PhysiXEngine.Helpers
 {
     public static class ExtensionMethods
     {
-        public static Vector3 getAxisVector(this Matrix matrix,int index)
+        public static Vector3 GetAxisVector(this Matrix matrix,int index)
         {
             switch (index)
             {
