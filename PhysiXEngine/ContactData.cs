@@ -130,15 +130,6 @@ namespace PhysiXEngine
             }
         }
 
-        public void BoxAndBox()
-        {
-            Box box1 = (Box)body[0];
-            Box box2 = (Box)body[1];
-
-            Vector3 midLine = box2.Position - box1.Position;
-
-        }
-
         /// <summary>
         /// Todo write a summry abou this method :)
         /// </summary>
