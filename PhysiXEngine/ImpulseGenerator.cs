@@ -34,7 +34,7 @@ namespace PhysiXEngine
         /// <param name="time"></param>
         public override void Update(float time)
         {
-            duration = time;
+            frameDuration = time;
             foreach (ContactData contactData in contactDataLinkedList)
             {
                 Affect(contactData);
@@ -60,11 +60,11 @@ namespace PhysiXEngine
 
             // NewVelocityCalculation
             // Calculate the acceleration induced velocity accumulated this frame
-            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.ContactNormal) * duration ;
+            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.ContactNormal) * frameDuration ;
 
             if (body2 != null)
             {
-                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, contactData.ContactNormal) * duration;
+                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, contactData.ContactNormal) * frameDuration;
             }
 
             // If the velocity is very slow, limit the restitution

@@ -8,7 +8,7 @@ namespace PhysiXEngine
 {
     public abstract class Effect
     {
-        protected float duration;
+        protected float frameDuration;
 
         public abstract void Update(float time);
 
