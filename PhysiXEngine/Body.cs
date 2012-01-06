@@ -24,6 +24,10 @@ namespace PhysiXEngine
                 _inverseMass = value;
             }
         }
+
+        /// <summary>
+        /// the Mass of the body in Kg
+        /// </summary>
         public float Mass 
         {
             get { return 1.0f / _inverseMass; }
@@ -50,6 +54,18 @@ namespace PhysiXEngine
         /// warning : this is in the body space
         /// </summary>
         public Matrix3 InverseInertiaTensor { get; protected set; }
+
+        public Matrix3 InertiaTensor 
+        {
+            get
+            {
+                return InverseInertiaTensor.inverse();
+            }
+            set
+            {
+                InverseInertiaTensor.setInverse(value);
+            }
+        }
 
         /// <summary>
         /// holds the inertia (independent of the axis)
@@ -173,7 +189,7 @@ namespace PhysiXEngine
         protected void setInertiaTensorCoeffs(float ix, float iy, float iz,
             float ixy = 0, float ixz = 0, float iyz = 0)
         {
-            InverseInertiaTensor.setInertiaTensorCoeffs(ix, iy, iz, ixy, ixz, iyz);
+            InertiaTensor.setInertiaTensorCoeffs(ix, iy, iz, ixy, ixz, iyz);
         }
     }
 }
