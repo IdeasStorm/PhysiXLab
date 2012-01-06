@@ -9,7 +9,7 @@ namespace PhysiXEngine
     public class ContactGenerator : Effect
     {
         protected LinkedList<ContactData> contactDataLinkedList;
-        protected Vector3 deltaVelocity;
+        static float velocityLimit = 0.25f;
 
         public ContactGenerator()
         {
@@ -19,7 +19,6 @@ namespace PhysiXEngine
         public void AddContactData(ContactData contactdata)
         {
             contactDataLinkedList.AddLast(contactdata);
-            deltaVelocity = new Vector3();
         }
 
         public void ClearContactData()
@@ -43,18 +42,21 @@ namespace PhysiXEngine
 
         public void Affect(ContactData contactData)
         {
+            // Calculating Desired Delta Velocity
+            contactData.InitializeAtMoment(frameDuration);
+            Vector3 deltaVelocity = calculateDeltaVelocity(contactData);
+
 
         }
 
         /// <summary>
         /// Calculates and sets the internal value for the delta velocity.
         /// </summary>
-        /// <param name="duration"></param>
-        public void calculateDeltaVelocity(ContactData contactData)
+        /// <param name="contactData">the contact Data that contains the bodies and contct informations</param>
+        public Vector3 calculateDeltaVelocity(ContactData contactData)
         {
-            //Temp ***************
-            Body body1=new Body();
-            Body body2=new Body();
+            Body body1 = contactData.body[0];
+            Body body2 = contactData.body[1];
 
             const float velocityLimit = (float)0.25f;
 
@@ -76,8 +78,11 @@ namespace PhysiXEngine
 
             // Combine the bounce velocity with the removed
             // acceleration velocity.
+            Vector3 deltaVelocity = new Vector3(0);
             deltaVelocity.X = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
-            ///<NewVelocityCalculation            
+            return deltaVelocity;
         }
+
+
     }
 }

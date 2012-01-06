@@ -14,7 +14,7 @@ namespace PhysiXEngine
          * Holds the bodies that are involved in the contact. The
          * second of these can be NULL, for contacts with the scenery.
          */
-        private Collidable[] body = new Collidable[2];
+        public Collidable[] body = new Collidable[2];
 
         /**
          * Holds the position of the contact in world coordinates.
@@ -33,12 +33,13 @@ namespace PhysiXEngine
          */
         public double Penetration { get; protected set; }
 
-        public Matrix ContactToWorld { get; private set; }
+        public Matrix3 ContactToWorld { get; private set; }
 
         public float restitution { get; protected set; }
         public Vector3 contactVelocity { get; protected set; }
         //TODO remoce the var above me
 
+        private Vector3[] relativeContactPosition = new Vector3[2];
 
         public ContactData(Collidable firstBody, Collidable secondBody)
         {
@@ -219,8 +220,7 @@ namespace PhysiXEngine
             }
 
             // Make a matrix from the three vectors.
-            ContactToWorld = Matrix.CreateWorld(ContactNormal, contactTangent[0], contactTangent[1]);
-
+            ContactToWorld.setComponents(ContactNormal, contactTangent[0], contactTangent[1]);
 
             //return new axis
         }
@@ -347,6 +347,65 @@ namespace PhysiXEngine
 
             //data->addContacts(1);
             return 1;
+        }
+
+        public void InitializeAtMoment(float duration)
+        {
+            // Check if the first object is NULL, and swap if it is.
+            if (body[0] == null)
+            {
+                body[0] = body[1];
+                body[1] = null;
+            }
+            //assert(body[0]);
+            //TODO check what is assert really doing
+
+            // Calculate an set of axis at the contact point.
+            calculateContactBasis();
+
+            // Store the relative position of the contact relative to each body
+            relativeContactPosition[0] = ContactPoint - body[0].Position;
+            if (body[1] != null) {
+                relativeContactPosition[1] = ContactPoint - body[1].Position;
+            }
+
+            // Find the relative velocity of the bodies at the contact point.
+            contactVelocity = calculateLocalVelocity(0, duration);
+            if (body[1] != null) {
+                contactVelocity -= calculateLocalVelocity(1, duration);
+            }
+
+            // will Calculate the desired change in velocity for resolution after this method in ContactGenerator Class
+        }
+
+        Vector3 calculateLocalVelocity(int bodyIndex,float duration)
+        {
+            Body thisBody= body[bodyIndex];
+
+            // Work out the velocity of the contact point.
+            Vector3 velocity = Vector3.Cross(thisBody.Rotation , relativeContactPosition[bodyIndex]);
+            velocity += thisBody.Velocity;
+
+            // Turn the velocity into contact-coordinates.
+            Vector3 contactVelocity = ContactToWorld.transformTranspose(velocity);
+
+            // Calculate the ammount of velocity that is due to forces without
+            // reactions.
+            Vector3 accVelocity = thisBody.LastFrameAcceleration * duration;
+
+            // Calculate the velocity in contact-coordinates.
+            accVelocity = ContactToWorld.transformTranspose(accVelocity);
+
+            // We ignore any component of acceleration in the contact normal 
+            // direction, we are only interested in planar acceleration
+            accVelocity.X = 0;
+
+            // Add the planar velocities - if there's enough friction they will 
+            // be removed during velocity resolution
+            contactVelocity += accVelocity;
+
+            // And return it
+            return contactVelocity;
         }
     }
 }
