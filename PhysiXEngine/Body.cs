@@ -143,12 +143,7 @@ namespace PhysiXEngine
 
         public Vector3 GetPointInWorldSpace(Vector3 point)
         {
-            //TODO return Point in world Space
-            return point;
-            
-            //(*this) * vector;
-            //return Vector3.Multiply(;
-            //return TransformMatrix * point;
+            return Vector3.Transform(point, TransformMatrix);            
         }
 
         public void AddForceAtPoint(Vector3 force, Vector3 point)
