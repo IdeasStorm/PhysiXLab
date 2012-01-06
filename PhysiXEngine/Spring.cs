@@ -14,12 +14,6 @@ namespace PhysiXEngine
          */
         public Vector3 otherConnectionPoint { get; private set; }
 
-        /** The particle at the first end of the spring. */
-        public Body first { get; private set; }
-
-        /** The particle at the other end of the spring. */
-        public Body other { get; private set; }
-
         /** Holds the sprint constant. */
         public float springConstant { get; private set; }
 
@@ -28,10 +22,13 @@ namespace PhysiXEngine
 
         /** Creates a new spring with the given parameters. */
         public Spring(Body first, Body other, Vector3 otherConnectionPoint,
-            float springConstant, float restLength) : base(first, other)
+            float springConstant, float restLength) : 
+            base(
+            /** The particle at the first end of the spring. */
+            first,
+            /** The particle at the other end of the spring. */
+            other)
         {
-            this.first = first;
-            this.other = other;
             this.otherConnectionPoint = otherConnectionPoint;
             this.springConstant = springConstant;
             this.restLength = restLength;
@@ -41,8 +38,8 @@ namespace PhysiXEngine
         protected override void Affect()
         {
             // Calculate the two ends in world space
-            Vector3 lws = first.GetPointInWorldSpace(first.Position);
-            Vector3 ows = other.GetPointInWorldSpace(other.Position);
+            Vector3 lws = bodys[0].GetPointInWorldSpace(bodys[0].Position);
+            Vector3 ows = bodys[1].GetPointInWorldSpace(bodys[1].Position);
 
             // Calculate the vector of the spring
             Vector3 force = lws - ows;
@@ -55,9 +52,9 @@ namespace PhysiXEngine
             // Calculate the final force and apply it
             force.Normalize();
             Vector3 secondforce = force * -magnitude;
-            first.AddForce(secondforce, lws);
+            bodys[0].AddForce(secondforce, lws);
             force *= magnitude;
-            other.AddForce(force, ows);
+            bodys[1].AddForce(force, ows);
         }
     }
 }

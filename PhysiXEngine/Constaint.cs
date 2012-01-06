@@ -8,10 +8,11 @@ namespace PhysiXEngine
 {
     public abstract class Constaint : Effect
     {
-        Body[] bodys = new Body[2];
+        public Body[] bodys { get; protected set; }
 
         public Constaint(Body firstBody, Body SecondBody)
         {
+            bodys = new Body[2];
             this.bodys[0] = firstBody;
             this.bodys[1] = SecondBody;
         }
