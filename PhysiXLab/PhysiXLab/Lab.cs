@@ -24,6 +24,7 @@ namespace PhysiXLab
         Ball ball;
         Ball dummy;
         Gravity g;
+        Spring spring;
         public Camera camera { get; protected set; }
 
         public Lab()
@@ -44,9 +45,9 @@ namespace PhysiXLab
             camera = new Camera(this, new Vector3(0, 0, 100),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
-
             ball = new Ball(10f);
             dummy = new Ball(10f);
+            spring = new Spring(Vector3.Zero, ball, dummy.Position, 0.3f, 20.0f);
             g = new Gravity(Vector3.Down * 0.01f);
             g.AddBody(ball);
             //TODO determine which is down for the world
@@ -107,7 +108,7 @@ namespace PhysiXLab
                     b.AddForce(new Vector3(2f, 1f, 0));
                 }
                 g.Update(gameTime.ElapsedGameTime.Milliseconds);
-
+                spring.Update(gameTime.ElapsedGameTime.Milliseconds);
                 // TODO: Add your update logic here
                 ball.Update(gameTime.ElapsedGameTime.Milliseconds);
                 foreach (Ball b in balls)
