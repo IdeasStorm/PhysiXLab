@@ -18,7 +18,7 @@ namespace PhysiXLab
     /// </summary>
     public class Lab : Microsoft.Xna.Framework.Game
     {
-        bool paused = true;
+        bool paused = false;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         LinkedList<Ball> balls = new LinkedList<Ball>();
@@ -49,10 +49,10 @@ namespace PhysiXLab
             ball = new Ball(10f);
             dummy = new Ball(10f);
             dummy.InverseMass = 0;
-            dummy.InverseInertiaTensor = new Matrix3();
-            spring = new Spring(Vector3.Zero, dummy, dummy.Position, 0.3f, 20.0f);
-            spring.AddBody(ball);
-            g = new Gravity(Vector3.Down * 10f);
+            //dummy.InverseInertiaTensor = new Matrix3();
+            spring = new Spring(dummy, dummy.Position, 0.3f, 20.0f);
+            //spring.AddBody(ball);
+            g = new Gravity(Vector3.Down * 0.01f);
             g.AddBody(ball);
             //TODO determine which is down for the world
             //BoundingSphereRenderer.InitializeGraphics(GraphicsDevice, 10^100);
@@ -111,6 +111,8 @@ namespace PhysiXLab
                     g.AddBody(b);
                     balls.AddLast(b);
                     b.AddForce(new Vector3(10f, 5f, 0));
+                    b.Position = new Vector3(0, -100f, 0);
+                    spring.AddBody(b);
                 }
                 g.Update(duration);
                 spring.Update(duration);

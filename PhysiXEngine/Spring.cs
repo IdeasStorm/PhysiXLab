@@ -9,12 +9,6 @@ namespace PhysiXEngine
     public class Spring : ForceGenerator
     {
         /**
-         * The point of connection of the spring, in local
-         * coordinates.
-         */
-        public Vector3 connectionPoint { get; private set; }
-
-        /**
          * The point of connection of the spring to the other object,
          * in that object's local coordinates.
          */
@@ -30,11 +24,9 @@ namespace PhysiXEngine
         public float restLength { get; private set; }
 
         /** Creates a new spring with the given parameters. */
-        public Spring(Vector3 localConnectionPoint, Body other,
-               Vector3 otherConnectionPoint, float springConstant,
-               float restLength)
+        public Spring(Body other, Vector3 otherConnectionPoint,
+            float springConstant, float restLength)
         {
-            this.connectionPoint = localConnectionPoint;
             this.other = other;
             this.otherConnectionPoint = otherConnectionPoint;
             this.springConstant = springConstant;
@@ -45,7 +37,7 @@ namespace PhysiXEngine
         protected override void Affect(Body body)
         {
             // Calculate the two ends in world space
-            Vector3 lws = body.GetPointInWorldSpace(connectionPoint);
+            Vector3 lws = body.GetPointInWorldSpace(body.Position);
             Vector3 ows = other.GetPointInWorldSpace(otherConnectionPoint);
 
             // Calculate the vector of the spring
@@ -59,7 +51,7 @@ namespace PhysiXEngine
             // Calculate the final force and apply it
             force.Normalize();
             force *= -magnitude;
-            body.AddForceAtPoint(force, lws);
+            body.AddForce(force, lws);
         }
     }
 }
