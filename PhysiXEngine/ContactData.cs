@@ -278,68 +278,88 @@ namespace PhysiXEngine
             return true;
         }
 
-        public bool BoxAndSphere()
+        //public bool BoxAndSphere()
+        public void SphereAndBox()
         {
-            Box box;
-            Sphere sphere;
-            if (body[0] is Box)
-            {
-                box = (Box)body[0];
-                sphere = (Sphere)body[1];
-            }
-            else
-            {
-                box = (Box)body[1];
-                sphere = (Sphere)body[0];
-            }
+            Sphere sphere = (Sphere)body[0];
+            Box box = (Box)body[1];
+            //Sphere sphere;
+            //Box box;
+            //if (body[0] is Box)
+            //{
+                //box = (Box)body[0];
+                //sphere = (Sphere)body[1];
+            //}
+            //else
+            //{
+                //box = (Box)body[1];
+                //sphere = (Sphere)body[0];
+            //}
             
             // Transform the centre of the sphere into box coordinates  
             Vector3 centre = sphere.GetAxis(3);
             //TODO not sure !!
-            Vector3 spherToBoxCor =Vector3.Transform(sphere.GetAxis(3),Matrix.Invert(box.TransformMatrix));
+            //Vector3 spherToBoxCor = Vector3.Transform(sphere.GetAxis(3), Matrix.Invert(box.TransformMatrix));
+            Vector3 spherToBoxCor = Vector3.Transform(centre, Matrix.Invert(box.TransformMatrix));
+            
             // cpp statement 
 
+            /*
             // Early out check to see if we can exclude the contact
-            if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X ||Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
+            if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X || 
+                Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||
+                Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
                 return false;
+            */
 
-            Vector3 closestPt=new Vector3();
-            float dist;
+            //Vector3 closestPt = new Vector3();
+            Vector3 closestPt = Vector3.Zero;
+            float dist = 0f;
 
+            // Find the closest point in the box to the target 
+            //     point and generate the contact fromit
             // Clamp each coordinate to the box.
             dist = spherToBoxCor.X;
-            if (dist > box.HalfSize.X) dist = box.HalfSize.X;
-            if (dist < -box.HalfSize.X) dist = -box.HalfSize.X;
+            if (dist > box.HalfSize.X)
+                dist = box.HalfSize.X;
+            if (dist < -box.HalfSize.X)
+                dist = -box.HalfSize.X;
             closestPt.X = dist;
 
             dist = spherToBoxCor.Y;
-            if (dist > box.HalfSize.Y) dist = box.HalfSize.Y;
-            if (dist < -box.HalfSize.Y) dist = -box.HalfSize.Y;
+            if (dist > box.HalfSize.Y) 
+                dist = box.HalfSize.Y;
+            if (dist < -box.HalfSize.Y) 
+                dist = -box.HalfSize.Y;
             closestPt.Y = dist;
 
             dist = spherToBoxCor.Z;
-            if (dist > box.HalfSize.Z) dist = box.HalfSize.Z;
-            if (dist < -box.HalfSize.Z) dist = -box.HalfSize.Z;
+            if (dist > box.HalfSize.Z) 
+                dist = box.HalfSize.Z;
+            if (dist < -box.HalfSize.Z) 
+                dist = -box.HalfSize.Z;
             closestPt.Z = dist;
 
             // Check we're in contact
             dist = (closestPt - spherToBoxCor).Length();
-            dist *= dist;
-
+            dist = (float)Math.Pow(dist, 2);
+            
+            /*
             if (dist > sphere.radius * sphere.radius)
                 return false;
+            */
 
-            Vector3 closestPtWorld = Vector3.Transform(closestPt,box.TransformMatrix);
+            Vector3 closestPtWorld = Vector3.Transform(closestPt, box.TransformMatrix);
             
-            ContactNormal = (closestPtWorld - centre);
+            ContactNormal = closestPtWorld - centre;
             ContactNormal.Normalize();
             ContactPoint = closestPtWorld;
             Penetration = sphere.radius - Math.Sqrt(dist);
 
-            //TOdo
+            //TODO
             //restitution = TODO;
             //friction    = TODO;
-            return true;
+            //return true;
         }
 
         private bool tryAxis(Box one, Box two, Vector3 axis, Vector3 toCentre, UInt32 index,
