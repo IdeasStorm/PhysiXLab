@@ -222,21 +222,21 @@ namespace PhysiXEngine
         /// <param name="box"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        public bool BoxAndPoint(Box box, Vector3 point)
+        //public bool BoxAndPoint(Box box, Vector3 point)
+        public void BoxAndPoint(Box box, Vector3 point)
         {
             // Transform the point into box coordinates.
-
             Vector3 pointToBoxCor = Vector3.Transform(point, Matrix.Invert(box.TransformMatrix));
 
             Vector3 normal;
 
             // Check each axis looking for the axis on which the penetration is least deep.
-
             #region X axis
             float minDepth = box.HalfSize.X - Math.Abs(pointToBoxCor.X);
 
             if (minDepth < 0)
-                return false;
+                //return false;
+                return;
 
             normal = box.GetAxis(0) * ((pointToBoxCor.X < 0) ? -1 : 1);
             #endregion
@@ -244,19 +244,20 @@ namespace PhysiXEngine
             float depth = box.HalfSize.Y - Math.Abs(pointToBoxCor.Y);
 
             if (depth < 0)
-                return false;
-            else
-                if (depth < minDepth)
-                {
-                    minDepth = depth;
-                    normal = box.GetAxis(1) * ((pointToBoxCor.Y < 0) ? -1 : 1);
-                }
+                //return false;
+                return;
+            else if (depth < minDepth)
+            {
+                minDepth = depth;
+                normal = box.GetAxis(1) * ((pointToBoxCor.Y < 0) ? -1 : 1);
+            }
             #endregion
             #region Z axis
             depth = box.HalfSize.Z - Math.Abs(pointToBoxCor.Z);
 
             if (depth < 0)
-                return false;
+                //return false;
+                return;
             else if (depth < minDepth)
             {
                 minDepth = depth;
@@ -271,12 +272,15 @@ namespace PhysiXEngine
 
             body[0] = box;
 
+            // Note that we don’t know what rigid body the point
+            // belongs to, so we just use NULL. Where this is called
+            // this value can be left, or filled in.
             body[1] = null;
 
-            //TOdo
+            //TODO
             //restitution = TODO;
             //friction    = TODO;
-            return true;
+            //return true;
         }
 
         //public bool BoxAndSphere()
