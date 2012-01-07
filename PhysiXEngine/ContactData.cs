@@ -88,7 +88,7 @@ namespace PhysiXEngine
             ContactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
         }
 
-        public void BoxHalfSpace()
+        public void BoxAndHalfSpace()
         {
             Box box = (Box)body[0];
             Plane plane = (Plane)body[1];
@@ -107,8 +107,9 @@ namespace PhysiXEngine
                 // Calculate the position of each vertex
                 //Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
                 Vector3 vertexPos;
-                vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
-                vertexPos = Vector3.Transform(vertexPos, box.TransformMatrix);
+                //vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
+                //vertexPos = Vector3.Transform(vertexPos, box.TransformMatrix);
+                vertexPos = Vector3.Transform(cornars[i], box.TransformMatrix);
 
                 ///>BoxPlaneTestOne
                 // Calculate the distance from the plane
@@ -221,21 +222,21 @@ namespace PhysiXEngine
         /// <param name="box"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        public bool BoxAndPoint(Box box, Vector3 point)
+        //public bool BoxAndPoint(Box box, Vector3 point)
+        public void BoxAndPoint(Box box, Vector3 point)
         {
             // Transform the point into box coordinates.
-
             Vector3 pointToBoxCor = Vector3.Transform(point, Matrix.Invert(box.TransformMatrix));
 
             Vector3 normal;
 
             // Check each axis looking for the axis on which the penetration is least deep.
-
             #region X axis
             float minDepth = box.HalfSize.X - Math.Abs(pointToBoxCor.X);
 
             if (minDepth < 0)
-                return false;
+                //return false;
+                return;
 
             normal = box.GetAxis(0) * ((pointToBoxCor.X < 0) ? -1 : 1);
             #endregion
@@ -243,19 +244,20 @@ namespace PhysiXEngine
             float depth = box.HalfSize.Y - Math.Abs(pointToBoxCor.Y);
 
             if (depth < 0)
-                return false;
-            else
-                if (depth < minDepth)
-                {
-                    minDepth = depth;
-                    normal = box.GetAxis(1) * ((pointToBoxCor.Y < 0) ? -1 : 1);
-                }
+                //return false;
+                return;
+            else if (depth < minDepth)
+            {
+                minDepth = depth;
+                normal = box.GetAxis(1) * ((pointToBoxCor.Y < 0) ? -1 : 1);
+            }
             #endregion
             #region Z axis
             depth = box.HalfSize.Z - Math.Abs(pointToBoxCor.Z);
 
             if (depth < 0)
-                return false;
+                //return false;
+                return;
             else if (depth < minDepth)
             {
                 minDepth = depth;
@@ -270,129 +272,99 @@ namespace PhysiXEngine
 
             body[0] = box;
 
+            // Note that we don’t know what rigid body the point
+            // belongs to, so we just use NULL. Where this is called
+            // this value can be left, or filled in.
             body[1] = null;
 
-            //TOdo
+            //TODO
             //restitution = TODO;
             //friction    = TODO;
-            return true;
+            //return true;
         }
 
-        public bool BoxAndSphere()
+        //public bool BoxAndSphere()
+        public void SphereAndBox()
         {
-            Box box;
-            Sphere sphere;
-            if (body[0] is Box)
-            {
-                box = (Box)body[0];
-                sphere = (Sphere)body[1];
-            }
-            else
-            {
-                box = (Box)body[1];
-                sphere = (Sphere)body[0];
-            }
+            Sphere sphere = (Sphere)body[0];
+            Box box = (Box)body[1];
+            //Sphere sphere;
+            //Box box;
+            //if (body[0] is Box)
+            //{
+                //box = (Box)body[0];
+                //sphere = (Sphere)body[1];
+            //}
+            //else
+            //{
+                //box = (Box)body[1];
+                //sphere = (Sphere)body[0];
+            //}
             
             // Transform the centre of the sphere into box coordinates  
             Vector3 centre = sphere.GetAxis(3);
             //TODO not sure !!
-            Vector3 spherToBoxCor =Vector3.Transform(sphere.GetAxis(3),Matrix.Invert(box.TransformMatrix));
+            //Vector3 spherToBoxCor = Vector3.Transform(sphere.GetAxis(3), Matrix.Invert(box.TransformMatrix));
+            Vector3 spherToBoxCor = Vector3.Transform(centre, Matrix.Invert(box.TransformMatrix));
+            
             // cpp statement 
 
+            /*
             // Early out check to see if we can exclude the contact
-            if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X ||Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
+            if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X || 
+                Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||
+                Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
                 return false;
+            */
 
-            Vector3 closestPt=new Vector3();
-            float dist;
+            //Vector3 closestPt = new Vector3();
+            Vector3 closestPt = Vector3.Zero;
+            float dist = 0f;
 
+            // Find the closest point in the box to the target 
+            //     point and generate the contact fromit
             // Clamp each coordinate to the box.
             dist = spherToBoxCor.X;
-            if (dist > box.HalfSize.X) dist = box.HalfSize.X;
-            if (dist < -box.HalfSize.X) dist = -box.HalfSize.X;
+            if (dist > box.HalfSize.X)
+                dist = box.HalfSize.X;
+            if (dist < -box.HalfSize.X)
+                dist = -box.HalfSize.X;
             closestPt.X = dist;
 
             dist = spherToBoxCor.Y;
-            if (dist > box.HalfSize.Y) dist = box.HalfSize.Y;
-            if (dist < -box.HalfSize.Y) dist = -box.HalfSize.Y;
+            if (dist > box.HalfSize.Y) 
+                dist = box.HalfSize.Y;
+            if (dist < -box.HalfSize.Y) 
+                dist = -box.HalfSize.Y;
             closestPt.Y = dist;
 
             dist = spherToBoxCor.Z;
-            if (dist > box.HalfSize.Z) dist = box.HalfSize.Z;
-            if (dist < -box.HalfSize.Z) dist = -box.HalfSize.Z;
+            if (dist > box.HalfSize.Z) 
+                dist = box.HalfSize.Z;
+            if (dist < -box.HalfSize.Z) 
+                dist = -box.HalfSize.Z;
             closestPt.Z = dist;
 
             // Check we're in contact
             dist = (closestPt - spherToBoxCor).Length();
-            dist *= dist;
-
+            dist = (float)Math.Pow(dist, 2);
+            
+            /*
             if (dist > sphere.radius * sphere.radius)
                 return false;
+            */
 
-            Vector3 closestPtWorld = Vector3.Transform(closestPt,box.TransformMatrix);
+            Vector3 closestPtWorld = Vector3.Transform(closestPt, box.TransformMatrix);
             
-            ContactNormal = (closestPtWorld - centre);
+            ContactNormal = closestPtWorld - centre;
             ContactNormal.Normalize();
             ContactPoint = closestPtWorld;
             Penetration = sphere.radius - Math.Sqrt(dist);
 
-            //TOdo
+            //TODO
             //restitution = TODO;
             //friction    = TODO;
-            return true;
-        }
-
-        private bool tryAxis(Box one, Box two, Vector3 axis, Vector3 toCentre, UInt32 index,
-            // These values may be updated
-            ref float smallestPenetration, ref UInt32 smallestCase)
-        {
-            float penetration = penetrationOnAxis(one, two, axis, toCentre);
-            if (penetration < 0) return false;
-            if (penetration < smallestPenetration) {
-                smallestPenetration = penetration;
-                smallestCase = index;
-            }
-            return true;
-        }
-
-        public ulong BoxAndBox()
-        {
-            Box one = (Box)body[0];
-            Box two = (Box)body[1];
-
-            Vector3 toCentre = two.Position - one.Position;
-            // We start assuming there is no contact
-            float pen = float.MaxValue;
-            UInt32 best = 0xffffff;
-            for (int i = 0; i < 3; i++)
-            {
-                if (!tryAxis(one, two, one.GetAxis(i), toCentre, (UInt32)i, ref pen, ref best))
-                    return 0;
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (!tryAxis(one, two, two.GetAxis(i), toCentre, (UInt32)i, ref pen, ref best))
-                    return 0;
-            }
-
-            // Store the best axis-major, in case we run into almost
-            // parallel edge collisions later
-            UInt32 bestSingleAxis = best;
-
-            for (int i = 0, j = 0, k = 0, w = 6; w < 15; i++, k++, w++)
-            {
-                if (i % 3 == 0 && i != 0)
-                {
-                    j++;
-                    j = 0;
-                }
-                if (!tryAxis(one, two, Vector3.Cross(one.GetAxis(j), two.GetAxis(k)),
-                    toCentre, (UInt32)w, ref pen, ref best))
-                    return 0;
-            }
-            
-            return 0;
+            //return true;
         }
 
         public static float penetrationOnAxis(Box one, Box two, Vector3 axis, Vector3 toCentre)
@@ -411,10 +383,251 @@ namespace PhysiXEngine
 
         private static float transformToAxis(Box box, Vector3 axis)
         {
-            return 
-                box.HalfSize.X * Math.Abs(Vector3.Dot(axis,box.GetAxis(0))) +
+            return
+                box.HalfSize.X * Math.Abs(Vector3.Dot(axis, box.GetAxis(0))) +
                 box.HalfSize.Y * Math.Abs(Vector3.Dot(axis, box.GetAxis(1))) +
                 box.HalfSize.Z * Math.Abs(Vector3.Dot(axis, box.GetAxis(2)));
+        }
+
+        private bool tryAxis(Box one, Box two, Vector3 axis, Vector3 toCentre, int index,
+            // These values may be updated
+            ref float smallestPenetration, ref int smallestCase)
+        {
+            float penetration = penetrationOnAxis(one, two, axis, toCentre);
+            if (penetration < 0) // there is no Contact
+                return false;
+            if (penetration < smallestPenetration) // Set the Smallest
+            {
+                smallestPenetration = penetration;
+                smallestCase = index;
+            }
+            return true;
+        }
+
+        void fillPointFaceBoxBox(Box one, Box two, Vector3 toCentre,
+            int best, float pen )
+        {
+            // This method is called when we know that a vertex from
+            // box two is in contact with box one.
+
+            // We know which axis the collision is on (i.e. best), 
+            // but we need to work out which of the two faces on 
+            // this axis.
+            Vector3 normal = one.GetAxis(best);
+            if (Vector3.Dot(one.GetAxis(best), toCentre) > 0)
+            {
+                normal *= -1f;
+            }
+
+            // Work out which vertex of box two we're colliding with.
+            // Using toCentre doesn't work!
+            Vector3 vertex = two.HalfSize;
+            if (Vector3.Dot(two.GetAxis(0), normal) < 0) 
+                vertex.X = -vertex.X;
+            if (Vector3.Dot(two.GetAxis(1), normal) < 0) 
+                vertex.Y = -vertex.Y;
+            if (Vector3.Dot(two.GetAxis(2), normal) < 0) 
+                vertex.Z = -vertex.Z;
+    
+            // Create the contact data
+            ContactNormal = normal;
+            Penetration = pen;
+            ContactPoint = Vector3.Transform(vertex, two.TransformMatrix);
+        }
+
+        private static Vector3 contactPoint(Vector3 pOne, Vector3 dOne,
+            float oneSize, Vector3 pTwo, Vector3 dTwo, float twoSize,
+
+            // If this is true, and the contact point is outside
+            // the edge (in the case of an edge-face contact) then
+            // we use one's midpoint, otherwise we use two's.
+            bool useOne)
+        {
+            Vector3 toSt, cOne, cTwo;
+            float dpStaOne, dpStaTwo, dpOneTwo, smOne, smTwo;
+            float denom, mua, mub;
+
+
+            smOne = (float)Math.Pow(dOne.Length(), 2);
+            smTwo = (float)Math.Pow(dTwo.Length(), 2);
+            dpOneTwo = Vector3.Dot(dTwo, dOne);
+
+            toSt = pOne - pTwo;
+            dpStaOne = Vector3.Dot(dOne, toSt);
+            dpStaTwo = Vector3.Dot(dTwo, toSt);
+
+            denom = smOne * smTwo - dpOneTwo * dpOneTwo;
+
+            // Zero denominator indicates parrallel lines
+            if (Math.Abs(denom) < 0.0001f) {
+                return useOne ? pOne : pTwo;
+            }
+
+            mua = (dpOneTwo * dpStaTwo - smTwo * dpStaOne) / denom;
+            mub = (smOne * dpStaTwo - dpOneTwo * dpStaOne) / denom;
+
+            // If either of the edges has the nearest point out
+            // of bounds, then the edges aren't crossed, we have
+            // an edge-face contact. Our point is on the edge, which
+            // we know from the useOne parameter.
+            if (mua > oneSize || mua < -oneSize ||
+                mub > twoSize || mub < -twoSize) 
+            {
+                return useOne ? pOne : pTwo;
+            }
+            else
+            {
+                cOne = pOne + dOne * mua;
+                cTwo = pTwo + dTwo * mub;
+
+                return Vector3.Multiply(cOne, 0.5f) + Vector3.Multiply(cTwo, 0.5f);
+            }
+        }
+
+        public int BoxAndBox()
+        {
+            Box one = (Box)body[0];
+            Box two = (Box)body[1];
+
+            Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
+            // We start assuming there is no contact
+            float pen = float.MaxValue;
+            int best = 0xffffff;
+
+            // Now we check each axes, returning if it gives us
+            // a separating axis, and keeping track of the axis with
+            // the smallest penetration otherwise.
+            for (int i = 0; i < 3; i++)
+            {
+                if (!tryAxis(one, two, one.GetAxis(i), toCentre, i, ref pen, ref best))
+                    return 0;
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!tryAxis(one, two, two.GetAxis(i), toCentre, i, ref pen, ref best))
+                    return 0;
+            }
+
+            // Store the best axis-major, in case we run into almost
+            // parallel edge collisions later
+            int bestSingleAxis = best;
+
+            for (int i = 0, j = 0, k = 0, w = 6; w < 15; i++, k++, w++)
+            {
+                if (i % 3 == 0 && i != 0)
+                {
+                    j++;
+                    j = 0;
+                }
+                if (!tryAxis(one, two, Vector3.Cross(one.GetAxis(j), two.GetAxis(k)),
+                    toCentre, w, ref pen, ref best))
+                    return 0;
+            }
+
+            // We now know there's a collision, and we know which
+            // of the axes gave the smallest penetration. We now
+            // can deal with it in different ways depending on
+            // the case.
+            if (best < 3)
+            {
+                // We've got a vertex of box two on a face of box one.
+                fillPointFaceBoxBox(one, two, toCentre, best, pen);
+                return 1;
+            }
+            else if (best < 6)
+            {
+                // We've got a vertex of box one on a face of box two.
+                // We use the same algorithm as above, but swap around
+                // one and two (and therefore also the vector between their 
+                // centres).
+                fillPointFaceBoxBox(two, one, toCentre * -1.0f, best - 3, pen);
+                return 1;
+            }
+            else
+            {
+                // We've got an edge-edge contact. Find out which axes
+                best -= 6;
+                UInt32 oneAxisIndex = (UInt32)best / 3;
+                UInt32 twoAxisIndex = (UInt32)best % 3;
+                Vector3 oneAxis = one.GetAxis((int)oneAxisIndex);
+                Vector3 twoAxis = two.GetAxis((int)twoAxisIndex);
+                Vector3 axis = Vector3.Cross(oneAxis, twoAxis);
+                axis.Normalize();
+
+                // The axis should point from box one to box two.
+                if (Vector3.Dot(axis, toCentre) > 0) 
+                    axis = axis * -1.0f;
+
+                // We have the axes, but not the edges: each axis has 4 edges parallel 
+                // to it, we need to find which of the 4 for each object. We do 
+                // that by finding the point in the centre of the edge. We know 
+                // its component in the direction of the box's collision axis is zero 
+                // (its a mid-point) and we determine which of the extremes in each 
+                // of the other axes is closest.
+                Vector3 ptOnOneEdge = one.HalfSize;
+                Vector3 ptOnTwoEdge = two.HalfSize;
+                for (int i = 0; i < 3; i++)
+                {
+                    // This doesn't work!
+                    if (i == oneAxisIndex)
+                    {
+                        if (i == 0) ptOnOneEdge.X = 0;
+                        if (i == 1) ptOnOneEdge.Y = 0;
+                        if (i == 2) ptOnOneEdge.Z = 0;
+                    }
+                    else if (Vector3.Dot(one.GetAxis(i), axis) > 0)
+                    {
+                        if (i == 0) ptOnOneEdge.X *= -1;
+                        if (i == 1) ptOnOneEdge.Y *= -1;
+                        if (i == 2) ptOnOneEdge.Z *= -1;
+                    }
+
+                    if (i == twoAxisIndex) 
+                    {
+                        if (i == 0) ptOnTwoEdge.X = 0;
+                        if (i == 1) ptOnTwoEdge.Y = 0;
+                        if (i == 2) ptOnTwoEdge.Z = 0;
+                    }
+                    else if (Vector3.Dot(two.GetAxis(i), axis) < 0)
+                    {
+                        if (i == 0) ptOnTwoEdge.X *= -1;
+                        if (i == 1) ptOnTwoEdge.Y *= -1;
+                        if (i == 2) ptOnTwoEdge.Z *= -1;
+                    }
+
+                    // Move them into world coordinates (they are already oriented
+                    // correctly, since they have been derived from the axes).
+                    ptOnOneEdge = Vector3.Transform(ptOnOneEdge, one.TransformMatrix);
+                    ptOnTwoEdge = Vector3.Transform(ptOnTwoEdge, two.TransformMatrix);
+
+                    // So we have a point and a direction for the colliding edges.
+                    // We need to find out point of closes approach of the two 
+                    // line-segments.
+
+                    float oneVal = 0f, twoVal = 0f;
+
+                    if (oneAxisIndex == 0) oneVal = one.HalfSize.X;
+                    if (oneAxisIndex == 1) oneVal = one.HalfSize.Y;
+                    if (oneAxisIndex >= 2) oneVal = one.HalfSize.Z;
+
+                    if (twoAxisIndex == 0) twoVal = two.HalfSize.X;
+                    if (twoAxisIndex == 1) twoVal = two.HalfSize.Y;
+                    if (twoAxisIndex >= 2) twoVal = two.HalfSize.Z;
+
+                    Vector3 vertex = contactPoint(ptOnOneEdge, oneAxis, oneVal,
+                        ptOnTwoEdge, twoAxis, twoVal, bestSingleAxis > 2);
+
+                    // We can fill the contact.
+                    Penetration = pen;
+                    ContactNormal = axis;
+                    ContactPoint = vertex;
+
+                    return 1;
+                }
+            }
+            
+            return 0;
         }
 
         public void InitializeAtMoment(float duration)

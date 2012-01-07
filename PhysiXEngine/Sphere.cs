@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
     public class Sphere : Collidable
     {
         public float radius { get; protected set; }
+        public BoundingSphere sphere { get; protected set; }
 
         /// <summary>
         /// Creates a sphere
@@ -17,6 +19,8 @@ namespace PhysiXEngine
         public Sphere(float radius, float mass=1)
         {
             this.radius = radius;
+            sphere = new BoundingSphere(Position, radius);
+            
             float coeff = 0.4f * Mass * radius * radius;
             setInertiaTensorCoeffs(coeff, coeff, coeff);
             calculateDerivedData();
@@ -38,7 +42,7 @@ namespace PhysiXEngine
             if (other as Box != null)
             {
                 contactData = new ContactData(this, other);
-                contactData.BoxAndSphere();
+                contactData.SphereAndBox();
             }
             return contactData;
         }
@@ -47,6 +51,11 @@ namespace PhysiXEngine
         {
             //TODO add Detection logic
             return false;
+        }
+
+        public BoundingSphere GetBounding()
+        {
+            return sphere;
         }
     }
 }
