@@ -46,6 +46,7 @@
     <Compile Include="Body.cs" />
     <Compile Include="Box.cs" />
     <Compile Include="Collidable.cs" />
+    <Compile Include="CollisionDetector.cs" />
     <Compile Include="Constaint.cs" />
     <Compile Include="ContactData.cs" />
     <Compile Include="Effect.cs" />
