@@ -51,6 +51,23 @@ namespace PhysiXEngine
 
         private Matrix3 _inverseInertiaTensor = new Matrix3();
 
+
+        public bool IsAsleep { 
+        set
+        {
+            IsAwake = !value;
+        } 
+        get
+        {
+            return !IsAwake;
+        }
+        }
+        public bool IsAwake { set; get; }
+        public void Awake()
+        {
+            IsAwake = true;
+        }
+
         /// <summary>
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
@@ -99,7 +116,6 @@ namespace PhysiXEngine
         public Matrix TransformMatrix { get; protected set; }
 
         //TODO add angular/linear damping if needed
-        //TODO add sleep support
 
 
         public Body()
@@ -115,6 +131,7 @@ namespace PhysiXEngine
         /// <param name="duration">the time elapsed from the past frame</param>
         public void Update(float duration)
         {
+            if (IsAsleep) return;
             LastFrameAcceleration = Acceleration;
             LastFrameAcceleration += forceAccumulator * _inverseMass;
             //AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
@@ -126,7 +143,7 @@ namespace PhysiXEngine
             orientation += Quaternion.CreateFromYawPitchRoll(Rotation.Y,Rotation.X,Rotation.Z);
             calculateDerivedData();
             clearAccumulators();
-            //TODO add sleep capablilty
+            // add damping 
         }
 
         protected void calculateDerivedData()
