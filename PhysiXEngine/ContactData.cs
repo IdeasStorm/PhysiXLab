@@ -31,7 +31,7 @@ namespace PhysiXEngine
          * bodies are specified then the contact point should be midway
          * between the inter-penetrating points.
          */
-        public double Penetration { get; set; }
+        public float Penetration { get; set; }
 
         public Matrix3 ContactToWorld { get; private set; }
 
@@ -58,7 +58,7 @@ namespace PhysiXEngine
 
             // Find the vector between the objects
             Vector3 midline = positionOne - positionTwo;
-            double size = midline.Length();
+            float size = midline.Length();
 
             // We manually create the normal, because we have the
             // size to hand.
@@ -76,7 +76,7 @@ namespace PhysiXEngine
             Vector3 position = sphere.Position;
 
             // Find the distance from the plane
-            double centreDistance = Vector3.Dot(plane.direction, position) - plane.offset;
+            float centreDistance = Vector3.Dot(plane.direction, position) - plane.offset;
 
             // Check which side of the plane we're on
             ContactNormal = plane.direction;
@@ -101,7 +101,7 @@ namespace PhysiXEngine
             // or on an edge, it will be reported as four or two contact points.
             Vector3[] cornars = box.box.GetCorners();
             // Go through each combination of + and - for each half-size
-            /*double[,] mults = new double[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
+            /*float[,] mults = new float[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
                                        {1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}};*/
 
             for (int i = 0; i < 8; i++)
@@ -116,7 +116,7 @@ namespace PhysiXEngine
 
                 ///>BoxPlaneTestOne
                 // Calculate the distance from the plane
-                double vertexDistance = Vector3.Dot(vertexPos, plane.direction);
+                float vertexDistance = Vector3.Dot(vertexPos, plane.direction);
 
                 // Compare this to the plane's distance
                 if (vertexDistance <= plane.offset)
@@ -184,7 +184,7 @@ namespace PhysiXEngine
             if (Math.Abs(ContactNormal.X) > Math.Abs(ContactNormal.Y))
             {
                 // Scaling factor to ensure the results are normalised
-                double s = 1.0 / Math.Sqrt(ContactNormal.Z * ContactNormal.Z + ContactNormal.X * ContactNormal.X);
+                float s = 1.0f / (float)Math.Sqrt(ContactNormal.Z * ContactNormal.Z + ContactNormal.X * ContactNormal.X);
 
                 // The new X-axis is at right angles to the world Y-axis
                 contactTangent[0].X = ContactNormal.Z * (float)s;
@@ -199,7 +199,7 @@ namespace PhysiXEngine
             else
             {
                 // Scaling factor to ensure the results are normalised
-                double s = 1.0 / Math.Sqrt(ContactNormal.Z * ContactNormal.Z +
+                float s = 1.0f / (float)Math.Sqrt(ContactNormal.Z * ContactNormal.Z +
                     ContactNormal.Y * ContactNormal.Y);
 
                 // The new X-axis is at right angles to the world X-axis
@@ -362,7 +362,7 @@ namespace PhysiXEngine
             ContactNormal = closestPtWorld - centre;
             ContactNormal.Normalize();
             ContactPoint = closestPtWorld;
-            Penetration = sphere.radius - Math.Sqrt(dist);
+            Penetration = sphere.radius - (float)Math.Sqrt(dist);
 
             //TODO
             //restitution = TODO;
@@ -644,7 +644,7 @@ namespace PhysiXEngine
                 body[1] = null;
             }
             //assert(body[0]);
-            //TODO check what is assert really doing
+            //TODO check what is assert floatly doing
 
             // Calculate an set of axis at the contact point.
             calculateContactBasis();
@@ -706,11 +706,104 @@ namespace PhysiXEngine
             }
         }
 
-        internal void applyPositionChange(Vector3[] velocityChange, Vector3[] rotationChange, float[] rotationAmount, float max)
+        internal void applyPositionChange(Vector3[] velocityChange, Vector3[] rotationDirection, float[] rotationAmount,float Penetration)
+            //unused penetration
         {
-            throw new NotImplementedException();
-        }
+            float angularLimit = (float)1000;//0.1f;
+            float[] angularMove = new float[2],
+                    linearMove = new float[2];
+            int b;
 
+            float totalInertia = 0;
+            float[] linearInertia = new float[2];
+            float[] angularInertia = new float[2];
+
+            
+            float[] inverseMass = new float[2];
+
+            totalInertia = angularInertia[0] + body[0].InverseMass;
+
+            if(body[1] != null)
+            {
+                inverseMass[1] = angularInertia[1] + body[1].InverseMass;
+                totalInertia+=inverseMass[1];
+
+                angularMove[1] = -Penetration*angularInertia[1]/totalInertia;
+                linearMove[1] = -Penetration*body[1].InverseMass/totalInertia;
+
+                // To avoid angular projections that are too great (when mass is large
+                // but inertia tensor is small) limit the angular move.
+                Vector3 projection = Vector3.Add(relativeContactPosition[1],
+                        ContactNormal * Vector3.Dot(-relativeContactPosition[1],ContactNormal));
+                
+                float max = angularLimit*relativeContactPosition[0].Length();
+
+                if(Math.Abs(angularMove[1]) > max)
+                {
+                    float pp=angularMove[1]+linearMove[1];
+                    angularMove[1]=angularMove[1]>0?max:-max;
+                    linearMove[1]=pp-angularMove[1];
+                }
+            }
+
+            angularMove[0] = Penetration*angularInertia[0]/totalInertia;
+            linearMove[0] = Penetration*body[0].InverseMass/totalInertia;
+
+            // To avoid angular projections that are too great (when mass is large
+            // but inertia tensor is small) limit the angular move.
+            Vector3 AngProjection = relativeContactPosition[0];
+            //projection.addScaledVector(contactNormal, 
+            //    -relativeContactPosition[0].scalarProduct(contactNormal));
+            //TOD prepare Projection
+            float maxAng = angularLimit*relativeContactPosition[0].Length();
+
+            if(Math.Abs(angularMove[0]) > maxAng)
+            {
+                float pp=angularMove[0]+linearMove[0];
+                angularMove[0]=angularMove[0]>0?maxAng:-maxAng;
+                linearMove[0]=pp-angularMove[0];
+            }
+
+            for(b=0;b<2;b++) if(body[b] != null)
+            {
+                Vector3 t;
+                if(angularMove[b]!=(0.0f))
+                {
+                    t = Vector3.Cross(relativeContactPosition[b],ContactNormal);
+
+                    Matrix3 inverseInertiaTensor;
+                    inverseInertiaTensor = body[b].InverseInertiaTensorWorld;
+                    rotationDirection[b] = inverseInertiaTensor.transform(t);
+
+                    rotationAmount[b] = angularMove[b] / angularInertia[b];
+
+                    //assert(rotationAmount[b]!=((real)0.0));
+                }
+                else
+                {
+                    rotationDirection[b] = Vector3.Zero;
+                    rotationAmount[b] = 1;
+                }
+
+                velocityChange[b] = ContactNormal;
+                velocityChange[b] *= linearMove[b]/rotationAmount[b];
+
+                Vector3 pos;
+                pos = body[b].Position;
+                pos = Vector3.Add(pos, ContactNormal * linearMove[b]);
+                body[b].Position = pos;
+
+                Quaternion q;
+                q = body[b].Orientation;
+                Quaternion rotDirQuat = Quaternion.CreateFromYawPitchRoll(
+                    rotationDirection[b].Y * rotationAmount[b] * 5.0f,
+                    rotationDirection[b].X * rotationAmount[b] * 5.0f,
+                    rotationDirection[b].Z * rotationAmount[b] * 5.0f);
+                q = Quaternion.Add(q, rotDirQuat * rotationAmount[b] * 5.0f);
+                body[b].Orientation = q;
+                // TODO be sure of the last operation
+            }
+        }
         #endregion
     }
 }
