@@ -38,7 +38,7 @@ namespace PhysiXEngine
             if (other as Box != null)
             {
                 contactData = new ContactData(this, other);
-                contactData.BoxAndSphere();
+                contactData.SphereAndBox();
             }
             return contactData;
         }
