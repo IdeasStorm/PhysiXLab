@@ -104,7 +104,7 @@ namespace PhysiXEngine
         /// <summary>
         /// Angular orientation in world space
         /// </summary>
-        Quaternion orientation;
+        public Quaternion Orientation;
         /// <summary>
         /// the angular velocity
         /// </summary>
@@ -140,7 +140,7 @@ namespace PhysiXEngine
             Rotation += AngularAcceleration;
 
             Position += Velocity;
-            orientation += Quaternion.CreateFromYawPitchRoll(Rotation.Y,Rotation.X,Rotation.Z);
+            Orientation += Quaternion.CreateFromYawPitchRoll(Rotation.Y,Rotation.X,Rotation.Z);
             calculateDerivedData();
             clearAccumulators();
             // add damping 
@@ -148,7 +148,7 @@ namespace PhysiXEngine
 
         protected void calculateDerivedData()
         {
-            orientation.Normalize();
+            Orientation.Normalize();
 
             // Calculate the transform matrix for the body.
             TransformMatrix = /*Matrix.CreateFromQuaternion(orientation) */ Matrix.CreateTranslation(Position);
