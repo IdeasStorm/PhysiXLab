@@ -37,7 +37,8 @@ namespace PhysiXEngine
 
         public float restitution { get; protected set; }
         public Vector3 contactVelocity { get; protected set; }
-        //TODO remoce the var above me
+
+        public float desiredDeltaVelocity { get; set; }
 
         public  Vector3[] relativeContactPosition = new Vector3[2];
 

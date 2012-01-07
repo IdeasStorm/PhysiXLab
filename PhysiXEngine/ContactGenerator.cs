@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using PhysiXEngine.Helpers;
 
 namespace PhysiXEngine
 {
@@ -45,7 +46,7 @@ namespace PhysiXEngine
         {
             // Calculating Desired Delta Velocity
             contactData.InitializeAtMoment(frameDuration);
-            Vector3 deltaVelocity = calculateDeltaVelocity(contactData);
+            float deltaVelocity = calculateDeltaVelocity(contactData);
 
 
         }
@@ -54,12 +55,10 @@ namespace PhysiXEngine
         /// Calculates and sets the internal value for the delta velocity.
         /// </summary>
         /// <param name="contactData">the contact Data that contains the bodies and contct informations</param>
-        public Vector3 calculateDeltaVelocity(ContactData contactData)
+        public float calculateDeltaVelocity(ContactData contactData)
         {
             Body body1 = contactData.body[0];
             Body body2 = contactData.body[1];
-
-            const float velocityLimit = (float)0.25f;
 
             // NewVelocityCalculation
             // Calculate the acceleration induced velocity accumulated this frame
@@ -79,12 +78,52 @@ namespace PhysiXEngine
 
             // Combine the bounce velocity with the removed
             // acceleration velocity.
-            Vector3 deltaVelocity = new Vector3(0);
-            deltaVelocity.X = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
+            float deltaVelocity;
+            deltaVelocity = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
+            //contactData.desiredDeltaVelocity = deltaVelocity;
             return deltaVelocity;
         }
 
+        private Vector3 CalculateFrictionlessImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
+        {
+            Body one = contactData.body[0];
+            Body two = contactData.body[1];
+            Vector3 impulseContact;
 
+            // Build a vector that shows the change in velocity in
+            // world space for a unit impulse in the direction of the contact
+            // normal.
+            Vector3 deltaVelWorldOne = Vector3.Multiply(contactData.relativeContactPosition[0], contactData.ContactNormal);
+            deltaVelWorldOne = inverseInertiaTensor[0].transform(deltaVelWorldOne);
+            deltaVelWorldOne = Vector3.Multiply(deltaVelWorldOne, contactData.relativeContactPosition[0]);
+
+            // Work out the change in velocity in contact coordiantes.
+            float deltaVelocity = Vector3.Dot(deltaVelWorldOne, contactData.ContactNormal);
+
+            // Add the linear component of velocity change
+            deltaVelocity += one.InverseMass;
+
+            // Check if we need to the second body's data
+            if (two != null)
+            {
+                // Go through the same transformation sequence again
+                Vector3 deltaVelWorldTwo = Vector3.Multiply(contactData.relativeContactPosition[1], contactData.ContactNormal);
+                deltaVelWorldTwo = inverseInertiaTensor[1].transform(deltaVelWorldTwo);
+                deltaVelWorldTwo = Vector3.Multiply(deltaVelWorldTwo, contactData.relativeContactPosition[1]);
+
+                // Add the change in velocity due to rotation
+                deltaVelocity += Vector3.Dot(deltaVelWorldTwo, contactData.ContactNormal);
+
+                // Add the change in velocity due to linear motion
+                deltaVelocity += two.InverseMass;
+            }
+
+            // Calculate the required size of the impulse
+            impulseContact.X = contactData.desiredDeltaVelocity / deltaVelocity;
+            impulseContact.Y = 0;
+            impulseContact.Z = 0;
+            return impulseContact;
+        }
         #region "Levels of resolving contacts"
         //LEVEL 1
 
