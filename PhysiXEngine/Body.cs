@@ -108,7 +108,7 @@ namespace PhysiXEngine
         /// <summary>
         /// the angular velocity
         /// </summary>
-        public Vector3 Rotation { get; protected set; }
+        public Vector3 Rotation { get; set; }
 
         /// <summary>
         /// the matrix that converts a vector from the body space to the world space

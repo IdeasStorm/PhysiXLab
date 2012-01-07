@@ -125,7 +125,7 @@ namespace PhysiXEngine
             return impulseContact;
         }
 
-        private Vector3 calculateFrictionImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
+        private Vector3 CalculateFrictionImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
         {
             Body one = contactData.body[0];
             Body two = contactData.body[1];
@@ -203,6 +203,66 @@ namespace PhysiXEngine
                 impulseContact.Z *= friction * impulseContact.X;
             }
             return impulseContact;
+        }
+
+        public void ApplyVelocityChange(ContactData contactData)
+        {
+            Body one = contactData.body[0];
+            Body two = contactData.body[1];
+
+            //TODO not sure !!!! //, Vector3 [] velocityChange, Vector3[] rotationChange)
+            Vector3[] velocityChange = new Vector3[2];
+            Vector3[] rotationChange = new Vector3[2];
+            // Get hold of the inverse mass and inverse inertia tensor, both in
+            // world coordinates.
+            Matrix3[] inverseInertiaTensor = new Matrix3[2];
+            inverseInertiaTensor[0] = one.InverseInertiaTensorWorld;
+            if (two != null)
+                inverseInertiaTensor[1] = two.InverseInertiaTensorWorld;
+
+            // We will calculate the impulse for each contact axis
+            Vector3 impulseContact;
+
+            //TODO add friction and delete bottome friction
+            float friction = 0;
+            if (friction == 0.0f)
+            {
+                //ther is no friction
+                impulseContact = CalculateFrictionlessImpulse(contactData, inverseInertiaTensor);
+            }
+            else
+            {
+                // Otherwise we may have impulses that aren't in the direction of the
+                // contact, so we need the more complex version.
+                impulseContact = CalculateFrictionImpulse(contactData, inverseInertiaTensor);
+            }
+
+            // Convert impulse to world coordinates
+            Vector3 impulse = contactData.ContactToWorld.transform(impulseContact);
+
+            // Split in the impulse into linear and rotational components
+            Vector3 impulsiveTorqueOne = Vector3.Multiply(contactData.relativeContactPosition[0], impulse);
+            rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorqueOne);
+
+            velocityChange[0] = Vector3.Zero;
+            velocityChange[0] += Vector3.Multiply(impulse, one.InverseMass);
+
+            // Apply the changes
+            one.AddVelocity(velocityChange[0]);
+            one.Rotation += rotationChange[0];
+
+            if (two != null)
+            {
+                // Work out body one's linear and angular changes
+                Vector3 impulsiveTorqueTwo = Vector3.Multiply(contactData.relativeContactPosition[1], impulse);
+                rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorqueTwo);
+                velocityChange[1] = Vector3.Zero;
+                velocityChange[1] += Vector3.Multiply(impulse, one.InverseMass);
+
+                // And apply them.
+                two.AddVelocity(velocityChange[1]);
+                two.Rotation += rotationChange[1];
+            }
         }
 
         #region "Levels of resolving contacts"
