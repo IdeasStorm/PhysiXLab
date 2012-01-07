@@ -22,7 +22,7 @@ namespace PhysiXEngine
             if (other as Box != null)
             {
                 contactData = new ContactData(other, this);
-                contactData.BoxHalfSpace();
+                contactData.BoxAndHalfSpace();
             }
             return contactData;
         }

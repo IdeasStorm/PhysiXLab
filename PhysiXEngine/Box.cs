@@ -28,7 +28,7 @@ namespace PhysiXEngine
             if (other as Plane != null)
             {
                 contactData = new ContactData(other, this);
-                contactData.BoxHalfSpace();
+                contactData.BoxAndHalfSpace();
             }
             return contactData;
         }

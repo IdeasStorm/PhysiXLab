@@ -88,7 +88,7 @@ namespace PhysiXEngine
             ContactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
         }
 
-        public void BoxHalfSpace()
+        public void BoxAndHalfSpace()
         {
             Box box = (Box)body[0];
             Plane plane = (Plane)body[1];
