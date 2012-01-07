@@ -124,6 +124,87 @@ namespace PhysiXEngine
             impulseContact.Z = 0;
             return impulseContact;
         }
+
+        private Vector3 calculateFrictionImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
+        {
+            Body one = contactData.body[0];
+            Body two = contactData.body[1];
+            Vector3 impulseContact;
+            float inverseMass = one.InverseMass;
+
+            // The equivalent of a cross product in matrices is multiplication
+            // by a skew symmetric matrix - we build the matrix for converting
+            // between linear and angular quantities.
+            Matrix3 impulseToTorque = new Matrix3();
+            impulseToTorque.setSkewSymmetric(contactData.relativeContactPosition[0]);
+
+            // Build the matrix to convert contact impulse to change in velocity
+            // in world coordinates.
+            Matrix3 deltaVelWorld = impulseToTorque;
+            deltaVelWorld *= inverseInertiaTensor[0];
+            deltaVelWorld *= impulseToTorque;
+            deltaVelWorld *= -1;
+
+            // Check if we need to add body two's data
+            if (two != null)
+            {
+                // Set the cross product matrix
+                impulseToTorque.setSkewSymmetric(contactData.relativeContactPosition[1]);
+
+                // Calculate the velocity change matrix
+                Matrix3 deltaVelWorldTwo = impulseToTorque;
+                deltaVelWorldTwo *= inverseInertiaTensor[1];
+                deltaVelWorldTwo *= impulseToTorque;
+                deltaVelWorldTwo *= -1;
+
+                // Add to the total delta velocity.
+                deltaVelWorld += deltaVelWorldTwo;
+
+                // Add to the inverse mass
+                inverseMass += two.InverseMass;
+            }
+
+            // Do a change of basis to convert into contact coordinates.
+            Matrix3 deltaVelocity = contactData.ContactToWorld.transpose();
+            deltaVelocity *= deltaVelWorld;
+            deltaVelocity *= contactData.ContactToWorld;
+
+            // Add in the linear velocity change
+            deltaVelocity.data[0] += inverseMass;
+            deltaVelocity.data[4] += inverseMass;
+            deltaVelocity.data[8] += inverseMass;
+
+            // Invert to get the impulse needed per unit velocity
+            Matrix3 impulseMatrix = deltaVelocity.inverse();
+
+            // Find the velocities that will be removed
+            Vector3 velKill = new Vector3(contactData.desiredDeltaVelocity,
+                -contactData.contactVelocity.Y,
+                -contactData.contactVelocity.Z);
+
+            // Find the impulse to kill target velocities
+            impulseContact = impulseMatrix.transform(velKill);
+
+            // Check for exceeding friction
+            float planarImpulse = (float)Math.Sqrt(Convert.ToDouble(impulseContact.Y * impulseContact.Y + impulseContact.Z * impulseContact.Z));
+            //TODO get Friction from contactData
+            float friction = 0;
+            if (planarImpulse > impulseContact.X * friction)
+            {
+                // We need to use dynamic friction
+                impulseContact.Y /= planarImpulse;
+                impulseContact.Z /= planarImpulse;
+
+                impulseContact.X = deltaVelocity.data[0] +
+                    deltaVelocity.data[1] * friction * impulseContact.Y +
+                    deltaVelocity.data[2] * friction * impulseContact.Z;
+                impulseContact.X = contactData.desiredDeltaVelocity / impulseContact.X;
+                impulseContact.Y *= friction * impulseContact.X;
+                impulseContact.Z *= friction * impulseContact.X;
+            }
+            return impulseContact;
+        }
+
         #region "Levels of resolving contacts"
         //LEVEL 1
 
