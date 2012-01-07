@@ -48,6 +48,8 @@ namespace PhysiXEngine
             this.body[1] = secondBody;
         }
 
+        #region "contactData Extraction "
+
         public void SphereAndSphere()
         {
             //Cache the sphere positions
@@ -630,7 +632,9 @@ namespace PhysiXEngine
             
             return 0;
         }
+        #endregion
 
+        #region "Collision/Penetration Resulution"
         public void InitializeAtMoment(float duration)
         {
             // Check if the first object is NULL, and swap if it is.
@@ -706,5 +710,7 @@ namespace PhysiXEngine
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }
