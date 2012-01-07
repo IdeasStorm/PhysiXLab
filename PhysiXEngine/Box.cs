@@ -23,7 +23,7 @@ namespace PhysiXEngine
             if (other as Sphere != null)
             {
                 contactData = new ContactData(other, this);
-                contactData.BoxAndSphere();
+                contactData.SphereAndBox();
             }
             if (other as Plane != null)
             {
