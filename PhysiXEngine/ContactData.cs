@@ -107,8 +107,9 @@ namespace PhysiXEngine
                 // Calculate the position of each vertex
                 //Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
                 Vector3 vertexPos;
-                vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
-                vertexPos = Vector3.Transform(vertexPos, box.TransformMatrix);
+                //vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
+                //vertexPos = Vector3.Transform(vertexPos, box.TransformMatrix);
+                vertexPos = Vector3.Transform(cornars[i], box.TransformMatrix);
 
                 ///>BoxPlaneTestOne
                 // Calculate the distance from the plane
