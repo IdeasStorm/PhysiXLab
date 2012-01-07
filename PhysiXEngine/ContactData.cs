@@ -31,7 +31,7 @@ namespace PhysiXEngine
          * bodies are specified then the contact point should be midway
          * between the inter-penetrating points.
          */
-        public double Penetration { get; protected set; }
+        public double Penetration { get; set; }
 
         public Matrix3 ContactToWorld { get; private set; }
 
@@ -39,7 +39,7 @@ namespace PhysiXEngine
         public Vector3 contactVelocity { get; protected set; }
         //TODO remoce the var above me
 
-        private Vector3[] relativeContactPosition = new Vector3[2];
+        public  Vector3[] relativeContactPosition = new Vector3[2];
 
         public ContactData(Collidable firstBody, Collidable secondBody)
         {
@@ -474,6 +474,23 @@ namespace PhysiXEngine
 
             // And return it
             return contactVelocity;
+        }
+
+        public void WakeUpPair()
+        {
+            // don't wake up if collided with the world
+            if (body[1] == null) return;
+            // Wake up only the sleeping one
+            if (body[0].IsAwake ^ body[1].IsAwake)
+            {
+                if (body[0].IsAwake) body[1].Awake();
+                else body[0].Awake();
+            }
+        }
+
+        internal void applyPositionChange(Vector3[] velocityChange, Vector3[] rotationChange, float[] rotationAmount, float max)
+        {
+            throw new NotImplementedException();
         }
     }
 }
