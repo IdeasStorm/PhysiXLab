@@ -233,7 +233,7 @@ namespace PhysiXEngine
 
                         cp += velocityChange[0];
 
-                        contactDataList[i].Penetration -=(double)
+                        contactDataList[i].Penetration -=
                             rotationAmount[0] * Vector3.Dot(cp,contactDataList[i].ContactNormal);
                     }
                     else if(contactDataList[i].body[0]==contactDataList[index].body[1])
@@ -242,7 +242,7 @@ namespace PhysiXEngine
 
                         cp += velocityChange[1];
 
-                        contactDataList[i].Penetration -= (double) rotationAmount[1] *
+                        contactDataList[i].Penetration -= rotationAmount[1] *
                             Vector3.Dot(cp,contactDataList[i].ContactNormal);
                     }
 
@@ -254,7 +254,7 @@ namespace PhysiXEngine
 
                             cp += velocityChange[0];
 
-                            contactDataList[i].Penetration += (double)rotationAmount[0] *
+                            contactDataList[i].Penetration += rotationAmount[0] *
                                 Vector3.Dot(cp,contactDataList[i].ContactNormal);
                         }
                         else if(contactDataList[i].body[1]==contactDataList[index].body[1])
@@ -263,7 +263,7 @@ namespace PhysiXEngine
 
                             cp += velocityChange[1];
 
-                            contactDataList[i].Penetration += (double)rotationAmount[1] *
+                            contactDataList[i].Penetration += rotationAmount[1] *
                                 Vector3.Dot(cp, contactDataList[i].ContactNormal);
                         }
                     }
