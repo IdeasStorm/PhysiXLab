@@ -10,7 +10,7 @@ namespace PhysiXEngine
     public class Box : Collidable
     {
         public Vector3 HalfSize { get; private set; }
-        public BoundingBox box { get; private set; }
+        public BoundingBox box { get; private set; }        
 
         public override ContactData generateContacts(Collidable other)
         {
@@ -36,6 +36,11 @@ namespace PhysiXEngine
         public override Boolean CollidesWith(Collidable other)
         {
             return false;
+        }
+
+        public BoundingBox GetBounding()
+        {
+            return box;
         }
     }
 }
