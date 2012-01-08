@@ -268,9 +268,10 @@ namespace PhysiXEngine
 
         void calculateContactInformations(float duration)
         {
-            BoundingBox world = new BoundingBox();
-            //TODO !! make float world 
-            CollisionDetector collisionGenerator = new CollisionDetector(world,bodies);
+            // BoundingBox world = new BoundingBox();
+            // TODO !! make real world
+            // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
+            CollisionDetector collisionGenerator = new CollisionDetector(bodies);
             this.contactDataList= collisionGenerator.Detect();
             // initializing contacts
             foreach (ContactData contactData in contactDataList)

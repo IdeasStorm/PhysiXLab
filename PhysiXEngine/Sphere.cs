@@ -53,7 +53,7 @@ namespace PhysiXEngine
             return false;
         }
 
-        public BoundingSphere GetBounding()
+        public BoundingSphere GetBoundingSphere()
         {
             return sphere;
         }
