@@ -45,7 +45,7 @@ namespace PhysiXEngine
         {
             // Calculating Desired Delta Velocity
             contactData.InitializeAtMoment(frameDuration);
-            float deltaVelocity = calculateDeltaVelocity(contactData);
+            //float deltaVelocity = CalculateDeltaVelocity(contactData);
 
 
         }
@@ -57,7 +57,7 @@ namespace PhysiXEngine
         /// <param name="bodyIndex"></param>
         /// <param name="duration"></param>
         /// <returns></returns>
-        private Vector3 CalculateLocalVelocity(ContactData contactData, uint bodyIndex, float duration)
+        private Vector3 CalculateLocalVelocity(ContactData contactData, uint bodyIndex)
         {
             Body thisBody = contactData.body[bodyIndex];
 
@@ -70,7 +70,7 @@ namespace PhysiXEngine
 
             // Calculate the ammount of velocity that is due to forces without
             // reactions.
-            Vector3 accVelocity = thisBody.LastFrameAcceleration* duration;
+            Vector3 accVelocity = thisBody.LastFrameAcceleration * frameDuration;
 
             // Calculate the velocity in contact-coordinates.
             accVelocity = contactData.ContactToWorld.transformTranspose(accVelocity);
@@ -91,7 +91,7 @@ namespace PhysiXEngine
         /// Calculates and sets the internal value for the delta velocity.
         /// </summary>
         /// <param name="contactData">the contact Data that contains the bodies and contct informations</param>
-        public float calculateDeltaVelocity(ContactData contactData)
+        private void CalculateDeltaVelocity(ref ContactData contactData)
         {
             Body body1 = contactData.body[0];
             Body body2 = contactData.body[1];
@@ -113,11 +113,16 @@ namespace PhysiXEngine
             }
 
             // Combine the bounce velocity with the removed
-            // acceleration velocity.
-            float deltaVelocity;
-            deltaVelocity = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
+            // acceleration velocity.            
+            contactData.desiredDeltaVelocity = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
             //contactData.desiredDeltaVelocity = deltaVelocity;
-            return deltaVelocity;
+        }
+
+        private void CalculateDeltaVelocity(ref List<ContactData> contactList,int i)
+        {
+            ContactData contact = contactList[i];
+            CalculateDeltaVelocity(ref contact);
+            contactList[i] = contact;
         }
 
         private void SwapBodies(ref ContactData contacData)
@@ -127,6 +132,37 @@ namespace PhysiXEngine
             Collidable temp = contacData.body[0];
             contacData.body[0] = contacData.body[1];
             contacData.body[1] = temp;
+        }
+
+        public void CalculateInternals(ref ContactData contacData)
+        {
+            // Check if the first object is NULL, and swap if it is.
+            if (contacData.body[0]==null) 
+                SwapBodies(ref contacData);
+
+            //TODO exit all program
+            if (contacData.body[0] == null)
+                return;
+
+            // Calculate an set of axis at the contact point.
+            contacData.calculateContactBasis();
+
+            // Store the relative position of the contact relative to each body
+            contacData.relativeContactPosition[0] = contacData.ContactPoint - contacData.body[0].Position;
+            if (contacData.body[1]!=null)
+            {
+                contacData.relativeContactPosition[1] = contacData.ContactPoint - contacData.body[1].Position;
+            }
+
+            // Find the relative velocity of the bodies at the contact point.
+            contacData.contactVelocity = CalculateLocalVelocity(contacData,0);
+            if (contacData.body[1]!=null)
+            {
+                contacData.contactVelocity -= CalculateLocalVelocity(contacData,1);
+            }
+
+            // Calculate the desired change in velocity for resolution
+            CalculateDeltaVelocity(ref contacData);
         }
 
         private Vector3 CalculateFrictionlessImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
@@ -498,7 +534,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity += 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            calculateDeltaVelocity(contactDataList[i]);
+                            CalculateDeltaVelocity(ref contactDataList,i);
                             //TODO move this to contact data & check params e.g duration
                         }
                         else if (contactDataList[i].body[0]==contactDataList[index].body[1])
@@ -509,7 +545,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity += 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            calculateDeltaVelocity(contactDataList[i]);
+                            CalculateDeltaVelocity(ref contactDataList, i);
                             //TODO move this to contact data & check params e.g duration
                         }
                     }
@@ -524,7 +560,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity -= 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            calculateDeltaVelocity(contactDataList[i]);
+                            CalculateDeltaVelocity(ref contactDataList, i);
                             //TODO move this to contact data & check params e.g duration
                         }
                         else if (contactDataList[i].body[1]==contactDataList[index].body[1])
@@ -535,7 +571,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity -= 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            calculateDeltaVelocity(contactDataList[i]);
+                            CalculateDeltaVelocity(ref contactDataList, i);
                             //TODO move this to contact data & check params e.g duration
                         }
                     }
