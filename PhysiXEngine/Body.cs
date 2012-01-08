@@ -140,7 +140,7 @@ namespace PhysiXEngine
             Rotation += AngularAcceleration;
 
             Position += Velocity;
-            Orientation += Quaternion.CreateFromYawPitchRoll(Rotation.Y,Rotation.X,Rotation.Z);
+            Orientation += Quaternion.CreateFromAxisAngle(Rotation, MathHelper.Pi) * (duration/2f) * Orientation;
             calculateDerivedData();
             clearAccumulators();
             // add damping 

@@ -794,14 +794,8 @@ namespace PhysiXEngine
                 body[b].Position = pos;
 
                 Quaternion q;
-                q = body[b].Orientation;
-                Quaternion rotDirQuat = Quaternion.CreateFromYawPitchRoll(
-                    rotationDirection[b].Y * rotationAmount[b] * 5.0f,
-                    rotationDirection[b].X * rotationAmount[b] * 5.0f,
-                    rotationDirection[b].Z * rotationAmount[b] * 5.0f);
-                q = Quaternion.Add(q, rotDirQuat * rotationAmount[b] * 5.0f);
-                body[b].Orientation = q;
-                // TODO be sure of the last operation
+                body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b],MathHelper.Pi)
+                    * rotationAmount[b] * 0.5f;
             }
         }
         #endregion
