@@ -122,6 +122,8 @@ namespace PhysiXEngine
         {
             Mass = 1;
             InertiaTensor = Matrix.Identity;
+            Orientation = Quaternion.CreateFromYawPitchRoll(0, 0, 0);
+            Awake();
             calculateDerivedData(); //TODO this must not be here!!
         }
 
@@ -134,6 +136,7 @@ namespace PhysiXEngine
             if (IsAsleep) return;
             LastFrameAcceleration = Acceleration;
             LastFrameAcceleration += forceAccumulator * _inverseMass;
+            AngularAcceleration = InverseInertiaTensorWorld.transform(AngularAcceleration);
             //AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
 
             Velocity += LastFrameAcceleration * duration;
@@ -151,7 +154,7 @@ namespace PhysiXEngine
             Orientation.Normalize();
 
             // Calculate the transform matrix for the body.
-            TransformMatrix = /*Matrix.CreateFromQuaternion(orientation) */ Matrix.CreateTranslation(Position);
+            TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
             InverseInertiaTensorWorld = InverseInertiaTensor * TransformMatrix;
