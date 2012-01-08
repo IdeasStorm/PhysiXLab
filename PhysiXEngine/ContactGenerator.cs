@@ -50,6 +50,37 @@ namespace PhysiXEngine
 
         }
 
+
+        private Vector3 CalculateLocalVelocity(ContactData contactData, uint bodyIndex, float duration)
+        {
+            Body thisBody = contactData.body[bodyIndex];
+
+            // Work out the velocity of the contact point.
+            Vector3 velocity = Vector3.Multiply(thisBody.Rotation, contactData.relativeContactPosition[bodyIndex]);
+            velocity += thisBody.Velocity;
+
+            // Turn the velocity into contact-coordinates.
+            Vector3 contactVelocity = contactData.ContactToWorld.transformTranspose(velocity);
+
+            // Calculate the ammount of velocity that is due to forces without
+            // reactions.
+            Vector3 accVelocity = thisBody.LastFrameAcceleration* duration;
+
+            // Calculate the velocity in contact-coordinates.
+            accVelocity = contactData.ContactToWorld.transformTranspose(accVelocity);
+
+            // We ignore any component of acceleration in the contact normal
+            // direction, we are only interested in planar acceleration
+            accVelocity.X = 0;
+
+            // Add the planar velocities - if there's enough friction they will
+            // be removed during velocity resolution
+            contactVelocity += accVelocity;
+
+            // And return it
+            return contactVelocity;
+        }
+
         /// <summary>
         /// Calculates and sets the internal value for the delta velocity.
         /// </summary>
