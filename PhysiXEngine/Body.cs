@@ -44,7 +44,7 @@ namespace PhysiXEngine
         public Vector3 Velocity {  get; protected set; }
         public Vector3 Acceleration {  get; protected set; }
         public Vector3 LastFrameAcceleration {  get; protected set; }
-        public Vector3 AngularAcceleration {  get; protected set; }
+        public Vector3 AngularAcceleration {  get; set; }
 
         private Vector3 forceAccumulator;
         private Vector3 torqueAccumulator;

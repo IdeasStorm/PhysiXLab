@@ -24,6 +24,7 @@ namespace PhysiXLab
         LinkedList<Ball> balls = new LinkedList<Ball>();
         Ball ball;
         Ball dummy;
+        Crate crate;
         Gravity g;
         Spring spring;
         public Camera camera { get; protected set; }
@@ -46,8 +47,10 @@ namespace PhysiXLab
             camera = new Camera(this, new Vector3(0, 0, 100),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
-            ball = new Ball(10f);
-            dummy = new Ball(10f);
+            ball = new Ball(1f);
+            dummy = new Ball(1f);
+            crate = new Crate(new Vector3(10,10,10));
+            crate.Position = new Vector3(20,20,20);
             //dummy.InverseMass = 0;
             //dummy.InverseInertiaTensor = new Matrix3();
             //spring = new Spring(ball, dummy, dummy.Position, 0.3f, 20.0f);
@@ -68,7 +71,7 @@ namespace PhysiXLab
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            crate.LoadContent(Content);
             // TODO: use this.Content to load your game content here
             ball.model = Content.Load<Model>(@"Ball");
             dummy.model = ball.model;
@@ -106,7 +109,7 @@ namespace PhysiXLab
                 if (spaceDown && (Keyboard.GetState(PlayerIndex.One).IsKeyUp(Keys.Space))) 
                 {
                     spaceDown = false;
-                    Ball b = new Ball(10f);
+                    Ball b = new Ball(1f);
                     b.model = ball.model;
                     //g.AddBody(b);
                     balls.AddLast(b);
@@ -114,6 +117,8 @@ namespace PhysiXLab
                     //b.AddForce(new Vector3(10f, 5f, 0));
                     //spring.AddBody(b);
                     spring = new Spring(b, dummy, dummy.Position, 0.3f, 20f);
+                    //crate.AddForce(new Vector3(12,32,3),new Vector3(2,2,3));
+                    crate.AngularAcceleration = new Vector3(0.001f,0.001f,0.001f);
                 }
                 g.Update(duration);
                 if (spring != null)
@@ -121,6 +126,7 @@ namespace PhysiXLab
                 // TODO: Add your update logic here
                 ball.Update(duration);
                 dummy.Update(duration);
+                crate.Update(duration);
                 foreach (Ball b in balls)
                     b.Update(duration);
             }
@@ -140,6 +146,7 @@ namespace PhysiXLab
             }
             dummy.Draw(camera);
             ball.Draw(camera);
+            crate.Draw(camera);
             //sphere.Draw(camera);
             //BoundingSphereRenderer.Render(new BoundingSphere(Vector3.Zero, 10f), GraphicsDevice,
             //    camera.view, camera.projection, Color.Red);
