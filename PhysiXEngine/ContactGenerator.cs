@@ -186,20 +186,19 @@ namespace PhysiXEngine
 
             // Check for exceeding friction
             float planarImpulse = (float)Math.Sqrt(Convert.ToDouble(impulseContact.Y * impulseContact.Y + impulseContact.Z * impulseContact.Z));
-            //TODO get Friction from contactData
-            float friction = 0;
-            if (planarImpulse > impulseContact.X * friction)
+            
+            if (planarImpulse > impulseContact.X * contactData.friction)
             {
                 // We need to use dynamic friction
                 impulseContact.Y /= planarImpulse;
                 impulseContact.Z /= planarImpulse;
 
                 impulseContact.X = deltaVelocity.data[0] +
-                    deltaVelocity.data[1] * friction * impulseContact.Y +
-                    deltaVelocity.data[2] * friction * impulseContact.Z;
+                    deltaVelocity.data[1] * contactData.friction * impulseContact.Y +
+                    deltaVelocity.data[2] * contactData.friction * impulseContact.Z;
                 impulseContact.X = contactData.desiredDeltaVelocity / impulseContact.X;
-                impulseContact.Y *= friction * impulseContact.X;
-                impulseContact.Z *= friction * impulseContact.X;
+                impulseContact.Y *= contactData.friction * impulseContact.X;
+                impulseContact.Z *= contactData.friction * impulseContact.X;
             }
             return impulseContact;
         }
@@ -220,9 +219,7 @@ namespace PhysiXEngine
             // We will calculate the impulse for each contact axis
             Vector3 impulseContact;
 
-            //TODO add friction and delete bottome friction
-            float friction = 0;
-            if (friction == 0.0f)
+            if (contactData.friction == 0.0f)
             {
                 //ther is no friction
                 impulseContact = CalculateFrictionlessImpulse(contactData, inverseInertiaTensor);
