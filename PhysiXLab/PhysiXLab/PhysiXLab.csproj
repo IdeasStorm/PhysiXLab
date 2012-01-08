@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="Ball.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Crate.cs" />
     <Compile Include="Lab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
