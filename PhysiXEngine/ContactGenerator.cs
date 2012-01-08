@@ -503,22 +503,4 @@ namespace PhysiXEngine
         #endregion
 
     }
-
-    ///
-    /// just a stub , remove this plz
-    class CollisionDetector
-    {
-        public CollisionDetector(LinkedList<Collidable> Shapes)
-        {
-            //TODO link the float class & delete this
-        }
-
-
-        public List<ContactData> ContactsList { get; set; }
-
-        internal List<ContactData> Detect()
-        {
-            throw new NotImplementedException();
-        }
-    }
 }
