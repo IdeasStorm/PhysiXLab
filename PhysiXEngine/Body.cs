@@ -129,7 +129,7 @@ namespace PhysiXEngine
         /// updates the body to the next state
         /// </summary>
         /// <param name="duration">the time elapsed from the past frame</param>
-        public void Update(float duration)
+        public virtual void Update(float duration)
         {
             if (IsAsleep) return;
             LastFrameAcceleration = Acceleration;
