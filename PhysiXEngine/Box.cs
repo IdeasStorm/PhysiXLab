@@ -10,7 +10,14 @@ namespace PhysiXEngine
     public class Box : Collidable
     {
         public Vector3 HalfSize { get; private set; }
-        public BoundingBox box { get; private set; }
+        private BoundingBox _box;
+        public BoundingBox box { get { return _box; } private set { _box = value; } }
+
+        public Box(Vector3 halfSize)
+        {
+            HalfSize = halfSize;
+            updateBounding();
+        }
 
         public override ContactData generateContacts(Collidable other)
         {
@@ -33,8 +40,16 @@ namespace PhysiXEngine
             return contactData;
         }
 
+        protected override void updateBounding()
+        {
+            _box.Min = Vector3.Transform(-HalfSize, TransformMatrix);
+            _box.Max = Vector3.Transform(HalfSize, TransformMatrix);
+            //TODO be sure of meaning of halfSize @JOBORY
+        }
+
         public override Boolean CollidesWith(Collidable other)
         {
+            //TOOD add CollidesWith() code here
             return false;
         }
 
