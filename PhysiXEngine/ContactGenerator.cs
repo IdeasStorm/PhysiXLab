@@ -50,7 +50,13 @@ namespace PhysiXEngine
 
         }
 
-
+        /// <summary>
+        /// Calculate the velocity of body with index i for calculate the contact velocity
+        /// </summary>
+        /// <param name="contactData"></param>
+        /// <param name="bodyIndex"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
         private Vector3 CalculateLocalVelocity(ContactData contactData, uint bodyIndex, float duration)
         {
             Body thisBody = contactData.body[bodyIndex];
@@ -112,6 +118,15 @@ namespace PhysiXEngine
             deltaVelocity = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
             //contactData.desiredDeltaVelocity = deltaVelocity;
             return deltaVelocity;
+        }
+
+        private void SwapBodies(ref ContactData contacData)
+        {
+            contacData.ContactNormal *= -1;
+
+            Collidable temp = contacData.body[0];
+            contacData.body[0] = contacData.body[1];
+            contacData.body[1] = temp;
         }
 
         private Vector3 CalculateFrictionlessImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
