@@ -9,7 +9,8 @@ namespace PhysiXEngine
     public class Sphere : Collidable
     {
         public float radius { get; protected set; }
-        public BoundingSphere sphere { get; protected set; }
+        private BoundingSphere _sphere;
+        public BoundingSphere sphere { get { return _sphere; } protected set { _sphere = value; } }
 
         /// <summary>
         /// Creates a sphere
@@ -24,6 +25,11 @@ namespace PhysiXEngine
             float coeff = 0.4f * Mass * radius * radius;
             setInertiaTensorCoeffs(coeff, coeff, coeff);
             calculateDerivedData();
+        }
+
+        protected override void updateBounding()
+        {
+            _sphere.Center = Vector3.Transform(Vector3.Zero, TransformMatrix);
         }
 
         public override ContactData generateContacts(Collidable other) 
