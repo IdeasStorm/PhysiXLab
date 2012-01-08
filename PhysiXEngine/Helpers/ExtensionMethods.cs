@@ -25,6 +25,18 @@ namespace PhysiXEngine.Helpers
                     return new Vector3();
             }
         }
+
+        enum CollisionType
+        {
+            None = 0x0,
+            Box = 0x100,
+            Sphere = 0x010,
+            Plane = 0x001,
+            Boxes = Box * 2,
+            Spheres = Sphere *2,
+            BoxAndSphere = Box + Sphere,
+            BoxAndPlane = Box + Plane
+        }
            
     }   
 }
