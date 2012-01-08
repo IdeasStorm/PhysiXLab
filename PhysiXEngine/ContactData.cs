@@ -36,7 +36,7 @@ namespace PhysiXEngine
         public Matrix3 ContactToWorld { get; private set; }
 
         public float restitution { get; protected set; }
-        public Vector3 contactVelocity { get; protected set; }
+        public Vector3 contactVelocity { get; set; }
 
         public float desiredDeltaVelocity { get; set; }
 
@@ -794,14 +794,8 @@ namespace PhysiXEngine
                 body[b].Position = pos;
 
                 Quaternion q;
-                q = body[b].Orientation;
-                Quaternion rotDirQuat = Quaternion.CreateFromYawPitchRoll(
-                    rotationDirection[b].Y * rotationAmount[b] * 5.0f,
-                    rotationDirection[b].X * rotationAmount[b] * 5.0f,
-                    rotationDirection[b].Z * rotationAmount[b] * 5.0f);
-                q = Quaternion.Add(q, rotDirQuat * rotationAmount[b] * 5.0f);
-                body[b].Orientation = q;
-                // TODO be sure of the last operation
+                body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b],MathHelper.Pi)
+                    * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
             }
         }
         #endregion
