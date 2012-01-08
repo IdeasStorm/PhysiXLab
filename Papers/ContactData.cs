@@ -1,13 +1,35 @@
-class ContactData 
+using System;
+
+namespace global
 {
-	enum CollisionType
-	{
-		None=0x0,
-		FirstBox=0x10,
-		SecondBox=0x01,
-		FirstSphere=0x20,
-		SecondSphere=0x02,
-		FirstPlane=0x30,
-		SecondPlane=0x03
-	}
+    class ContactData
+    {
+	    enum CollisionType
+	    {
+            None = 0x0,
+            Box = 0x100,
+            Sphere = 0x010,
+            Plane = 0x001,
+            Boxes = Box * 2,
+            Spheres = Sphere * 2,
+            BoxAndSphere = Box + Sphere,
+            BoxAndPlane = Box + Plane
+	    }
+	
+	    public void someMethod()
+	    {
+		
+	    }
+    }
+
+    class Sphere : Collidable
+    {
+        private CollisionType t;
+        List<Collidable> bodies;
+        public Sphere()
+        {
+            t = bodies[1].getCollidableType() + this.getCollidableType();
+        }
+        
+    }
 }
