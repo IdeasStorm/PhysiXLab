@@ -570,6 +570,8 @@ namespace PhysiXEngine
                 // of the other axes is closest.
                 Vector3 ptOnOneEdge = one.HalfSize;
                 Vector3 ptOnTwoEdge = two.HalfSize;
+
+                float oneVal = 0f, twoVal = 0f;
                 for (int i = 0; i < 3; i++)
                 {
                     // This doesn't work!
@@ -608,8 +610,6 @@ namespace PhysiXEngine
                     // We need to find out point of closes approach of the two 
                     // line-segments.
 
-                    float oneVal = 0f, twoVal = 0f;
-
                     if (oneAxisIndex == 0) oneVal = one.HalfSize.X;
                     if (oneAxisIndex == 1) oneVal = one.HalfSize.Y;
                     if (oneAxisIndex >= 2) oneVal = one.HalfSize.Z;
@@ -617,20 +617,19 @@ namespace PhysiXEngine
                     if (twoAxisIndex == 0) twoVal = two.HalfSize.X;
                     if (twoAxisIndex == 1) twoVal = two.HalfSize.Y;
                     if (twoAxisIndex >= 2) twoVal = two.HalfSize.Z;
+                }
 
-                    Vector3 vertex = contactPoint(ptOnOneEdge, oneAxis, oneVal,
+                Vector3 vertex = contactPoint(ptOnOneEdge, oneAxis, oneVal,
                         ptOnTwoEdge, twoAxis, twoVal, bestSingleAxis > 2);
 
-                    // We can fill the contact.
-                    Penetration = pen;
-                    ContactNormal = axis;
-                    ContactPoint = vertex;
+                // We can fill the contact.
+                Penetration = pen;
+                ContactNormal = axis;
+                ContactPoint = vertex;
 
-                    return 1;
-                }
+                return 1;
             }
-            
-            return 0;
+            //return 0;
         }
         #endregion
 
