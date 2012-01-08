@@ -205,14 +205,12 @@ namespace PhysiXEngine
             return impulseContact;
         }
 
-        public void ApplyVelocityChange(ContactData contactData)
+        public void ApplyVelocityChange(ContactData contactData,out Vector3[] velocityChange,out Vector3[] rotationChange)
         {
             Body one = contactData.body[0];
             Body two = contactData.body[1];
-
-            //TODO not sure !!!! //, Vector3 [] velocityChange, Vector3[] rotationChange)
-            Vector3[] velocityChange = new Vector3[2];
-            Vector3[] rotationChange = new Vector3[2];
+            velocityChange = new Vector3[2];
+            rotationChange = new Vector3[2];
             // Get hold of the inverse mass and inverse inertia tensor, both in
             // world coordinates.
             Matrix3[] inverseInertiaTensor = new Matrix3[2];
@@ -271,7 +269,7 @@ namespace PhysiXEngine
         void calculateContactInformations(float duration)
         {
             BoundingBox world = new BoundingBox();
-            //TODO !! make real world 
+            //TODO !! make float world 
             CollisionDetector collisionGenerator = new CollisionDetector(world,bodies);
             this.contactDataList= collisionGenerator.Detect();
             // initializing contacts
@@ -412,6 +410,96 @@ namespace PhysiXEngine
                 positionIterationsUsed++;
     }
 }
+
+        //Level2 - resolving collison
+        void resolveCollisonVelocity(float duration)
+        { 
+            Vector3[] velocityChange, rotationChange;
+            Vector3 cp;
+
+            // iteratively handle impacts in order of severity.
+            velocityIterationsUsed = 0;
+            while(velocityIterationsUsed < velocityIterations) 
+            {
+                // Find contact with maximum magnitude of probable velocity change.
+                float max = velocityEpsilon;
+                int index = contactDataList.Count;
+                for(int i = 0; i < contactDataList.Count; i++)
+                {
+                    if (contactDataList[i].desiredDeltaVelocity > max)
+                    {
+                        max = contactDataList[i].desiredDeltaVelocity;
+                        index = i;
+                    }
+                }
+                if (index == contactDataList.Count) break;
+
+                // Match the awake state at the contact
+                contactDataList[index].WakeUpPair();
+
+                // Do the resolution on the contact that came out top.
+                ApplyVelocityChange(contactDataList[index],out velocityChange,out rotationChange);
+
+                // With the change in velocity of the two bodies, the update of 
+                // contact velocities means that some of the relative closing 
+                // velocities need recomputing.
+                for (int i = 0; i < contactDataList.Count; i++)
+                {
+                    if (contactDataList[i].body[0] != null)
+                    {
+                        if (contactDataList[i].body[0] == contactDataList[index].body[0])
+                        {
+                            cp = Vector3.Cross(rotationChange[0],contactDataList[i].relativeContactPosition[0]);
+
+                            cp += velocityChange[0];
+
+                            contactDataList[i].contactVelocity += 
+                                contactDataList[i].ContactToWorld.transformTranspose(cp);
+                            calculateDeltaVelocity(contactDataList[i]);
+                            //TODO move this to contact data & check params e.g duration
+                        }
+                        else if (contactDataList[i].body[0]==contactDataList[index].body[1])
+                        {
+                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[0]);
+
+                            cp += velocityChange[1];
+
+                            contactDataList[i].contactVelocity += 
+                                contactDataList[i].ContactToWorld.transformTranspose(cp);
+                            calculateDeltaVelocity(contactDataList[i]);
+                            //TODO move this to contact data & check params e.g duration
+                        }
+                    }
+
+                    if (contactDataList[i].body[1] != null )
+                    {
+                        if (contactDataList[i].body[1]==contactDataList[index].body[0])
+                        {
+                            cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[1]);
+
+                            cp += velocityChange[0];
+
+                            contactDataList[i].contactVelocity -= 
+                                contactDataList[i].ContactToWorld.transformTranspose(cp);
+                            calculateDeltaVelocity(contactDataList[i]);
+                            //TODO move this to contact data & check params e.g duration
+                        }
+                        else if (contactDataList[i].body[1]==contactDataList[index].body[1])
+                        {
+                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[1]);
+
+                            cp += velocityChange[1];
+
+                            contactDataList[i].contactVelocity -= 
+                                contactDataList[i].ContactToWorld.transformTranspose(cp);
+                            calculateDeltaVelocity(contactDataList[i]);
+                            //TODO move this to contact data & check params e.g duration
+                        }
+                    }
+                }
+                velocityIterationsUsed++;
+    }
+        }
         #endregion
 
     }
@@ -422,7 +510,7 @@ namespace PhysiXEngine
     {
         public CollisionDetector(BoundingBox World, LinkedList<Collidable> Shapes)
         {
-            //TODO link the real class & delete this
+            //TODO link the float class & delete this
         }
 
 
