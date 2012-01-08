@@ -45,8 +45,8 @@ namespace PhysiXEngine
                 contact.ContactPoint = (onePosWorld + twoPosWorld) * 0.5f;
                 contact.Penetration = length - constant;
                 //TODO add friction and restitution to contactdata 
-                //contact.friction = 1.0f;
-                //contact.restitution = 0;
+                contact.friction = 1.0f;
+                contact.restitution = 0;
                 return true;
             }
 
