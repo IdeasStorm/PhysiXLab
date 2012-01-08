@@ -19,6 +19,11 @@ namespace PhysiXEngine
             this.offset = offset;
         }
 
+        protected override void updateBounding()
+        {
+            //TODO add update logic
+        }
+
         public override ContactData generateContacts(Collidable other)
         {
             ContactData contactData = null;
