@@ -271,7 +271,7 @@ namespace PhysiXEngine
             // TODO !! make real world
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies);
-            this.contactDataList= collisionGenerator.Detect();
+            this.contactDataList= collisionGenerator.ReDetect();
             // initializing contacts
             foreach (ContactData contactData in contactDataList)
             {
