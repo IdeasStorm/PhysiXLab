@@ -47,8 +47,8 @@ namespace PhysiXLab
             camera = new Camera(this, new Vector3(0, 0, 100),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
-            ball = new Ball(1f);
-            dummy = new Ball(1f);
+            ball = new Ball(100f);
+            dummy = new Ball(100f);
             crate = new Crate(new Vector3(10,10,10));
             crate.Position = new Vector3(20,20,20);
             //dummy.InverseMass = 0;
@@ -73,7 +73,7 @@ namespace PhysiXLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
             crate.LoadContent(Content);
             // TODO: use this.Content to load your game content here
-            ball.model = Content.Load<Model>(@"Ball");
+            ball.model = Content.Load<Model>(@"ball");
             dummy.model = ball.model;
         }
 
@@ -109,7 +109,7 @@ namespace PhysiXLab
                 if (spaceDown && (Keyboard.GetState(PlayerIndex.One).IsKeyUp(Keys.Space))) 
                 {
                     spaceDown = false;
-                    Ball b = new Ball(1f);
+                    Ball b = new Ball(100f);
                     b.model = ball.model;
                     //g.AddBody(b);
                     balls.AddLast(b);

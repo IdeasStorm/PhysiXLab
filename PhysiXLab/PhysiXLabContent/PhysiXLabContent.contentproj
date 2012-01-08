@@ -39,15 +39,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ball.FBX">
-      <Name>Ball</Name>
+    <Compile Include="box.FBX">
+      <Name>box</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="box.FBX">
-      <Name>box</Name>
+    <Compile Include="ball.FBX">
+      <Name>ball</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
