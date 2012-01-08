@@ -10,6 +10,6 @@ namespace PhysiXEngine
     {
         public abstract ContactData generateContacts(Collidable other);
         public abstract Boolean CollidesWith(Collidable other);
-        public abstract BoundingSphere getBoundingSphere();
+        public abstract BoundingSphere GetBoundingSphere();
     }
 }

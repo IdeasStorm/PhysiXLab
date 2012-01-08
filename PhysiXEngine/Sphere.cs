@@ -53,7 +53,7 @@ namespace PhysiXEngine
             return false;
         }
 
-        public BoundingSphere GetBoundingSphere()
+        public override BoundingSphere GetBoundingSphere()
         {
             return sphere;
         }

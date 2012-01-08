@@ -43,5 +43,9 @@ namespace PhysiXEngine
         {
             return plane;
         }
+        public override BoundingSphere GetBoundingSphere()
+        {
+            return BoundingSphere.CreateFromBoundingBox(plane);
+        }
     }
 }
