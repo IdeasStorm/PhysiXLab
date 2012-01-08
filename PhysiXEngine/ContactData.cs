@@ -35,12 +35,14 @@ namespace PhysiXEngine
 
         public Matrix3 ContactToWorld { get; private set; }
 
-        public float restitution { get; protected set; }
+        public float restitution { get; set; }
         public Vector3 contactVelocity { get; set; }
 
         public float desiredDeltaVelocity { get; set; }
 
         public  Vector3[] relativeContactPosition = new Vector3[2];
+
+        public float friction { get; set; }
 
         public ContactData(Collidable firstBody, Collidable secondBody)
         {
