@@ -509,7 +509,7 @@ namespace PhysiXEngine
     /// just a stub , remove this plz
     class CollisionDetector
     {
-        public CollisionDetector(BoundingBox World, LinkedList<Collidable> Shapes)
+        public CollisionDetector(LinkedList<Collidable> Shapes)
         {
             //TODO link the float class & delete this
         }
