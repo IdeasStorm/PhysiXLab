@@ -36,7 +36,7 @@ namespace PhysiXEngine
         public Matrix3 ContactToWorld { get; private set; }
 
         public float restitution { get; protected set; }
-        public Vector3 contactVelocity { get; protected set; }
+        public Vector3 contactVelocity { get; set; }
 
         public float desiredDeltaVelocity { get; set; }
 
