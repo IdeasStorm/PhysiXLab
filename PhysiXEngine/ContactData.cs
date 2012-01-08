@@ -19,12 +19,12 @@ namespace PhysiXEngine
         /**
          * Holds the position of the contact in world coordinates.
          */
-        public Vector3 ContactPoint { get; protected set; }
+        public Vector3 ContactPoint { get; set; }
 
         /**
          * Holds the direction of the contact in world coordinates.
          */
-        public Vector3 ContactNormal { get; protected set; }
+        public Vector3 ContactNormal { get; set; }
 
         /**
          * Holds the depth of penetration at the contact point. If both
