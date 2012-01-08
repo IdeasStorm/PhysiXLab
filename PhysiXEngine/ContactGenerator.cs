@@ -33,13 +33,12 @@ namespace PhysiXEngine
         /// to affect each body by the another
         /// </summary>
         /// <param name="time"></param>
-        public override void Update(float time)
-        {
-            frameDuration = time;
-            foreach (ContactData contactData in contactDataList)
-            {
-                Affect(contactData);
-            }
+        public override void Update(float duration)
+        {            
+            frameDuration = duration;
+            calculateContactInformations(duration);
+            resolvePenetration(duration);
+            resolveCollisonVelocity(duration);
         }
 
         public void Affect(ContactData contactData)
