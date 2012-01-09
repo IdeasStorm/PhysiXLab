@@ -49,7 +49,7 @@ namespace PhysiXLab
             Components.Add(camera);
             ball = new Ball(100f);
             dummy = new Ball(100f);
-            crate = new Crate(new Vector3(10,10,10));
+            crate = new Crate(new Vector3(1,1,1));
             crate.Position = new Vector3(20,20,20);
             //dummy.InverseMass = 0;
             //dummy.InverseInertiaTensor = new Matrix3();
@@ -118,7 +118,7 @@ namespace PhysiXLab
                     //spring.AddBody(b);
                     spring = new Spring(b, dummy, dummy.Position, 0.3f, 20f);
                     //crate.AddForce(new Vector3(12,32,3),new Vector3(2,2,3));
-                    crate.AngularAcceleration = new Vector3(0.001f,0.001f,0.001f);
+                    crate.AngularAcceleration = new Vector3(0.001f,0f,0f);
                 }
                 g.Update(duration);
                 if (spring != null)
