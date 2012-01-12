@@ -794,7 +794,6 @@ namespace PhysiXEngine
                 pos = Vector3.Add(pos, ContactNormal * linearMove[b]);
                 body[b].Position = pos;
 
-                Quaternion q;
                 body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b],MathHelper.Pi)
                     * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
             }
