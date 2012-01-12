@@ -19,6 +19,11 @@ namespace Test
     {
         GraphicsDeviceManager graphics;
 
+        #region "testing components"
+        Ball b1, b2;
+        Camera camera;
+        #endregion
+
         public Collisions()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -31,8 +36,14 @@ namespace Test
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization code here
+            b1 = new Ball(100f);
+            b2 = new Ball(100f);
+            b2.Position = new Vector3(100,0,0);
 
+            b1.model = b2.model = Content.Load<Model>(@"ball");
+            camera = new Camera(this, new Vector3(0, 0, 100),
+                Vector3.Zero, Vector3.Up);
+            Components.Add(camera);
             base.Initialize();
         }
 
@@ -42,7 +53,13 @@ namespace Test
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
+            float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                b1.AddForce(new Vector3(100, 0, 0));
+
+            b1.Update(duration);
+            b2.Update(duration);
 
             base.Update(gameTime);
         }
@@ -50,7 +67,8 @@ namespace Test
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            b1.Draw(camera);
+            b2.Draw(camera);
             base.Draw(gameTime);
         }
     }
