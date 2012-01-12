@@ -35,22 +35,24 @@ namespace PhysiXEngine
         public override Contact generateContacts(Collidable other) 
         {
             Contact contactData = null;
+            
+            return contactData;
+        }
+
+        public override void generateContacts(Collidable other, Contact contact)
+        {
             if (other as Sphere != null)
             {
-                contactData = new Contact(this, other);
-                contactData.SphereAndSphere();
+                contact.SphereAndSphere();
             }
             if (other as Plane != null)
             {
-                contactData = new Contact(this, other);
-                contactData.SphereAndPlane();
+                contact.SphereAndPlane();
             }
             if (other as Box != null)
             {
-                contactData = new Contact(this, other);
-                contactData.SphereAndBox();
+                contact.SphereAndBox();
             }
-            return contactData;
         }
 
         public override Boolean CollidesWith(Collidable other)

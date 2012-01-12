@@ -22,21 +22,7 @@ namespace PhysiXEngine
         public override Contact generateContacts(Collidable other)
         {
             Contact contactData = null;
-            if (other as Box != null)
-            {
-                contactData = new Contact(other, this);
-                contactData.BoxAndBox();
-            }
-            if (other as Sphere != null)
-            {
-                contactData = new Contact(other, this);
-                contactData.SphereAndBox();
-            }
-            if (other as Plane != null)
-            {
-                contactData = new Contact(other, this);
-                contactData.BoxAndHalfSpace();
-            }
+            
             return contactData;
         }
 
@@ -56,6 +42,22 @@ namespace PhysiXEngine
         public override BoundingSphere GetBoundingSphere()
         {
             return BoundingSphere.CreateFromBoundingBox(box);
+        }
+
+        public override void generateContacts(Collidable other, Contact contact)
+        {
+            if (other as Box != null)
+            {
+                contact.BoxAndBox();
+            }
+            if (other as Sphere != null)
+            {
+                contact.SphereAndBox();
+            }
+            if (other as Plane != null)
+            {
+                contact.BoxAndHalfSpace();
+            }
         }
     }
 }

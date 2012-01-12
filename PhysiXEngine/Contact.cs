@@ -190,8 +190,18 @@ namespace PhysiXEngine
 
         public void SphereAndPlane()
         {
-            Sphere sphere = (Sphere)body[0];
-            Plane plane = (Plane)body[1];
+            Sphere sphere = null;
+            Plane plane = null;
+            if (body[0] as Sphere != null)
+            {
+                sphere = (Sphere)body[0];
+                plane = (Plane)body[1];
+            }
+            else
+            {
+                plane = (Plane)body[0];
+                sphere = (Sphere)body[1];
+            }
 
             // Cache the sphere position
             Vector3 position = sphere.Position;
@@ -214,28 +224,32 @@ namespace PhysiXEngine
 
         public void BoxAndHalfSpace()
         {
-            Box box = (Box)body[0];
-            Plane plane = (Plane)body[1];
+            Box box = null;
+            Plane plane = null;
+            if (body[0] as Box != null)
+            {
+                box = (Box)body[0];
+                plane = (Plane)body[1];
+            }
+            else
+            {
+                plane = (Plane)body[0];
+                box = (Box)body[1];
+            }
 
             // We have an intersection, so find the intersection points. We can make
             // do with only checking vertices. If the box is resting on a plane
             // or on an edge, it will be reported as four or two contact points.
             Vector3[] cornars = box.box.GetCorners();
             // Go through each combination of + and - for each half-size
-            /*float[,] mults = new float[8,3] {{1,1,1},{-1,1,1},{1,-1,1},{-1,-1,1},
-                                       {1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}};*/
 
             for (int i = 0; i < 8; i++)
             {
 
                 // Calculate the position of each vertex
-                //Vector3 vertexPos = new Vector3((float)mults[i,0], (float)mults[i,1], (float)mults[i,2]);
                 Vector3 vertexPos;
-                //vertexPos = Vector3.Cross(cornars[i], box.HalfSize);
-                //vertexPos = Vector3.Transform(vertexPos, box.TransformMatrix);
                 vertexPos = Vector3.Transform(cornars[i], box.TransformMatrix);
 
-                ///>BoxPlaneTestOne
                 // Calculate the distance from the plane
                 float vertexDistance = Vector3.Dot(vertexPos, plane.direction);
 
@@ -410,20 +424,18 @@ namespace PhysiXEngine
         //public bool BoxAndSphere()
         public void SphereAndBox()
         {
-            Sphere sphere = (Sphere)body[0];
-            Box box = (Box)body[1];
-            //Sphere sphere;
-            //Box box;
-            //if (body[0] is Box)
-            //{
-                //box = (Box)body[0];
-                //sphere = (Sphere)body[1];
-            //}
-            //else
-            //{
-                //box = (Box)body[1];
-                //sphere = (Sphere)body[0];
-            //}
+            Sphere sphere = null;
+            Box box = null;
+            if (body[0] as Box != null)
+            {
+                box = (Box)body[0];
+                sphere = (Sphere)body[1];
+            }
+            else
+            {
+                box = (Box)body[1];
+                sphere = (Sphere)body[0];
+            }
             
             // Transform the centre of the sphere into box coordinates  
             Vector3 centre = sphere.GetAxis(3);
