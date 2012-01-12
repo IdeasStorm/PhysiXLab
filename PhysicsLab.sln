@@ -5,9 +5,9 @@ Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "PhysicsLabDesign", "Physics
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXEngine", "PhysiXEngine\PhysiXEngine.csproj", "{14604323-9A03-42D6-8C2E-D443B2BC9733}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXLab", "PhysiXLab\PhysiXLab\PhysiXLab.csproj", "{70B462C1-4680-4F68-926E-7353A515B31A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "PhysiXLab\PhysiXLab\Test.csproj", "{70B462C1-4680-4F68-926E-7353A515B31A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXLabContent", "PhysiXLab\PhysiXLabContent\PhysiXLabContent.contentproj", "{4369C0DA-852E-42CB-866F-9FEBB266ECA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestContent", "PhysiXLab\PhysiXLabContent\TestContent.contentproj", "{4369C0DA-852E-42CB-866F-9FEBB266ECA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

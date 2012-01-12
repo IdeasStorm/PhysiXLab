@@ -1,6 +1,6 @@
 using System;
 
-namespace PhysiXLab
+namespace Test
 {
 #if WINDOWS || XBOX
     static class Program

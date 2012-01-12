@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using PhysiXEngine.Helpers;
 using PhysiXEngine;
 
-namespace PhysiXLab
+namespace Test
 {
     /// <summary>
     /// This is the main type for your game

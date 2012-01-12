@@ -6,7 +6,7 @@ using PhysiXEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace PhysiXLab
+namespace Test
 {
     class Ball : Sphere
     {
