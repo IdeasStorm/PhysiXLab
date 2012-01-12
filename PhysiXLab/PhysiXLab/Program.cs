@@ -10,7 +10,7 @@ namespace Test
         /// </summary>
         static void Main(string[] args)
         {
-            using (Lab game = new Lab())
+            using (Collisions game = new Collisions())
             {
                 game.Run();
             }
