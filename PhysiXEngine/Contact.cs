@@ -51,6 +51,124 @@ namespace PhysiXEngine
             ContactToWorld = new Matrix3();
         }
 
+        #region Calculate internel information 
+
+        /// <summary>
+        /// Calculates and sets the internal value for the delta velocity.
+        /// </summary>
+        /// <param name="contactData">the contact Data that contains the bodies and contct informations</param>
+        public void CalculateDeltaVelocity(float frameDuration)
+        {
+            const float velocityLimit = 0.25f;
+
+            Body body1 = this.body[0];
+            Body body2 = this.body[1];
+
+            // NewVelocityCalculation
+            // Calculate the acceleration induced velocity accumulated this frame
+            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,this.ContactNormal) * frameDuration ;
+
+            if (body2 != null)
+            {
+                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, this.ContactNormal) * frameDuration;
+            }
+
+            // If the velocity is very slow, limit the restitution
+            float thisRestitution = this.restitution;
+            if (Math.Sqrt(this.contactVelocity.X) < velocityLimit)
+            {
+                thisRestitution = (float)0.0f;
+            }
+
+            // Combine the bounce velocity with the removed
+            // acceleration velocity.            
+            this.desiredDeltaVelocity = -this.contactVelocity.X - thisRestitution * ((this.contactVelocity.X - velocityFromAcc));
+            //contactData.desiredDeltaVelocity = deltaVelocity;
+        }
+
+        private void SwapBodies()
+        {
+            this.ContactNormal *= -1;
+
+            Collidable temp = this.body[0];
+            this.body[0] = this.body[1];
+            this.body[1] = temp;
+        }
+
+        /// <summary>
+        /// Calculate the velocity of body with index i for calculate the contact velocity
+        /// </summary>
+        /// <param name="contactData"></param>
+        /// <param name="bodyIndex"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
+        public Vector3 CalculateLocalVelocity(float frameDuration, uint bodyIndex)
+        {
+            Body thisBody = this.body[bodyIndex];
+
+            // Work out the velocity of the contact point.
+            Vector3 velocity = Vector3.Multiply(thisBody.Rotation, this.relativeContactPosition[bodyIndex]);
+            velocity += thisBody.Velocity;
+
+            // Turn the velocity into contact-coordinates.
+            Vector3 contactVelocity = this.ContactToWorld.transformTranspose(velocity);
+
+            // Calculate the ammount of velocity that is due to forces without
+            // reactions.
+            Vector3 accVelocity = thisBody.LastFrameAcceleration * frameDuration;
+
+            // Calculate the velocity in contact-coordinates.
+            accVelocity = this.ContactToWorld.transformTranspose(accVelocity);
+
+            // We ignore any component of acceleration in the contact normal
+            // direction, we are only interested in planar acceleration
+            accVelocity.X = 0;
+
+            // Add the planar velocities - if there's enough friction they will
+            // be removed during velocity resolution
+            contactVelocity += accVelocity;
+
+            // And return it
+            return contactVelocity;
+        }
+
+        /// <summary>
+        /// calculate Local Velocity "Closing velocity" then calculate deltavelocity
+        /// </summary>
+        /// <param name="frameDuration"></param>
+        public void CalculateInternals(float frameDuration)
+        {
+            // Check if the first object is NULL, and swap if it is.
+            if (this.body[0]==null) 
+                SwapBodies();
+
+            //TODO exit all program
+            if (this.body[0] == null)
+                return;
+
+            // Calculate an set of axis at the contact point.
+            this.calculateContactBasis();
+
+            // Store the relative position of the contact relative to each body
+            this.relativeContactPosition[0] = this.ContactPoint - this.body[0].Position;
+            if (this.body[1]!=null)
+            {
+                this.relativeContactPosition[1] = this.ContactPoint - this.body[1].Position;
+            }
+
+            // Find the relative velocity of the bodies at the contact point.
+            this.contactVelocity = CalculateLocalVelocity(frameDuration,0);
+            if (this.body[1]!=null)
+            {
+                this.contactVelocity -= CalculateLocalVelocity(frameDuration,1);
+            }
+
+            // Calculate the desired change in velocity for resolution
+            CalculateDeltaVelocity(frameDuration);
+        }
+
+        #endregion
+
         #region "contactData Extraction "
 
         public void SphereAndSphere()

@@ -53,7 +53,6 @@
     <Compile Include="Effect.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="ForceGenerator.cs" />
-    <Compile Include="Friction.cs" />
     <Compile Include="Gravity.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\Matrix3.cs" />
