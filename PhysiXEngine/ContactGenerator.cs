@@ -69,120 +69,114 @@ namespace PhysiXEngine
 
         }
 
-        /// <summary>
-        /// Calculate the velocity of body with index i for calculate the contact velocity
-        /// </summary>
-        /// <param name="contactData"></param>
-        /// <param name="bodyIndex"></param>
-        /// <param name="duration"></param>
-        /// <returns></returns>
-        private Vector3 CalculateLocalVelocity(Contact contactData, uint bodyIndex)
-        {
-            Body thisBody = contactData.body[bodyIndex];
+        ///// <summary>
+        ///// Calculate the velocity of body with index i for calculate the contact velocity
+        ///// </summary>
+        ///// <param name="contactData"></param>
+        ///// <param name="bodyIndex"></param>
+        ///// <param name="duration"></param>
+        ///// <returns></returns>
+        //private Vector3 CalculateLocalVelocity(Contact contactData, uint bodyIndex)
+        //{
+        //    Body thisBody = contactData.body[bodyIndex];
 
-            // Work out the velocity of the contact point.
-            Vector3 velocity = Vector3.Multiply(thisBody.Rotation, contactData.relativeContactPosition[bodyIndex]);
-            velocity += thisBody.Velocity;
+        //    // Work out the velocity of the contact point.
+        //    Vector3 velocity = Vector3.Multiply(thisBody.Rotation, contactData.relativeContactPosition[bodyIndex]);
+        //    velocity += thisBody.Velocity;
 
-            // Turn the velocity into contact-coordinates.
-            Vector3 contactVelocity = contactData.ContactToWorld.transformTranspose(velocity);
+        //    // Turn the velocity into contact-coordinates.
+        //    Vector3 contactVelocity = contactData.ContactToWorld.transformTranspose(velocity);
 
-            // Calculate the ammount of velocity that is due to forces without
-            // reactions.
-            Vector3 accVelocity = thisBody.LastFrameAcceleration * frameDuration;
+        //    // Calculate the ammount of velocity that is due to forces without
+        //    // reactions.
+        //    Vector3 accVelocity = thisBody.LastFrameAcceleration * frameDuration;
 
-            // Calculate the velocity in contact-coordinates.
-            accVelocity = contactData.ContactToWorld.transformTranspose(accVelocity);
+        //    // Calculate the velocity in contact-coordinates.
+        //    accVelocity = contactData.ContactToWorld.transformTranspose(accVelocity);
 
-            // We ignore any component of acceleration in the contact normal
-            // direction, we are only interested in planar acceleration
-            accVelocity.X = 0;
+        //    // We ignore any component of acceleration in the contact normal
+        //    // direction, we are only interested in planar acceleration
+        //    accVelocity.X = 0;
 
-            // Add the planar velocities - if there's enough friction they will
-            // be removed during velocity resolution
-            contactVelocity += accVelocity;
+        //    // Add the planar velocities - if there's enough friction they will
+        //    // be removed during velocity resolution
+        //    contactVelocity += accVelocity;
 
-            // And return it
-            return contactVelocity;
-        }
+        //    // And return it
+        //    return contactVelocity;
+        //}
 
-        /// <summary>
-        /// Calculates and sets the internal value for the delta velocity.
-        /// </summary>
-        /// <param name="contactData">the contact Data that contains the bodies and contct informations</param>
-        private void CalculateDeltaVelocity(ref Contact contactData)
-        {
-            Body body1 = contactData.body[0];
-            Body body2 = contactData.body[1];
+        ///// <summary>
+        ///// Calculates and sets the internal value for the delta velocity.
+        ///// </summary>
+        ///// <param name="contactData">the contact Data that contains the bodies and contct informations</param>
+        //private void CalculateDeltaVelocity(Contact contactData)
+        //{
+        //    Body body1 = contactData.body[0];
+        //    Body body2 = contactData.body[1];
 
-            // NewVelocityCalculation
-            // Calculate the acceleration induced velocity accumulated this frame
-            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.ContactNormal) * frameDuration ;
+        //    // NewVelocityCalculation
+        //    // Calculate the acceleration induced velocity accumulated this frame
+        //    float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,contactData.ContactNormal) * frameDuration ;
 
-            if (body2 != null)
-            {
-                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, contactData.ContactNormal) * frameDuration;
-            }
+        //    if (body2 != null)
+        //    {
+        //        velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, contactData.ContactNormal) * frameDuration;
+        //    }
 
-            // If the velocity is very slow, limit the restitution
-            float thisRestitution = contactData.restitution;
-            if (Math.Sqrt(contactData.contactVelocity.X) < velocityLimit)
-            {
-                thisRestitution = (float)0.0f;
-            }
+        //    // If the velocity is very slow, limit the restitution
+        //    float thisRestitution = contactData.restitution;
+        //    if (Math.Sqrt(contactData.contactVelocity.X) < velocityLimit)
+        //    {
+        //        thisRestitution = (float)0.0f;
+        //    }
 
-            // Combine the bounce velocity with the removed
-            // acceleration velocity.            
-            contactData.desiredDeltaVelocity = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
-            //contactData.desiredDeltaVelocity = deltaVelocity;
-        }
+        //    // Combine the bounce velocity with the removed
+        //    // acceleration velocity.            
+        //    contactData.desiredDeltaVelocity = -contactData.contactVelocity.X - thisRestitution * ((contactData.contactVelocity.X - velocityFromAcc));
+        //    //contactData.desiredDeltaVelocity = deltaVelocity;
+        //}
 
-        private void CalculateDeltaVelocity(ref List<Contact> contactList,int i)
-        {
-            Contact contact = contactList[i];
-            CalculateDeltaVelocity(ref contact);
-            contactList[i] = contact;
-        }
 
-        private void SwapBodies(ref Contact contacData)
-        {
-            contacData.ContactNormal *= -1;
+        //private void SwapBodies(Contact contacData)
+        //{
+        //    contacData.ContactNormal *= -1;
 
-            Collidable temp = contacData.body[0];
-            contacData.body[0] = contacData.body[1];
-            contacData.body[1] = temp;
-        }
+        //    Collidable temp = contacData.body[0];
+        //    contacData.body[0] = contacData.body[1];
+        //    contacData.body[1] = temp;
+        //}
 
-        public void CalculateInternals(ref Contact contacData)
-        {
-            // Check if the first object is NULL, and swap if it is.
-            if (contacData.body[0]==null) 
-                SwapBodies(ref contacData);
+        //public void CalculateInternals(Contact contacData)
+        //{
+        //    // Check if the first object is NULL, and swap if it is.
+        //    if (contacData.body[0]==null) 
+        //        SwapBodies(contacData);
 
-            //TODO exit all program
-            if (contacData.body[0] == null)
-                return;
+        //    //TODO exit all program
+        //    if (contacData.body[0] == null)
+        //        return;
 
-            // Calculate an set of axis at the contact point.
-            contacData.calculateContactBasis();
+        //    // Calculate an set of axis at the contact point.
+        //    contacData.calculateContactBasis();
 
-            // Store the relative position of the contact relative to each body
-            contacData.relativeContactPosition[0] = contacData.ContactPoint - contacData.body[0].Position;
-            if (contacData.body[1]!=null)
-            {
-                contacData.relativeContactPosition[1] = contacData.ContactPoint - contacData.body[1].Position;
-            }
+        //    // Store the relative position of the contact relative to each body
+        //    contacData.relativeContactPosition[0] = contacData.ContactPoint - contacData.body[0].Position;
+        //    if (contacData.body[1]!=null)
+        //    {
+        //        contacData.relativeContactPosition[1] = contacData.ContactPoint - contacData.body[1].Position;
+        //    }
 
-            // Find the relative velocity of the bodies at the contact point.
-            contacData.contactVelocity = CalculateLocalVelocity(contacData,0);
-            if (contacData.body[1]!=null)
-            {
-                contacData.contactVelocity -= CalculateLocalVelocity(contacData,1);
-            }
+        //    // Find the relative velocity of the bodies at the contact point.
+        //    contacData.contactVelocity = CalculateLocalVelocity(contacData,0);
+        //    if (contacData.body[1]!=null)
+        //    {
+        //        contacData.contactVelocity -= CalculateLocalVelocity(contacData,1);
+        //    }
 
-            // Calculate the desired change in velocity for resolution
-            CalculateDeltaVelocity(ref contacData);
-        }
+        //    // Calculate the desired change in velocity for resolution
+        //    CalculateDeltaVelocity(contacData);
+        //}
 
         private Vector3 CalculateFrictionlessImpulse(Contact contactData, Matrix3[] inverseInertiaTensor)
         {
@@ -555,7 +549,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity += 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            CalculateDeltaVelocity(ref contactDataList,i);
+                            contactDataList[i].CalculateDeltaVelocity(duration);
                             //TODO move this to contact data & check params e.g duration
                         }
                         else if (contactDataList[i].body[0]==contactDataList[index].body[1])
@@ -566,7 +560,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity += 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            CalculateDeltaVelocity(ref contactDataList, i);
+                            contactDataList[i].CalculateDeltaVelocity(duration);
                             //TODO move this to contact data & check params e.g duration
                         }
                     }
@@ -581,7 +575,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity -= 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            CalculateDeltaVelocity(ref contactDataList, i);
+                            contactDataList[i].CalculateDeltaVelocity(duration);
                             //TODO move this to contact data & check params e.g duration
                         }
                         else if (contactDataList[i].body[1]==contactDataList[index].body[1])
@@ -592,7 +586,7 @@ namespace PhysiXEngine
 
                             contactDataList[i].contactVelocity -= 
                                 contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            CalculateDeltaVelocity(ref contactDataList, i);
+                            contactDataList[i].CalculateDeltaVelocity(duration);
                             //TODO move this to contact data & check params e.g duration
                         }
                     }
