@@ -16,6 +16,7 @@ namespace PhysiXEngine
         public ContactGenerator()
         {
             contactDataList = new List<Contact>();
+            bodies = new LinkedList<Collidable>();
         }
 
         public void AddContactData(Contact contactdata)
