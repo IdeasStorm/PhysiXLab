@@ -364,13 +364,15 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations;
+        uint velocityIterations = 10;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations;
+        uint positionIterations = 10;
+
+        //TODO modify above values
 
         /// <summary>
         /// Stores the number of velocity iterations used in the 
