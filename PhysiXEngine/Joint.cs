@@ -22,7 +22,7 @@ namespace PhysiXEngine
             this.constant = constant;
         }
 
-        public bool addContact(ref ContactData contact, int limit)
+        public bool addContact(ref Contact contact, int limit)
         {
             // Calculate the position of each connection point in world coordinates
             Vector3 onePosWorld = body[0].GetPointInWorldSpace(body[0].Position);

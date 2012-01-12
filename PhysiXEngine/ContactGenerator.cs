@@ -10,15 +10,15 @@ namespace PhysiXEngine
     public class ContactGenerator : Effect
     {
         protected LinkedList<Collidable> bodies;
-        protected List<ContactData> contactDataList;
+        protected List<Contact> contactDataList;
         static float velocityLimit = 0.25f;
 
         public ContactGenerator()
         {
-            contactDataList = new List<ContactData>();
+            contactDataList = new List<Contact>();
         }
 
-        public void AddContactData(ContactData contactdata)
+        public void AddContactData(Contact contactdata)
         {
             contactDataList.Add(contactdata);
         }
@@ -41,7 +41,7 @@ namespace PhysiXEngine
             resolveCollisonVelocity(duration);
         }
 
-        public void Affect(ContactData contactData)
+        public void Affect(Contact contactData)
         {
             // Calculating Desired Delta Velocity
             contactData.InitializeAtMoment(frameDuration);
@@ -57,7 +57,7 @@ namespace PhysiXEngine
         /// <param name="bodyIndex"></param>
         /// <param name="duration"></param>
         /// <returns></returns>
-        private Vector3 CalculateLocalVelocity(ContactData contactData, uint bodyIndex)
+        private Vector3 CalculateLocalVelocity(Contact contactData, uint bodyIndex)
         {
             Body thisBody = contactData.body[bodyIndex];
 
@@ -91,7 +91,7 @@ namespace PhysiXEngine
         /// Calculates and sets the internal value for the delta velocity.
         /// </summary>
         /// <param name="contactData">the contact Data that contains the bodies and contct informations</param>
-        private void CalculateDeltaVelocity(ref ContactData contactData)
+        private void CalculateDeltaVelocity(ref Contact contactData)
         {
             Body body1 = contactData.body[0];
             Body body2 = contactData.body[1];
@@ -118,14 +118,14 @@ namespace PhysiXEngine
             //contactData.desiredDeltaVelocity = deltaVelocity;
         }
 
-        private void CalculateDeltaVelocity(ref List<ContactData> contactList,int i)
+        private void CalculateDeltaVelocity(ref List<Contact> contactList,int i)
         {
-            ContactData contact = contactList[i];
+            Contact contact = contactList[i];
             CalculateDeltaVelocity(ref contact);
             contactList[i] = contact;
         }
 
-        private void SwapBodies(ref ContactData contacData)
+        private void SwapBodies(ref Contact contacData)
         {
             contacData.ContactNormal *= -1;
 
@@ -134,7 +134,7 @@ namespace PhysiXEngine
             contacData.body[1] = temp;
         }
 
-        public void CalculateInternals(ref ContactData contacData)
+        public void CalculateInternals(ref Contact contacData)
         {
             // Check if the first object is NULL, and swap if it is.
             if (contacData.body[0]==null) 
@@ -165,7 +165,7 @@ namespace PhysiXEngine
             CalculateDeltaVelocity(ref contacData);
         }
 
-        private Vector3 CalculateFrictionlessImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
+        private Vector3 CalculateFrictionlessImpulse(Contact contactData, Matrix3[] inverseInertiaTensor)
         {
             Body one = contactData.body[0];
             Body two = contactData.body[1];
@@ -206,7 +206,7 @@ namespace PhysiXEngine
             return impulseContact;
         }
 
-        private Vector3 CalculateFrictionImpulse(ContactData contactData, Matrix3[] inverseInertiaTensor)
+        private Vector3 CalculateFrictionImpulse(Contact contactData, Matrix3[] inverseInertiaTensor)
         {
             Body one = contactData.body[0];
             Body two = contactData.body[1];
@@ -285,7 +285,7 @@ namespace PhysiXEngine
             return impulseContact;
         }
 
-        public void ApplyVelocityChange(ContactData contactData,out Vector3[] velocityChange,out Vector3[] rotationChange)
+        public void ApplyVelocityChange(Contact contactData,out Vector3[] velocityChange,out Vector3[] rotationChange)
         {
             Body one = contactData.body[0];
             Body two = contactData.body[1];
@@ -352,7 +352,7 @@ namespace PhysiXEngine
             CollisionDetector collisionGenerator = new CollisionDetector(bodies);
             this.contactDataList= collisionGenerator.ReDetect();
             // initializing contacts
-            foreach (ContactData contactData in contactDataList)
+            foreach (Contact contactData in contactDataList)
             {
                 contactData.InitializeAtMoment(duration);
             }
@@ -421,7 +421,7 @@ namespace PhysiXEngine
                 max = positionEpsilon;
                 index = contactDataList.Count;
                 //for(i=0;i<contactDataList.Count;i++) {
-                foreach (ContactData c in contactDataList) {
+                foreach (Contact c in contactDataList) {
                     if(c.Penetration > max)
                     {
                         max = (float)c.Penetration;

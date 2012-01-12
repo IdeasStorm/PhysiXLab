@@ -19,22 +19,22 @@ namespace PhysiXEngine
             updateBounding();
         }
 
-        public override ContactData generateContacts(Collidable other)
+        public override Contact generateContacts(Collidable other)
         {
-            ContactData contactData = null;
+            Contact contactData = null;
             if (other as Box != null)
             {
-                contactData = new ContactData(other, this);
+                contactData = new Contact(other, this);
                 contactData.BoxAndBox();
             }
             if (other as Sphere != null)
             {
-                contactData = new ContactData(other, this);
+                contactData = new Contact(other, this);
                 contactData.SphereAndBox();
             }
             if (other as Plane != null)
             {
-                contactData = new ContactData(other, this);
+                contactData = new Contact(other, this);
                 contactData.BoxAndHalfSpace();
             }
             return contactData;

@@ -65,19 +65,19 @@ namespace PhysiXEngine
             return Volume.Intersects(other.Volume);
         }
 
-        public void FindPotentialCollisions(List<ContactData> Potentials)
+        public void FindPotentialCollisions(List<Contact> Potentials)
         {
             if (this.isLeaf())
                 return;
             this.Children[0].FindPotentialCollisionsWith(Potentials, this.Children[1]);
         }
 
-        public void FindPotentialCollisionsWith(List<ContactData> Potentials, BVHNode other)
+        public void FindPotentialCollisionsWith(List<Contact> Potentials, BVHNode other)
         {
             if (!CollidesWith(other))
                 return;
             if (this.isLeaf() && other.isLeaf())
-                Potentials.Add(new ContactData(this.Body, other.Body));
+                Potentials.Add(new Contact(this.Body, other.Body));
             else if (other.isLeaf() || ((!this.isLeaf()) && (this.Volume.Radius > other.Volume.Radius)))
             {
                 this.Children[0].FindPotentialCollisionsWith(Potentials, other);

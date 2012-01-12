@@ -15,10 +15,10 @@ namespace PhysiXEngine
         // public BoundingBox World { private set; get; }
 
         private bool didDetect = false;
-        private List<ContactData> detections = null;
+        private List<Contact> detections = null;
 
         public LinkedList<Collidable> Shapes { private set; get; }
-        public List<ContactData> Detections
+        public List<Contact> Detections
         {
             get
             {
@@ -44,7 +44,7 @@ namespace PhysiXEngine
         public CollisionDetector(LinkedList<Collidable> Shapes)
         {
             this.Shapes = Shapes;
-            detections = new List<ContactData>(Shapes.Count);   // Shapes.Count is sth arbitrary.
+            detections = new List<Contact>(Shapes.Count);   // Shapes.Count is sth arbitrary.
         }
 
 
@@ -54,7 +54,7 @@ namespace PhysiXEngine
         /// expand the project to accept more complex structures, the whole algorithm will
         /// need reassembling.
         /// </summary>
-        public List<ContactData> ReDetect()
+        public List<Contact> ReDetect()
         {
             didDetect = true;
             BVHNode Hierarchy = new BVHNode(null, Shapes.First.Value);

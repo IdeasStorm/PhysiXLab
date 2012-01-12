@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 namespace PhysiXEngine
 {
     using PhysiXEngine.Helpers;
-    public class ContactData
+    public class Contact
     {
         /**
          * Holds the bodies that are involved in the contact. The
@@ -44,7 +44,7 @@ namespace PhysiXEngine
 
         public float friction { get; set; }
 
-        public ContactData(Collidable firstBody, Collidable secondBody)
+        public Contact(Collidable firstBody, Collidable secondBody)
         {
             this.body[0] = firstBody;
             this.body[1] = secondBody;
