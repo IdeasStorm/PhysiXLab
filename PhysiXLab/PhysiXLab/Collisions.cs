@@ -37,8 +37,8 @@ namespace Test
         /// </summary>
         protected override void Initialize()
         {
-            b1 = new Ball(100f);
-            b2 = new Ball(100f);
+            b1 = new Ball(10f);
+            b2 = new Ball(10f);
             cg = new ContactGenerator();
             b2.Position = new Vector3(100,0,0);            
             cg.AddBody(b1);
