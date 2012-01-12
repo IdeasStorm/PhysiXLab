@@ -29,6 +29,25 @@ namespace PhysiXEngine
         }
 
         /// <summary>
+        /// Adds a body to the collison List to check for it
+        /// </summary>
+        /// <param name="body"></param>
+        public void AddBody(Collidable body)
+        {
+            this.bodies.AddLast(body);
+        }
+
+        /// <summary>
+        /// Removes a body from collison List 
+        /// warning : this method is expensive O(n) , try to not use this in update
+        /// </summary>
+        /// <param name="body"></param>
+        public void RemoveBody(Collidable body)
+        {
+            this.bodies.Remove(body);
+        }
+
+        /// <summary>
         /// passing all contacts list calling affect function
         /// to affect each body by the another
         /// </summary>
