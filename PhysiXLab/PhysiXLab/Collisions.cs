@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-
+using PhysiXEngine;
 
 namespace Test
 {
@@ -21,6 +21,7 @@ namespace Test
 
         #region "testing components"
         Ball b1, b2;
+        ContactGenerator cg;
         Camera camera;
         #endregion
 
@@ -38,8 +39,10 @@ namespace Test
         {
             b1 = new Ball(100f);
             b2 = new Ball(100f);
-            b2.Position = new Vector3(100,0,0);
-
+            cg = new ContactGenerator();
+            b2.Position = new Vector3(100,0,0);            
+            cg.AddBody(b1);
+            cg.AddBody(b2);
             b1.model = b2.model = Content.Load<Model>(@"ball");
             camera = new Camera(this, new Vector3(0, 0, 100),
                 Vector3.Zero, Vector3.Up);
@@ -60,6 +63,7 @@ namespace Test
 
             b1.Update(duration);
             b2.Update(duration);
+            cg.Update(duration);
 
             base.Update(gameTime);
         }

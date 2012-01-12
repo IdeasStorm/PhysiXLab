@@ -48,6 +48,7 @@ namespace PhysiXEngine
         {
             this.body[0] = firstBody;
             this.body[1] = secondBody;
+            ContactToWorld = new Matrix3();
         }
 
         #region "contactData Extraction "
