@@ -16,6 +16,15 @@ namespace PhysiXEngine
         public abstract Contact generateContacts(Collidable other);
 
         /// <summary>
+        ///  generates contact information for this collidable body with another one 
+        ///  and fill this info into an existing contact
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="contact">a contact to fill</param>
+        /// <returns></returns>
+        public abstract void generateContacts(Collidable other,Contact contact);
+
+        /// <summary>
         /// Checks whether the body collides with another collidable or not
         /// </summary>
         /// <param name="other">the other collidable body to collides with </param>
