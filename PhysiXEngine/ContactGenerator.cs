@@ -78,9 +78,9 @@ namespace PhysiXEngine
             // Build a vector that shows the change in velocity in
             // world space for a unit impulse in the direction of the contact
             // normal.
-            Vector3 deltaVelWorldOne = Vector3.Multiply(contactData.relativeContactPosition[0], contactData.ContactNormal);
+            Vector3 deltaVelWorldOne = Vector3.Cross(contactData.relativeContactPosition[0], contactData.ContactNormal);
             deltaVelWorldOne = inverseInertiaTensor[0].transform(deltaVelWorldOne);
-            deltaVelWorldOne = Vector3.Multiply(deltaVelWorldOne, contactData.relativeContactPosition[0]);
+            deltaVelWorldOne = Vector3.Cross(deltaVelWorldOne, contactData.relativeContactPosition[0]);
 
             // Work out the change in velocity in contact coordiantes.
             float deltaVelocity = Vector3.Dot(deltaVelWorldOne, contactData.ContactNormal);
@@ -92,9 +92,9 @@ namespace PhysiXEngine
             if (two != null)
             {
                 // Go through the same transformation sequence again
-                Vector3 deltaVelWorldTwo = Vector3.Multiply(contactData.relativeContactPosition[1], contactData.ContactNormal);
+                Vector3 deltaVelWorldTwo = Vector3.Cross(contactData.relativeContactPosition[1], contactData.ContactNormal);
                 deltaVelWorldTwo = inverseInertiaTensor[1].transform(deltaVelWorldTwo);
-                deltaVelWorldTwo = Vector3.Multiply(deltaVelWorldTwo, contactData.relativeContactPosition[1]);
+                deltaVelWorldTwo = Vector3.Cross(deltaVelWorldTwo, contactData.relativeContactPosition[1]);
 
                 // Add the change in velocity due to rotation
                 deltaVelocity += Vector3.Dot(deltaVelWorldTwo, contactData.ContactNormal);
@@ -221,11 +221,11 @@ namespace PhysiXEngine
             Vector3 impulse = contactData.ContactToWorld.transform(impulseContact);
 
             // Split in the impulse into linear and rotational components
-            Vector3 impulsiveTorqueOne = Vector3.Multiply(contactData.relativeContactPosition[0], impulse);
+            Vector3 impulsiveTorqueOne = Vector3.Cross(contactData.relativeContactPosition[0], impulse);
             rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorqueOne);
 
             velocityChange[0] = Vector3.Zero;
-            velocityChange[0] += Vector3.Multiply(impulse, one.InverseMass);
+            velocityChange[0] += impulse * one.InverseMass;
 
             // Apply the changes
             one.AddVelocity(velocityChange[0]);
@@ -234,10 +234,9 @@ namespace PhysiXEngine
             if (two != null)
             {
                 // Work out body one's linear and angular changes
-                Vector3 impulsiveTorqueTwo = Vector3.Multiply(contactData.relativeContactPosition[1], impulse);
+                Vector3 impulsiveTorqueTwo = Vector3.Cross(contactData.relativeContactPosition[1], impulse);
                 rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorqueTwo);
-                velocityChange[1] = Vector3.Zero;
-                velocityChange[1] += Vector3.Multiply(impulse, one.InverseMass);
+                velocityChange[1] = - impulse * one.InverseMass;
 
                 // And apply them.
                 two.AddVelocity(velocityChange[1]);
@@ -383,7 +382,7 @@ namespace PhysiXEngine
                         }
                         else if(contactDataList[i].body[1]==contactDataList[index].body[1])
                         {
-                            cp = Vector3.Cross(rotationChange[i], contactDataList[i].relativeContactPosition[1]);
+                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[1]);
 
                             cp += velocityChange[1];
 

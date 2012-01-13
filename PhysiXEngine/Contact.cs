@@ -49,6 +49,7 @@ namespace PhysiXEngine
             this.body[0] = firstBody;
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
+            restitution = 0.1f;
         }
 
         #region Calculate internel information 
@@ -792,7 +793,7 @@ namespace PhysiXEngine
             if (body[1] != null) {
                 contactVelocity -= calculateLocalVelocity(1, duration);
             }
-            
+            //TODO performance issue 2 calls !!
             // Calculate the desired change in velocity for resolution
             CalculateDeltaVelocity(duration);
         }
@@ -852,22 +853,43 @@ namespace PhysiXEngine
             float[] angularInertia = new float[2];
 
             
+            // We need to work out the inertia of each object in the direction
+            // of the contact normal, due to angular inertia only. 
+            for (int i = 0; i < 2; i++) {
+                if (body[i] != null) {
+                    Matrix3 inverseInertiaTensor = body[i].InverseInertiaTensorWorld;
+
+                    // Use the same procedure as for calculating frictionless
+                    // velocity change to work out the angular inertia.
+                    Vector3 angularInertiaWorld = Vector3.Cross(relativeContactPosition[i] , ContactNormal);
+                    angularInertiaWorld = inverseInertiaTensor.transform(angularInertiaWorld);
+                    angularInertiaWorld = Vector3.Cross(angularInertiaWorld , relativeContactPosition[i]);
+                    angularInertia[i] = Vector3.Dot(angularInertiaWorld , ContactNormal);
+
+                    // The linear component is simply the inverse mass
+                    linearInertia[i] = body[i].InverseMass;
+
+                    // Keep track of the total inertia from all components
+                    totalInertia += linearInertia[i] + angularInertia[i];
+                }
+            }
+        ///<AngularInertia
+
             float[] inverseMass = new float[2];
 
             totalInertia = angularInertia[0] + body[0].InverseMass;
 
             if(body[1] != null)
             {
-                inverseMass[1] = angularInertia[1] + body[1].InverseMass;
+                inverseMass[1] = angularInertia[1] + body[1].InverseMass ;
                 totalInertia+=inverseMass[1];
 
                 angularMove[1] = -Penetration*angularInertia[1]/totalInertia;
-                linearMove[1] = -Penetration*body[1].InverseMass/totalInertia;
+                linearMove[1] = -Penetration*body[1].InverseMass /totalInertia;
 
                 // To avoid angular projections that are too great (when mass is large
                 // but inertia tensor is small) limit the angular move.
-                Vector3 projection = Vector3.Add(relativeContactPosition[1],
-                        ContactNormal * Vector3.Dot(-relativeContactPosition[1],ContactNormal));
+                Vector3 projection = relativeContactPosition[1] + ContactNormal * Vector3.Dot(-relativeContactPosition[1],  ContactNormal);
                 
                 float max = angularLimit*relativeContactPosition[0].Length();
 
@@ -884,16 +906,15 @@ namespace PhysiXEngine
 
             // To avoid angular projections that are too great (when mass is large
             // but inertia tensor is small) limit the angular move.
-            Vector3 AngProjection = relativeContactPosition[0];
+            //Vector3 projection = relativeContactPosition[0];
             //projection.addScaledVector(contactNormal, 
             //    -relativeContactPosition[0].scalarProduct(contactNormal));
-            //TOD prepare Projection
-            float maxAng = angularLimit*relativeContactPosition[0].Length();
+            float max2 = angularLimit*relativeContactPosition[0].Length();
 
-            if(Math.Abs(angularMove[0]) > maxAng)
+            if(Math.Abs(angularMove[0]) > max2)
             {
                 float pp=angularMove[0]+linearMove[0];
-                angularMove[0]=angularMove[0]>0?maxAng:-maxAng;
+                angularMove[0]=angularMove[0]>0?max2:-max2;
                 linearMove[0]=pp-angularMove[0];
             }
 
@@ -904,8 +925,7 @@ namespace PhysiXEngine
                 {
                     t = Vector3.Cross(relativeContactPosition[b],ContactNormal);
 
-                    Matrix3 inverseInertiaTensor;
-                    inverseInertiaTensor = body[b].InverseInertiaTensorWorld;
+                    Matrix3 inverseInertiaTensor = body[b].InverseInertiaTensorWorld;
                     rotationDirection[b] = inverseInertiaTensor.transform(t);
 
                     rotationAmount[b] = angularMove[b] / angularInertia[b];
@@ -915,19 +935,17 @@ namespace PhysiXEngine
                 else
                 {
                     rotationDirection[b] = Vector3.Zero;
-                    rotationAmount[b] = 1;
+                    rotationAmount[b]=1;
                 }
 
                 velocityChange[b] = ContactNormal;
                 velocityChange[b] *= linearMove[b]/rotationAmount[b];
 
-                Vector3 pos;
-                pos = body[b].Position;
-                pos = Vector3.Add(pos, ContactNormal * linearMove[b]);
-                body[b].Position = pos;
+                body[b].Position = body[b].Position + ContactNormal * linearMove[b];
 
-                body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b],MathHelper.Pi)
-                    * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
+                body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b], MathHelper.Pi)
+                   * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
+
             }
         }
         #endregion
