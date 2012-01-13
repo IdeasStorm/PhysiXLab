@@ -54,10 +54,10 @@ namespace PhysiXEngine
             {
                 contact.SphereAndBox();
             }
-            if (other as Plane != null)
+            /*if (other as HalfSpace != null)
             {
                 contact.BoxAndHalfSpace();
-            }
+            }*/
         }
     }
 }

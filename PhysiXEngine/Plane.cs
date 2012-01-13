@@ -6,19 +6,19 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    public class Plane : Collidable
+    public class HalfSpace
     {
         public Vector3 direction { get; protected set; }
         public float offset { get; protected set; }
-        public BoundingBox plane { get; protected set; }
+        public Plane plane { get; protected set; }
 
-        public Plane(Vector3 direction, float offset)
+        public HalfSpace(Plane plane)
         {
-            plane = new BoundingBox(Position, Vector3.One);
+            this.plane = plane;
             this.direction = direction;
-            this.offset = offset;
+            this.offset = plane.D;
         }
-
+        /*
         protected override void updateBounding()
         {
             //TODO add update logic
@@ -30,8 +30,8 @@ namespace PhysiXEngine
             
             return contactData;
         }
-
-        public override void generateContacts(Collidable other, Contact contact)
+        */
+        public void generateContacts(Collidable other, Contact contact)
         {
             if (other as Sphere != null)
             {
@@ -42,7 +42,7 @@ namespace PhysiXEngine
                 contact.BoxAndHalfSpace();
             }
         }
-
+        /*
         public override Boolean CollidesWith(Collidable other)
         {
             return false;
@@ -56,5 +56,6 @@ namespace PhysiXEngine
         {
             return BoundingSphere.CreateFromBoundingBox(plane);
         }
+         */
     }
 }
