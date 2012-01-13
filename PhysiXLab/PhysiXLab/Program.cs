@@ -14,6 +14,11 @@ namespace Test
             {
                 game.Run();
             }
+            //FrictionWithCrate fr = new FrictionWithCrate();
+            //fr.Run();
+
+            FrictionTest fr = new FrictionTest();
+            fr.Run();
         }
     }
 #endif
