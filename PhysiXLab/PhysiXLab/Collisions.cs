@@ -20,7 +20,8 @@ namespace Test
         GraphicsDeviceManager graphics;
 
         #region "testing components"
-        Ball b1, b2;
+        Ball b1;
+        LinkedList<Ball> balls = new LinkedList<Ball>();
         ContactGenerator cg;
         Camera camera;
         #endregion
@@ -38,17 +39,17 @@ namespace Test
         protected override void Initialize()
         {
             b1 = new Ball(10f);
-            b2 = new Ball(10f);
             cg = new ContactGenerator();
-            b2.Position = new Vector3(100,0,0);            
+            b1.Position = new Vector3(100,0,0);            
             cg.AddBody(b1);
-            cg.AddBody(b2);
-            b1.model = b2.model = Content.Load<Model>(@"ball");
+            b1.model = Content.Load<Model>(@"ball");
             camera = new Camera(this, new Vector3(0, 0, 100),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             base.Initialize();
         }
+
+        bool spaceClicked;
 
         /// <summary>
         /// Allows the game component to update itself.
@@ -57,13 +58,22 @@ namespace Test
         protected override void Update(GameTime gameTime)
         {
             float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
-
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                b1.AddForce(new Vector3(100, 0, 0));
-
-            b1.Update(duration);
-            b2.Update(duration);
+                spaceClicked = true;
+            if (Keyboard.GetState().IsKeyUp(Keys.Space) && spaceClicked)
+            {
+                spaceClicked = false;
+                Ball b = new Ball(10f);
+                b.model = b1.model;
+                balls.AddLast(b);
+                cg.AddBody(b);
+                b.AddForce(new Vector3(100, 0, 0));
+            }
             cg.Update(duration);
+            b1.Update(duration);
+            foreach (Ball b in balls)
+                b.Update(duration);
+            
 
             base.Update(gameTime);
         }
@@ -72,7 +82,9 @@ namespace Test
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             b1.Draw(camera);
-            b2.Draw(camera);
+            foreach (Ball b in balls)
+                b.Draw(camera);
+
             base.Draw(gameTime);
         }
     }
