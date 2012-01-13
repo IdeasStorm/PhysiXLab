@@ -792,8 +792,9 @@ namespace PhysiXEngine
             if (body[1] != null) {
                 contactVelocity -= calculateLocalVelocity(1, duration);
             }
-
-            // will Calculate the desired change in velocity for resolution after this method in ContactGenerator Class
+            
+            // Calculate the desired change in velocity for resolution
+            CalculateDeltaVelocity(duration);
         }
 
         Vector3 calculateLocalVelocity(int bodyIndex,float duration)
