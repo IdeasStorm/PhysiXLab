@@ -67,7 +67,7 @@ namespace Test
                 b.model = b1.model;
                 balls.AddLast(b);
                 cg.AddBody(b);
-                b.AddForce(new Vector3(100, 0, 0));
+                b.AddForce(new Vector3(400, 20, 0));
             }
             cg.Update(duration);
             b1.Update(duration);
