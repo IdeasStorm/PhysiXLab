@@ -33,6 +33,8 @@ namespace PhysiXEngine
          */
         public float Penetration { get; set; }
 
+        private HalfSpace plane;
+
         public Matrix3 ContactToWorld { get; private set; }
 
         public float restitution { get; set; }
@@ -48,6 +50,15 @@ namespace PhysiXEngine
         {
             this.body[0] = firstBody;
             this.body[1] = secondBody;
+            ContactToWorld = new Matrix3();
+            restitution = 0.7f;
+        }
+
+        public Contact(Collidable firstBody, Plane plane)
+        {
+            this.body[0] = firstBody;
+            this.body[1] = null;
+            this.plane = new HalfSpace(plane);
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
         }
@@ -191,18 +202,17 @@ namespace PhysiXEngine
 
         public void SphereAndPlane()
         {
-            Sphere sphere = null;
-            Plane plane = null;
-            if (body[0] as Sphere != null)
-            {
-                sphere = (Sphere)body[0];
-                plane = (Plane)body[1];
-            }
-            else
-            {
-                plane = (Plane)body[0];
-                sphere = (Sphere)body[1];
-            }
+            Sphere sphere = (Sphere)body[0];
+            //if (body[0] as Sphere != null)
+            //{
+                //sphere = (Sphere)body[0];
+                //plane = (Plane)body[1];
+            //}
+            //else
+            //{
+                //plane = (Plane)body[0];
+                //sphere = (Sphere)body[1];
+            //}
 
             // Cache the sphere position
             Vector3 position = sphere.Position;
@@ -225,18 +235,18 @@ namespace PhysiXEngine
 
         public void BoxAndHalfSpace()
         {
-            Box box = null;
-            Plane plane = null;
-            if (body[0] as Box != null)
-            {
-                box = (Box)body[0];
-                plane = (Plane)body[1];
-            }
-            else
-            {
-                plane = (Plane)body[0];
-                box = (Box)body[1];
-            }
+            Box box = (Box)body[0];
+            //Plane plane = null;
+            //if (body[0] as Box != null)
+            //{
+                
+                //plane = (Plane)body[1];
+            //}
+            //else
+            //{
+                //plane = (Plane)body[0];
+                //box = (Box)body[1];
+            //}
 
             // We have an intersection, so find the intersection points. We can make
             // do with only checking vertices. If the box is resting on a plane
