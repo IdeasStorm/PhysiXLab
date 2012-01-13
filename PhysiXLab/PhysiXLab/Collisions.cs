@@ -39,6 +39,7 @@ namespace Test
         protected override void Initialize()
         {
             b1 = new Ball(10f);
+            b1.Texture = Content.Load<Texture2D>(@"basic_material");
             cg = new ContactGenerator();
             b1.Position = new Vector3(100,0,0);            
             cg.AddBody(b1);

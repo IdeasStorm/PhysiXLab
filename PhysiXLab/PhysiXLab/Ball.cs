@@ -11,7 +11,7 @@ namespace Test
     class Ball : Sphere
     {
         public Model model { get; set; }
-
+        public Texture2D Texture { get; set; }
         public Ball(float radius) 
             : base(radius)
         {}
@@ -24,6 +24,11 @@ namespace Test
             {
                 foreach (BasicEffect be in mesh.Effects)
                 {
+                    if (Texture != null)
+                    {
+                        be.Texture = this.Texture;
+                        be.TextureEnabled = true;
+                    }
                     be.EnableDefaultLighting();
                     be.World = mesh.ParentBone.Transform * Matrix.CreateScale(radius) * TransformMatrix;
                     be.View = camera.view;
