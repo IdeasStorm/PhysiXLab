@@ -183,7 +183,7 @@ namespace PhysiXEngine
         /// <param name="velocity"></param>
         public void AddVelocity(Vector3 velocity)
         {
-            velocity += velocity;
+            this.Velocity += velocity;
         }
 
 
