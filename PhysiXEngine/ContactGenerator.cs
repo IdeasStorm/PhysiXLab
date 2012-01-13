@@ -269,13 +269,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations = 10;
+        uint velocityIterations = 4;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 10;
+        uint positionIterations = 1;
 
         //TODO modify above values
 
@@ -331,8 +331,7 @@ namespace PhysiXEngine
                 foreach (Contact c in contactDataList) {
                     if(c.Penetration > max)
                     {
-                        max = (float)c.Penetration;
-                        //TODO change Penetration to flaot from origin
+                        max = c.Penetration;                        
                         index=i;
                     }
                     i++;
