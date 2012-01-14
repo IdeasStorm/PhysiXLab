@@ -200,19 +200,28 @@ namespace PhysiXEngine
             Penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
         }
 
+        public void SphereAndHalfSpace()
+        {
+            Sphere sphere = (Sphere)body[0];
+
+            // Cache the sphere position
+            Vector3 position = sphere.Position;
+
+            // Find the distance from the plane
+            float ballDistance = Vector3.Dot(plane.direction, position) - 
+                sphere.radius - plane.offset;
+
+            if (ballDistance >= 0) return;
+
+            // Create the contact - it has a normal in the plane direction.
+            ContactNormal = plane.direction;
+            Penetration = -ballDistance;
+            ContactPoint = position - plane.direction * (ballDistance + sphere.radius);
+        }
+
         public void SphereAndPlane()
         {
             Sphere sphere = (Sphere)body[0];
-            //if (body[0] as Sphere != null)
-            //{
-                //sphere = (Sphere)body[0];
-                //plane = (Plane)body[1];
-            //}
-            //else
-            //{
-                //plane = (Plane)body[0];
-                //sphere = (Sphere)body[1];
-            //}
 
             // Cache the sphere position
             Vector3 position = sphere.Position;
@@ -236,17 +245,6 @@ namespace PhysiXEngine
         public void BoxAndHalfSpace()
         {
             Box box = (Box)body[0];
-            //Plane plane = null;
-            //if (body[0] as Box != null)
-            //{
-                
-                //plane = (Plane)body[1];
-            //}
-            //else
-            //{
-                //plane = (Plane)body[0];
-                //box = (Box)body[1];
-            //}
 
             // We have an intersection, so find the intersection points. We can make
             // do with only checking vertices. If the box is resting on a plane
