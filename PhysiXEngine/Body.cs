@@ -246,5 +246,14 @@ namespace PhysiXEngine
             Position = this._oldPosition;
             // TODO save this position somewhere
         }
+
+        /// <summary>
+        /// indicates the state of this body (moving or not)
+        /// </summary>
+        public bool IsMoving {
+            get { 
+                return (Velocity != Vector3.Zero);
+            }
+        }
     }
 }
