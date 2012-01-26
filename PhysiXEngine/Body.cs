@@ -105,6 +105,12 @@ namespace PhysiXEngine
         /// Angular orientation in world space
         /// </summary>
         public Quaternion Orientation;
+
+        /// <summary>
+        /// stores the old position for this object providing rollingback capability
+        /// </summary>
+        private Vector3 _oldPosition;
+
         /// <summary>
         /// the angular velocity
         /// </summary>
@@ -230,6 +236,15 @@ namespace PhysiXEngine
         public Vector3 GetAxis(int index)
         {
             return TransformMatrix.GetAxisVector(index);
+        }
+
+        /// <summary>
+        /// revert Position changes in the last frame
+        /// </summary>
+        public void RevertChanges()
+        {
+            Position = this._oldPosition;
+            // TODO save this position somewhere
         }
     }
 }
