@@ -10,7 +10,7 @@ namespace PhysiXEngine
     public class Box : Collidable
     {
         public Vector3 HalfSize { get; private set; }
-        private BoundingBox _box;
+        private BoundingBox _box = new BoundingBox();
         public BoundingBox box { get { return _box; } private set { _box = value; } }
 
         public Box(Vector3 halfSize)

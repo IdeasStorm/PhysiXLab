@@ -78,15 +78,23 @@ namespace PhysiXEngine
                 return;
             if (this.isLeaf() && other.isLeaf())
                 Potentials.Add(new Contact(this.Body, other.Body));
-            else if (other.isLeaf() || ((!this.isLeaf()) && (this.Volume.Radius > other.Volume.Radius)))
+            else if (other.isLeaf() && !this.isLeaf())
             {
                 this.Children[0].FindPotentialCollisionsWith(Potentials, other);
                 this.Children[1].FindPotentialCollisionsWith(Potentials, other);
+                this.FindPotentialCollisions(Potentials);
+            }
+            else if (this.isLeaf() && !other.isLeaf())
+            {
+                other.Children[0].FindPotentialCollisionsWith(Potentials, this);
+                other.Children[1].FindPotentialCollisionsWith(Potentials, this);
             }
             else
             {
                 other.Children[0].FindPotentialCollisionsWith(Potentials, this.Children[0]);
                 other.Children[1].FindPotentialCollisionsWith(Potentials, this.Children[1]);
+                this.FindPotentialCollisions(Potentials);
+                other.FindPotentialCollisions(Potentials);
             }
         }
     }
