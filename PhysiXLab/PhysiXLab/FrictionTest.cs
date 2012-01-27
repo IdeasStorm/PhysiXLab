@@ -22,6 +22,7 @@ namespace Test
         #region "testing components"
         Ball fixedBall;
         Ball ball;
+        Crate crate;
         LinkedList<Ball> balls = new LinkedList<Ball>();
         ContactGenerator cg;
         Camera camera;
@@ -48,9 +49,14 @@ namespace Test
             ball.Texture = Content.Load<Texture2D>(@"basic_material");
             ball.Position = new Vector3(100,150, 0);
 
+            crate = new Crate(new Vector3(2,2,2));
+            crate.Position = new Vector3(0,100,0);
+
             cg = new ContactGenerator();
             cg.AddBody(fixedBall);
             cg.AddBody(ball);
+            cg.AddBody(crate);
+
             fixedBall.model = Content.Load<Model>(@"ball");
             ball.model = fixedBall.model;
             camera = new Camera(this, new Vector3(0, 0, 100),
@@ -62,6 +68,12 @@ namespace Test
             ball.Mass = 10;
 
             base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            crate.LoadContent(Content);
+            base.LoadContent();
         }
 
         bool spaceClicked;
@@ -79,11 +91,13 @@ namespace Test
             {
                 spaceClicked = false;
                 g.AddBody(ball);
+                g.AddBody(crate);
             }
 
             g.Update(duration);
             fixedBall.Update(duration);
             ball.Update(duration);
+            crate.Update(duration);
             cg.Update(duration);
 
             base.Update(gameTime);
@@ -94,7 +108,7 @@ namespace Test
             GraphicsDevice.Clear(Color.CornflowerBlue);
             fixedBall.Draw(camera);
             ball.Draw(camera);
-
+            crate.Draw(camera);
             base.Draw(gameTime);
         }
     }
