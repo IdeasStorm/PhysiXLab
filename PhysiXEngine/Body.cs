@@ -107,10 +107,20 @@ namespace PhysiXEngine
 
         //TODO above matrices should be 3x3
 
+        private Quaternion _oldOrientation;
+        private Quaternion _orientation;
+
         /// <summary>
         /// Angular orientation in world space
         /// </summary>
-        public Quaternion Orientation;
+        public Quaternion Orientation {
+            set
+            {
+                _oldOrientation = _orientation;
+                _orientation = value;
+            }
+            get { return _orientation; }
+        }
 
         /// <summary>
         /// stores the old position for this object providing rollingback capability
@@ -250,9 +260,9 @@ namespace PhysiXEngine
         public void RevertChanges()
         {
             _position = this._oldPosition;
+            _orientation = _oldOrientation;
             UpdateMatices();
             // TODO save this position somewhere
-            // TODO add _oldOrientation mechanism
         }
 
         /// <summary>
