@@ -15,19 +15,22 @@ namespace Test
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Ray : Microsoft.Xna.Framework.DrawableGameComponent
+    public class RayIndicator : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        public Ray(Game game, Matrix world, Vector3 ray)
+        public RayIndicator(Game game, Vector3 position, Vector3 Value)
             : base(game)
         {
             // TODO: Construct any child components here
-            this.world = world;
-            this.ray = ray;
+            this.position = position;
+            this.value = value;
+            direction = Vector3.Normalize(value);
         }
 
-        public Matrix world { protected set; get; }
-        public Vector3 ray { protected set; get; }
+        //public Matrix world { protected set; get; }
+        public Vector3 position { protected set; get; }
+        public Vector3 value { protected set; get; }
         private Model model { protected set; get; }
+        private Vector3 direction;
         private Matrix scale;
         private Matrix rotation;
         private Matrix[] baseMatrix;
@@ -39,7 +42,6 @@ namespace Test
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
             base.Initialize();
         }
 
@@ -58,8 +60,9 @@ namespace Test
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            scale = Matrix.CreateScale(ray.X, ray.Y, ray.Z);
-            rotation = Matrix.CreateFromYawPitchRoll(ray.X, ray.Y, ray.Z);
+            scale = Matrix.CreateScale(value.X, value.Y, value.Z);
+            rotation = Matrix.CreateFromYawPitchRoll(direction.X, direction.Y, 
+                direction.Z);
             base.Update(gameTime);
         }
 
@@ -72,14 +75,15 @@ namespace Test
                     be.EnableDefaultLighting();
                     if (mesh.Name == "Box01")
                     {
-                        be.World = baseMatrix[mesh.ParentBone.Index] * 
-                            (world * scale) * rotation;
+                        be.World = baseMatrix[mesh.ParentBone.Index] *
+                            (Matrix.CreateTranslation(position) * scale) * rotation;
                         //world = world * scale;
                         //world = Matrix.Transform(world,scale);
                         //world = Vector3.Transform(new Vector3(2f, 0f, 0f), world);
                     }
                     else
-                        be.World = baseMatrix[mesh.ParentBone.Index] * world * 
+                        //TODO set solution here
+                        be.World = baseMatrix[mesh.ParentBone.Index] * Matrix.CreateTranslation(position) * 
                             scale * rotation;
                     be.View = camera.view;
                     be.Projection = camera.projection;
