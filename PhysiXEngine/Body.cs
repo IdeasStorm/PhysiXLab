@@ -252,6 +252,7 @@ namespace PhysiXEngine
             _position = this._oldPosition;
             UpdateMatices();
             // TODO save this position somewhere
+            // TODO add _oldOrientation mechanism
         }
 
         /// <summary>
