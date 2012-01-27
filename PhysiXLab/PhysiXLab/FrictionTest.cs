@@ -80,10 +80,11 @@ namespace Test
                 spaceClicked = false;
                 g.AddBody(ball);
             }
-            cg.Update(duration);
+
+            g.Update(duration);
             fixedBall.Update(duration);
             ball.Update(duration);
-            g.Update(duration);
+            cg.Update(duration);
 
             base.Update(gameTime);
         }
