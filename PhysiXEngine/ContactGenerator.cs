@@ -274,7 +274,7 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 1;
+        uint positionIterations = 4;
 
         //TODO modify above values
 
@@ -336,61 +336,11 @@ namespace PhysiXEngine
                     i++;
                 }
                 if (index == contactDataList.Count) break;
-
-                // wake up the slept body of the pair
-                contactDataList[index].WakeUpPair();
-
-                // Resolve the penetration.
-                contactDataList[index].applyPositionChange(velocityChange,
-                    rotationChange,
-                    rotationAmount,
-                    max);//-positionEpsilon);
-
-                // Again this action may have changed the penetration of other 
-                // bodies, so we update contacts.
-                for(i = 0; i < contactDataList.Count; i++)
-                {
-                    if(contactDataList[i].body[0] == contactDataList[index].body[0])
-                    {
-                        cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[0]);
-
-                        cp += velocityChange[0];
-
-                        contactDataList[i].Penetration -=
-                            rotationAmount[0] * Vector3.Dot(cp,contactDataList[i].ContactNormal);
-                    }
-                    else if(contactDataList[i].body[0]==contactDataList[index].body[1])
-                    {
-                        cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[0]);
-
-                        cp += velocityChange[1];
-
-                        contactDataList[i].Penetration -= rotationAmount[1] *
-                            Vector3.Dot(cp,contactDataList[i].ContactNormal);
-                    }
-
-                    if(contactDataList[i].body[1] != null)
-                    {
-                        if(contactDataList[i].body[1]==contactDataList[index].body[0])
-                        {
-                            cp = Vector3.Cross(rotationChange[0],contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[0];
-
-                            contactDataList[i].Penetration += rotationAmount[0] *
-                                Vector3.Dot(cp,contactDataList[i].ContactNormal);
-                        }
-                        else if(contactDataList[i].body[1]==contactDataList[index].body[1])
-                        {
-                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[1];
-
-                            contactDataList[i].Penetration += rotationAmount[1] *
-                                Vector3.Dot(cp, contactDataList[i].ContactNormal);
-                        }
-                    }
-                }
+                // an item was chosen 
+                Collidable BodyOne = contactDataList[index].body[0];
+                Collidable BodyTwo = contactDataList[index].body[1];
+                if (BodyOne.IsMoving) BodyOne.RevertChanges();
+                else if (BodyTwo.IsMoving) BodyTwo.RevertChanges();
                 positionIterationsUsed++;
     }
 }
