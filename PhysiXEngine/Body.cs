@@ -39,8 +39,14 @@ namespace PhysiXEngine
         }
 
 
-
-        public Vector3 Position {  get; set; }
+        private Vector3 _position;
+        public Vector3 Position { 
+            get { return _position; } 
+            set { 
+                _oldPosition = _position; 
+                _position = value; 
+            } 
+        }
         public Vector3 Velocity {  get; protected set; }
         public Vector3 Acceleration {  get; protected set; }
         public Vector3 LastFrameAcceleration {  get; protected set; }
@@ -130,7 +136,7 @@ namespace PhysiXEngine
             InertiaTensor = Matrix.Identity;
             Orientation = Quaternion.CreateFromYawPitchRoll(0, 0, 0);
             Awake();
-            calculateDerivedData(); //TODO this must not be here!!
+            UpdateMatices(); //TODO this must not be here!!
         }
 
         /// <summary>
@@ -150,12 +156,12 @@ namespace PhysiXEngine
 
             Position += Velocity;
             Orientation += Quaternion.CreateFromAxisAngle(Rotation, MathHelper.Pi) * (duration/2f) * Orientation;
-            calculateDerivedData();
+            UpdateMatices();
             clearAccumulators();
             // add damping 
         }
 
-        protected void calculateDerivedData()
+        protected void UpdateMatices()
         {
             Orientation.Normalize();
 
@@ -243,7 +249,8 @@ namespace PhysiXEngine
         /// </summary>
         public void RevertChanges()
         {
-            Position = this._oldPosition;
+            _position = this._oldPosition;
+            UpdateMatices();
             // TODO save this position somewhere
         }
 
