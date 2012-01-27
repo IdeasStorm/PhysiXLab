@@ -24,7 +24,7 @@ namespace PhysiXEngine
             
             float coeff = 0.4f * Mass * radius * radius;
             setInertiaTensorCoeffs(coeff, coeff, coeff);
-            calculateDerivedData();
+            UpdateMatices();
         }
 
         protected override void updateBounding()
