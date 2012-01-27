@@ -25,11 +25,12 @@ namespace Test
             this.ray = ray;
         }
 
-        Matrix world { protected set; get; }
-        Vector3 ray { protected set; get; }
-        Model model { protected set; get; }
-        Matrix scale;
-        Matrix[] baseMatrix;
+        public Matrix world { protected set; get; }
+        public Vector3 ray { protected set; get; }
+        private Model model { protected set; get; }
+        private Matrix scale;
+        private Matrix rotation;
+        private Matrix[] baseMatrix;
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
@@ -58,13 +59,12 @@ namespace Test
         {
             // TODO: Add your update code here
             scale = Matrix.CreateScale(ray.X, ray.Y, ray.Z);
+            rotation = Matrix.CreateFromYawPitchRoll(ray.X, ray.Y, ray.Z);
             base.Update(gameTime);
         }
 
         public void Draw(Camera camera, Model baseModel)
         {
-            Matrix[] transforms = new Matrix[model.Bones.Count];
-            model.CopyAbsoluteBoneTransformsTo(transforms);
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (BasicEffect be in mesh.Effects)
@@ -72,13 +72,15 @@ namespace Test
                     be.EnableDefaultLighting();
                     if (mesh.Name == "Box01")
                     {
-                        be.World = baseMatrix[mesh.ParentBone.Index] * (world * scale);
+                        be.World = baseMatrix[mesh.ParentBone.Index] * 
+                            (world * scale) * rotation;
                         //world = world * scale;
                         //world = Matrix.Transform(world,scale);
                         //world = Vector3.Transform(new Vector3(2f, 0f, 0f), world);
                     }
                     else
-                        be.World = baseMatrix[mesh.ParentBone.Index] * world * scale;
+                        be.World = baseMatrix[mesh.ParentBone.Index] * world * 
+                            scale * rotation;
                     be.View = camera.view;
                     be.Projection = camera.projection;
                 }
