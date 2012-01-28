@@ -49,6 +49,8 @@ namespace PhysiXEngine
 
         public float friction { get; set; }
 
+        public bool WithPlane { get; protected set; }
+
         public Contact(Collidable firstBody, Collidable secondBody)
         {
             this.body[0] = firstBody;
@@ -62,6 +64,7 @@ namespace PhysiXEngine
         {
             this.body[0] = firstBody;
             this.body[1] = null;
+            this.WithPlane = true;
             this.plane = new HalfSpace(plane);
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
@@ -1016,9 +1019,30 @@ namespace PhysiXEngine
             return contactData;
         }
 
+        /// <summary>
+        /// Refills contact data
+        /// </summary>
         private void Check()
         {
-            
+            ContactData cd;
+            if (WithPlane)
+                //cd = body[0].generateContacts(plane);
+                throw new NotImplementedException();
+            else
+                cd = body[0].generateContacts(body[1]);
+        }
+
+        /// <summary>
+        /// detects whether contact has a collision actually or not
+        /// </summary>
+        /// <returns></returns>
+        public bool IsColliding()
+        {
+            if (this.WithPlane)
+                return body[0].CollidesWith(plane);
+            else
+                return body[0].CollidesWith(body[1]);
+            //TODO add try catch IDontKnowException
         }
     }
 }
