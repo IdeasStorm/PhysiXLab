@@ -158,7 +158,7 @@ namespace PhysiXEngine
             if (IsAsleep) return;
             LastFrameAcceleration = Acceleration;
             LastFrameAcceleration += forceAccumulator * _inverseMass;
-            AngularAcceleration = InverseInertiaTensorWorld.transform(AngularAcceleration);
+            AngularAcceleration = InverseInertiaTensorWorld.transform(torqueAccumulator);
             //AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
 
             Velocity += LastFrameAcceleration * duration;
