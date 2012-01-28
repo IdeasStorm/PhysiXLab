@@ -179,7 +179,7 @@ namespace PhysiXEngine
             TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
-            InverseInertiaTensorWorld = InverseInertiaTensor * TransformMatrix;
+            InverseInertiaTensorWorld = TransformMatrix *InverseInertiaTensor ;
 
             //TODO rem 3x3 4x4 problems
         }
@@ -241,7 +241,15 @@ namespace PhysiXEngine
         protected void setInertiaTensorCoeffs(float ix, float iy, float iz,
             float ixy = 0, float ixz = 0, float iyz = 0)
         {
-            InertiaTensor.setInertiaTensorCoeffs(ix, iy, iz, ixy, ixz, iyz);
+            Matrix matrix = Matrix.Identity;
+            matrix.M11 = ix;
+            matrix.M22 = iy;
+            matrix.M33 = iz;
+            matrix.M12 = matrix.M21 = -ixy;
+            matrix.M13 = matrix.M31 = -ixz;
+            matrix.M23 = matrix.M32 = -iyz;
+            matrix.M44 = 1;
+            InverseInertiaTensor = Matrix.Invert(matrix);
         }
 
         /// <summary>
