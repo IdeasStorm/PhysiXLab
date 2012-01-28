@@ -16,6 +16,8 @@ namespace PhysiXEngine
          */
         public Collidable[] body = new Collidable[2];
 
+        //public ContactData contactData;
+
         /**
          * Holds the position of the contact in world coordinates.
          */
@@ -1005,12 +1007,18 @@ namespace PhysiXEngine
 
         }
 
+        public ContactData GetContactData()
+        {
+            ContactData contactData = new ContactData();
+            contactData.ContactNormal = ContactNormal;
+            contactData.ContactPoint = ContactPoint;
+            contactData.Penetration = Penetration;
+            return contactData;
+        }
+
         private void Check()
         {
-            if (body[0] as Sphere != null)
-                ((Sphere)body[0]).generateContacts(body[1]);
-            else if (body[0] as Box != null)
-                ((Sphere)body[0]).generateContacts(body[1]);
+            
         }
     }
 }

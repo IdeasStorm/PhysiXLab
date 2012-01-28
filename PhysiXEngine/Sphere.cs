@@ -32,11 +32,18 @@ namespace PhysiXEngine
             _sphere.Center = Vector3.Transform(Vector3.Zero, TransformMatrix);
         }
 
-        public override Contact generateContacts(Collidable other) 
+        public override ContactData generateContacts(Collidable other) 
         {
-            Contact contactData = null;
-            
-            return contactData;
+            Contact contact = new Contact(this, other);
+            if (other as Sphere != null)
+            {
+                contact.SphereAndSphere();
+            }
+            else if (other as Box != null)
+            {
+                contact.SphereAndBox();
+            }
+            return contact.GetContactData();
         }
 
         public override void generateContacts(Collidable other, Contact contact)

@@ -13,7 +13,7 @@ namespace PhysiXEngine
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public abstract Contact generateContacts(Collidable other);
+        public abstract ContactData generateContacts(Collidable other);
 
         /// <summary>
         ///  generates contact information for this collidable body with another one 
