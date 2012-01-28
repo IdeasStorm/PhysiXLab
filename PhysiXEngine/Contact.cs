@@ -457,20 +457,9 @@ namespace PhysiXEngine
             }
             
             // Transform the centre of the sphere into box coordinates  
-            Vector3 centre = sphere.GetAxis(3);
-            //TODO not sure !!
-            //Vector3 spherToBoxCor = Vector3.Transform(sphere.GetAxis(3), Matrix.Invert(box.TransformMatrix));
+            Vector3 centre = sphere.Position;
             Vector3 spherToBoxCor = Vector3.Transform(centre, Matrix.Invert(box.TransformMatrix));
-            
-            // cpp statement 
-
-            /*
-            // Early out check to see if we can exclude the contact
-            if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X || 
-                Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||
-                Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
-                return false;
-            */
+            //Vector3 spherToBoxCor = sphere.Position - box.Position;
 
             //Vector3 closestPt = new Vector3();
             Vector3 closestPt = Vector3.Zero;
@@ -503,11 +492,6 @@ namespace PhysiXEngine
             // Check we're in contact
             dist = (closestPt - spherToBoxCor).Length();
             dist = (float)Math.Pow(dist, 2);
-            
-            /*
-            if (dist > sphere.radius * sphere.radius)
-                return false;
-            */
 
             Vector3 closestPtWorld = Vector3.Transform(closestPt, box.TransformMatrix);
             
@@ -515,11 +499,6 @@ namespace PhysiXEngine
             _ContactNormal.Normalize();
             _ContactPoint = closestPtWorld;
             _Penetration = sphere.radius - (float)Math.Sqrt(dist);
-
-            //TODO
-            //restitution = TODO;
-            //friction    = TODO;
-            //return true;
         }
 
         public static float penetrationOnAxis(Box one, Box two, Vector3 axis, Vector3 toCentre)
