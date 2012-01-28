@@ -179,7 +179,7 @@ namespace PhysiXEngine
             TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
-            InverseInertiaTensorWorld = TransformMatrix *InverseInertiaTensor ;
+            InverseInertiaTensorWorld = TransformMatrix * InverseInertiaTensor ;
 
             //TODO rem 3x3 4x4 problems
         }
