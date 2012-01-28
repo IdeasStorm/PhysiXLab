@@ -43,6 +43,7 @@ namespace PhysiXEngine
         public float desiredDeltaVelocity { get; set; }
 
         public  Vector3[] relativeContactPosition = new Vector3[2];
+        private float minimumPenetration = 0.1f; //TODO put an appropriate value
 
         public float friction { get; set; }
 
@@ -958,5 +959,52 @@ namespace PhysiXEngine
             }
         }
         #endregion
+
+        /// <summary>
+        /// Fixes Penetration Problem using "Imponderable Penetration Resolving Algorithm"
+        /// it's a kind of binarysearch between collision moment and the moment before it
+        /// based on penetration sign (+/-)
+        /// <author>MhdSyrwan</author>
+        /// </summary>
+        void interpolateToPenetrate()
+        {
+            // select the faster body
+            Collidable chosen;
+            chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
+            // A = collision moment
+            Vector3 PositionA = chosen.Position;
+            Quaternion OrientationA = chosen.Orientation;
+            // revert to the moment before collision moment
+            chosen.RevertChanges();
+            // B = the moment before collision moment
+            Vector3 PositionB = chosen.Position;
+            Quaternion OrientationB = chosen.Orientation;
+            
+            // starting binary search loop
+            while ( Math.Abs(Penetration) > this.minimumPenetration)
+            {
+                chosen.Position = Vector3.Lerp(PositionA, PositionB, 0.5f);
+                chosen.Orientation = Quaternion.Slerp(OrientationA, OrientationB, 0.5f);
+                this.Check();
+                if (Penetration < 0)
+                {
+                    PositionB = chosen.Position;
+                    OrientationB = chosen.Orientation;
+                }
+                else // if (Penetration > 0) // zero is excluded according to "while loop" header
+                {
+                    PositionA = chosen.Position;
+                    OrientationA = chosen.Orientation;
+                }
+                
+            }            
+
+
+        }
+
+        private void Check()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
