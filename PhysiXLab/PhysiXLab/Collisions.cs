@@ -21,6 +21,7 @@ namespace Test
 
         #region "testing components"
         Ball b1;
+        HalfSpace p1;
         LinkedList<Ball> balls = new LinkedList<Ball>();
         ContactGenerator cg;
         Camera camera;
@@ -40,10 +41,15 @@ namespace Test
         {
             b1 = new Ball(10f);
             b1.Texture = Content.Load<Texture2D>(@"basic_material");
-            cg = new ContactGenerator();
-            b1.Position = new Vector3(100,0,0);            
-            cg.AddBody(b1);
+            b1.Position = new Vector3(100,0,0);
             b1.model = Content.Load<Model>(@"ball");
+
+            p1 = new HalfSpace(new Plane(new Vector3(100, 0, 0), 100));
+
+            cg = new ContactGenerator();
+            cg.AddBody(b1);
+            cg.AddPlane(p1);
+
             camera = new Camera(this, new Vector3(0, 0, 100),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);

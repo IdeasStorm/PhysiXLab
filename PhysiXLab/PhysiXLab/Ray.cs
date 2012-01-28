@@ -29,7 +29,7 @@ namespace Test
         //public Matrix world { protected set; get; }
         public Vector3 position { protected set; get; }
         public Vector3 value { protected set; get; }
-        private Model model { protected set; get; }
+        public Model model { protected set; get; }
         private Vector3 direction;
         private Matrix scale;
         private Matrix rotation;

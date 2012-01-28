@@ -10,12 +10,14 @@ namespace PhysiXEngine
     public class ContactGenerator : Effect
     {
         protected LinkedList<Collidable> bodies;
+        protected LinkedList<HalfSpace> planes;
         protected List<Contact> contactDataList;
 
         public ContactGenerator()
         {
             contactDataList = new List<Contact>();
             bodies = new LinkedList<Collidable>();
+            planes = new LinkedList<HalfSpace>();
         }
 
         public void AddContactData(Contact contactdata)
@@ -45,6 +47,25 @@ namespace PhysiXEngine
         public void RemoveBody(Collidable body)
         {
             this.bodies.Remove(body);
+        }
+
+        /// <summary>
+        /// Adds a Plane to the Planes Set to check for associated collisions
+        /// </summary>
+        /// <param name="plane"></param>
+        public void AddPlane(HalfSpace plane)
+        {
+            this.planes.AddLast(plane);
+        }
+
+        /// <summary>
+        /// Removes a Plane from the Planes Set.
+        /// warning : this method is expensive O(n) , try to not use this in update
+        /// </summary>
+        /// <param name="plane"></param>
+        public void RemovePlane(HalfSpace plane)
+        {
+            this.planes.Remove(plane);
         }
 
         /// <summary>
@@ -252,7 +273,7 @@ namespace PhysiXEngine
             // BoundingBox world = new BoundingBox();
             // TODO !! make real world
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
-            CollisionDetector collisionGenerator = new CollisionDetector(bodies);
+            CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
             // initializing contacts
             foreach (Contact contactData in contactDataList)
