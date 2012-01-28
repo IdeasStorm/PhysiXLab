@@ -45,11 +45,7 @@ namespace PhysiXEngine
             {
                 contact.SphereAndSphere();
             }
-            /*if (other as HalfSpace != null)
-            {
-                contact.SphereAndPlane();
-            }*/
-            if (other as Box != null)
+            else if (other as Box != null)
             {
                 contact.SphereAndBox();
             }
@@ -57,7 +53,25 @@ namespace PhysiXEngine
 
         public override Boolean CollidesWith(Collidable other)
         {
-            //TODO add Detection logic
+            if (other as Sphere != null)
+            {
+                return sphere.Intersects(other.GetBoundingSphere());
+            }
+            else if (other as Box != null)
+            {
+                return sphere.Intersects(((Box)other).box);
+            }
+            return false;
+        }
+
+        public override Boolean CollidesWith(HalfSpace plane)
+        {
+            //TOOD add CollidesWith() code here
+            PlaneIntersectionType p = sphere.Intersects(plane.plane);
+            if (p == PlaneIntersectionType.Intersecting)
+            {
+                return true;
+            }
             return false;
         }
 

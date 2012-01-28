@@ -30,7 +30,7 @@ namespace PhysiXEngine
         /// <param name="other">the other collidable body to collides with </param>
         /// <returns></returns>
         public abstract Boolean CollidesWith(Collidable other);
-
+        public abstract Boolean CollidesWith(HalfSpace plane);
         /// <summary>
         /// gets the bounding sphere arround the collidable body 
         /// </summary>

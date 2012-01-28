@@ -1007,7 +1007,10 @@ namespace PhysiXEngine
 
         private void Check()
         {
-            throw new NotImplementedException();
+            if (body[0] as Sphere != null)
+                ((Sphere)body[0]).generateContacts(body[1]);
+            else if (body[0] as Box != null)
+                ((Sphere)body[0]).generateContacts(body[1]);
         }
     }
 }
