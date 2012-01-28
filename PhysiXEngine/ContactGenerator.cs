@@ -99,12 +99,12 @@ namespace PhysiXEngine
             // Build a vector that shows the change in velocity in
             // world space for a unit impulse in the direction of the contact
             // normal.
-            Vector3 deltaVelWorldOne = Vector3.Cross(contactData.relativeContactPosition[0], contactData._ContactNormal);
+            Vector3 deltaVelWorldOne = Vector3.Cross(contactData.relativeContactPosition[0], contactData.ContactNormal);
             deltaVelWorldOne = inverseInertiaTensor[0].transform(deltaVelWorldOne);
             deltaVelWorldOne = Vector3.Cross(deltaVelWorldOne, contactData.relativeContactPosition[0]);
 
             // Work out the change in velocity in contact coordiantes.
-            float deltaVelocity = Vector3.Dot(deltaVelWorldOne, contactData._ContactNormal);
+            float deltaVelocity = Vector3.Dot(deltaVelWorldOne, contactData.ContactNormal);
 
             // Add the linear component of velocity change
             deltaVelocity += one.InverseMass;
@@ -113,12 +113,12 @@ namespace PhysiXEngine
             if (two != null)
             {
                 // Go through the same transformation sequence again
-                Vector3 deltaVelWorldTwo = Vector3.Cross(contactData.relativeContactPosition[1], contactData._ContactNormal);
+                Vector3 deltaVelWorldTwo = Vector3.Cross(contactData.relativeContactPosition[1], contactData.ContactNormal);
                 deltaVelWorldTwo = inverseInertiaTensor[1].transform(deltaVelWorldTwo);
                 deltaVelWorldTwo = Vector3.Cross(deltaVelWorldTwo, contactData.relativeContactPosition[1]);
 
                 // Add the change in velocity due to rotation
-                deltaVelocity += Vector3.Dot(deltaVelWorldTwo, contactData._ContactNormal);
+                deltaVelocity += Vector3.Dot(deltaVelWorldTwo, contactData.ContactNormal);
 
                 // Add the change in velocity due to linear motion
                 deltaVelocity += two.InverseMass;
@@ -349,9 +349,9 @@ namespace PhysiXEngine
                 index = contactDataList.Count;
                 //for(i=0;i<contactDataList.Count;i++) {
                 foreach (Contact c in contactDataList) {
-                    if(c._Penetration > max)
+                    if(c.Penetration > max)
                     {
-                        max = c._Penetration;                        
+                        max = c.Penetration;                        
                         index=i;
                     }
                     i++;
