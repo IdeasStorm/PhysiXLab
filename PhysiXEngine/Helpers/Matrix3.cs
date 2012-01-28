@@ -47,6 +47,32 @@ namespace PhysiXEngine.Helpers
             this.data[8] = m.M33;
         }
 
+
+        public static implicit operator Matrix3 (Matrix instance)
+        {
+            return new Matrix3(instance);
+        }
+
+        public static explicit operator Matrix(Matrix3 instance)
+        {
+            Matrix m = new Matrix();
+            m.M11 = instance.data[0];
+            m.M12 = instance.data[1];
+            m.M13 = instance.data[2];
+
+            m.M21 = instance.data[3];
+            m.M22 = instance.data[4];
+            m.M23 = instance.data[5];
+
+            m.M31 = instance.data[6];
+            m.M32 = instance.data[7];
+            m.M33 = instance.data[8];
+
+            m.M44 = 1;
+            //TODO be sure of this method (is it correct ?!)
+            return m;
+        }
+
         ///<summary>
         ///Creates a new matrix with the given three vectors making
         ///up its columns.
