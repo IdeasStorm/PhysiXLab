@@ -16,6 +16,7 @@ namespace PhysiXEngine
 
         private bool didDetect = false;
         private List<Contact> detections = null;
+        private LinkedList<HalfSpace> planes = null;
 
         public LinkedList<Collidable> Shapes { private set; get; }
         public List<Contact> Detections
@@ -45,8 +46,26 @@ namespace PhysiXEngine
         {
             this.Shapes = Shapes;
             detections = new List<Contact>(Shapes.Count);   // Shapes.Count is sth arbitrary.
+            this.planes = new LinkedList<HalfSpace>();
         }
 
+        public CollisionDetector(LinkedList<Collidable> Shapes, LinkedList<HalfSpace> Planes)
+        {
+            this.Shapes = Shapes;
+            detections = new List<Contact>(Shapes.Count);
+            this.planes = new LinkedList<HalfSpace>(Planes);
+        }
+
+        public void AddPlane(HalfSpace plane)
+        {
+            planes.AddLast(plane);
+        }
+
+        private void DetectPlaneCollisions(BVHNode Hierarchy)
+        {
+            foreach (HalfSpace P in planes)
+                Hierarchy.FindPotentialCollisionsWithPlane(detections, P);
+        }
 
         /// <summary>
         /// Since we are dealing with primatives only now, there is no need for a fine and
@@ -73,7 +92,8 @@ namespace PhysiXEngine
 
             Shapes.AddFirst(saver);
             detections.Clear();
-            Hierarchy.FindPotentialCollisions(detections);
+            Hierarchy.FindPotentialCollisions(detections);  // Detect Collidables Collisions
+            DetectPlaneCollisions(Hierarchy);               // Detect Plane-Collidable Collisions
 
             return detections;
         }
