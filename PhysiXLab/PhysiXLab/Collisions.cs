@@ -21,7 +21,7 @@ namespace Test
 
         #region "testing components"
         Ball b1;
-        HalfSpace p1;
+        Border p1;
         LinkedList<Ball> balls = new LinkedList<Ball>();
         ContactGenerator cg;
         Camera camera;
@@ -44,7 +44,8 @@ namespace Test
             b1.Position = new Vector3(100,0,0);
             b1.model = Content.Load<Model>(@"ball");
 
-            p1 = new HalfSpace(new Plane(new Vector3(100, 0, 0), 100));
+            p1 = new Border(new Plane(new Vector3(50, 50, 50), 10));
+            p1.model = Content.Load<Model>(@"plane");
 
             cg = new ContactGenerator();
             cg.AddBody(b1);
@@ -91,6 +92,7 @@ namespace Test
             b1.Draw(camera);
             foreach (Ball b in balls)
                 b.Draw(camera);
+            p1.Draw(camera);
 
             base.Draw(gameTime);
         }
