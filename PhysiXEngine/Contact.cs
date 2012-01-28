@@ -21,19 +21,22 @@ namespace PhysiXEngine
         /**
          * Holds the position of the contact in world coordinates.
          */
-        public Vector3 ContactPoint { get; set; }
+        private Vector3 _ContactPoint;
+        public Vector3 ContactPoint { get { return _ContactPoint; } set { _ContactPoint = value; } }
 
         /**
          * Holds the direction of the contact in world coordinates.
          */
-        public Vector3 ContactNormal { get; set; }
+        private Vector3 _ContactNormal;
+        public Vector3 ContactNormal { get { return _ContactNormal; } set { _ContactNormal = value; } }
 
         /**
          * Holds the depth of penetration at the contact point. If both
          * bodies are specified then the contact point should be midway
          * between the inter-penetrating points.
          */
-        public float Penetration { get; set; }
+        private float _Penetration;
+        public float Penetration { get { return _Penetration; } set { _Penetration = value; } }
 
         private HalfSpace plane;
 
@@ -85,11 +88,11 @@ namespace PhysiXEngine
 
             // NewVelocityCalculation
             // Calculate the acceleration induced velocity accumulated this frame
-            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,this.ContactNormal) * frameDuration ;
+            float velocityFromAcc = Vector3.Dot(body1.LastFrameAcceleration,this._ContactNormal) * frameDuration ;
 
             if (body2 != null)
             {
-                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, this.ContactNormal) * frameDuration;
+                velocityFromAcc -= Vector3.Dot(body2.LastFrameAcceleration, this._ContactNormal) * frameDuration;
             }
 
             // If the velocity is very slow, limit the restitution
@@ -107,7 +110,7 @@ namespace PhysiXEngine
 
         private void SwapBodies()
         {
-            this.ContactNormal *= -1;
+            this._ContactNormal *= -1;
 
             Collidable temp = this.body[0];
             this.body[0] = this.body[1];
@@ -169,10 +172,10 @@ namespace PhysiXEngine
             this.calculateContactBasis();
 
             // Store the relative position of the contact relative to each body
-            this.relativeContactPosition[0] = this.ContactPoint - this.body[0].Position;
+            this.relativeContactPosition[0] = this._ContactPoint - this.body[0].Position;
             if (this.body[1]!=null)
             {
-                this.relativeContactPosition[1] = this.ContactPoint - this.body[1].Position;
+                this.relativeContactPosition[1] = this._ContactPoint - this.body[1].Position;
             }
 
             // Find the relative velocity of the bodies at the contact point.
@@ -202,9 +205,9 @@ namespace PhysiXEngine
 
             // We manually create the normal, because we have the
             // size to hand.
-            ContactNormal = Vector3.Multiply(midline, (float)(1.0f / size));
-            ContactPoint = positionOne + Vector3.Multiply(midline, 0.5f);
-            Penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
+            _ContactNormal = Vector3.Multiply(midline, (float)(1.0f / size));
+            _ContactPoint = positionOne + Vector3.Multiply(midline, 0.5f);
+            _Penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
         }
 
         public void SphereAndHalfSpace()
@@ -221,9 +224,9 @@ namespace PhysiXEngine
             if (ballDistance >= 0) return;
 
             // Create the contact - it has a normal in the plane direction.
-            ContactNormal = plane.direction;
-            Penetration = -ballDistance;
-            ContactPoint = position - plane.direction * (ballDistance + sphere.radius);
+            _ContactNormal = plane.direction;
+            _Penetration = -ballDistance;
+            _ContactPoint = position - plane.direction * (ballDistance + sphere.radius);
         }
 
         public void SphereAndPlane()
@@ -237,16 +240,16 @@ namespace PhysiXEngine
             float centreDistance = Vector3.Dot(plane.direction, position) - plane.offset;
 
             // Check which side of the plane we're on
-            ContactNormal = plane.direction;
-            Penetration = -centreDistance;
+            _ContactNormal = plane.direction;
+            _Penetration = -centreDistance;
             if (centreDistance < 0)
             {
-                ContactNormal *= -1;
-                Penetration = -Penetration;
+                _ContactNormal *= -1;
+                _Penetration = -_Penetration;
             }
-            Penetration += sphere.radius;
+            _Penetration += sphere.radius;
 
-            ContactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
+            _ContactPoint = position - Vector3.Multiply(plane.direction, (float)centreDistance);
         }
 
         public void BoxAndHalfSpace()
@@ -275,11 +278,11 @@ namespace PhysiXEngine
                     // The contact point is halfway between the vertex and the
                     // plane - we multiply the direction by half the separation 
                     // distance and add the vertex location.
-                    ContactPoint = plane.direction;
-                    ContactPoint = Vector3.Multiply(ContactPoint, (float)(vertexDistance - plane.offset));
-                    ContactPoint += vertexPos;
-                    ContactNormal = plane.direction;
-                    Penetration = plane.offset - vertexDistance;
+                    _ContactPoint = plane.direction;
+                    _ContactPoint = Vector3.Multiply(_ContactPoint, (float)(vertexDistance - plane.offset));
+                    _ContactPoint += vertexPos;
+                    _ContactNormal = plane.direction;
+                    _Penetration = plane.offset - vertexDistance;
 
                 }
             }
@@ -332,40 +335,40 @@ namespace PhysiXEngine
             Vector3[] contactTangent = new Vector3[2];
 
             // Check whether the Z-axis is nearer to the X or Y axis
-            if (Math.Abs(ContactNormal.X) > Math.Abs(ContactNormal.Y))
+            if (Math.Abs(_ContactNormal.X) > Math.Abs(_ContactNormal.Y))
             {
                 // Scaling factor to ensure the results are normalised
-                float s = 1.0f / (float)Math.Sqrt(ContactNormal.Z * ContactNormal.Z + ContactNormal.X * ContactNormal.X);
+                float s = 1.0f / (float)Math.Sqrt(_ContactNormal.Z * _ContactNormal.Z + _ContactNormal.X * _ContactNormal.X);
 
                 // The new X-axis is at right angles to the world Y-axis
-                contactTangent[0].X = ContactNormal.Z * (float)s;
+                contactTangent[0].X = _ContactNormal.Z * (float)s;
                 contactTangent[0].Y = 0.0f;
-                contactTangent[0].Z = -ContactNormal.X * (float)s;
+                contactTangent[0].Z = -_ContactNormal.X * (float)s;
 
                 // The new Y-axis is at right angles to the new X- and Z- axes
-                contactTangent[1].X = ContactNormal.Y * contactTangent[0].X;
-                contactTangent[1].Y = ContactNormal.Z * contactTangent[0].X - ContactNormal.X * contactTangent[0].Z;
-                contactTangent[1].Z = -ContactNormal.Y * contactTangent[0].X;
+                contactTangent[1].X = _ContactNormal.Y * contactTangent[0].X;
+                contactTangent[1].Y = _ContactNormal.Z * contactTangent[0].X - _ContactNormal.X * contactTangent[0].Z;
+                contactTangent[1].Z = -_ContactNormal.Y * contactTangent[0].X;
             }
             else
             {
                 // Scaling factor to ensure the results are normalised
-                float s = 1.0f / (float)Math.Sqrt(ContactNormal.Z * ContactNormal.Z +
-                    ContactNormal.Y * ContactNormal.Y);
+                float s = 1.0f / (float)Math.Sqrt(_ContactNormal.Z * _ContactNormal.Z +
+                    _ContactNormal.Y * _ContactNormal.Y);
 
                 // The new X-axis is at right angles to the world X-axis
                 contactTangent[0].X = 0;
-                contactTangent[0].Y = -ContactNormal.Z * (float)s;
-                contactTangent[0].Z = ContactNormal.Y * (float)s;
+                contactTangent[0].Y = -_ContactNormal.Z * (float)s;
+                contactTangent[0].Z = _ContactNormal.Y * (float)s;
 
                 // The new Y-axis is at right angles to the new X- and Z- axes
-                contactTangent[1].X = ContactNormal.Y * contactTangent[0].Z - ContactNormal.Z * contactTangent[0].Y;
-                contactTangent[1].Y = -ContactNormal.X * contactTangent[0].Z;
-                contactTangent[1].Z = ContactNormal.X * contactTangent[0].Y;
+                contactTangent[1].X = _ContactNormal.Y * contactTangent[0].Z - _ContactNormal.Z * contactTangent[0].Y;
+                contactTangent[1].Y = -_ContactNormal.X * contactTangent[0].Z;
+                contactTangent[1].Z = _ContactNormal.X * contactTangent[0].Y;
             }
 
             // Make a matrix from the three vectors.
-            ContactToWorld.setComponents(ContactNormal, contactTangent[0], contactTangent[1]);
+            ContactToWorld.setComponents(_ContactNormal, contactTangent[0], contactTangent[1]);
 
             //return new axis
         }
@@ -420,9 +423,9 @@ namespace PhysiXEngine
             #endregion
 
             //filling data
-            ContactNormal = normal;
-            ContactPoint = point;
-            Penetration = minDepth;
+            _ContactNormal = normal;
+            _ContactPoint = point;
+            _Penetration = minDepth;
 
             body[0] = box;
 
@@ -508,10 +511,10 @@ namespace PhysiXEngine
 
             Vector3 closestPtWorld = Vector3.Transform(closestPt, box.TransformMatrix);
             
-            ContactNormal = closestPtWorld - centre;
-            ContactNormal.Normalize();
-            ContactPoint = closestPtWorld;
-            Penetration = sphere.radius - (float)Math.Sqrt(dist);
+            _ContactNormal = closestPtWorld - centre;
+            _ContactNormal.Normalize();
+            _ContactPoint = closestPtWorld;
+            _Penetration = sphere.radius - (float)Math.Sqrt(dist);
 
             //TODO
             //restitution = TODO;
@@ -582,9 +585,9 @@ namespace PhysiXEngine
                 vertex.Z = -vertex.Z;
     
             // Create the contact data
-            ContactNormal = normal;
-            Penetration = pen;
-            ContactPoint = Vector3.Transform(vertex, two.TransformMatrix);
+            _ContactNormal = normal;
+            _Penetration = pen;
+            _ContactPoint = Vector3.Transform(vertex, two.TransformMatrix);
         }
 
         private static Vector3 contactPoint(Vector3 pOne, Vector3 dOne,
@@ -772,9 +775,9 @@ namespace PhysiXEngine
                         ptOnTwoEdge, twoAxis, twoVal, bestSingleAxis > 2);
 
                 // We can fill the contact.
-                Penetration = pen;
-                ContactNormal = axis;
-                ContactPoint = vertex;
+                _Penetration = pen;
+                _ContactNormal = axis;
+                _ContactPoint = vertex;
 
                 return 1;
             }
@@ -798,9 +801,9 @@ namespace PhysiXEngine
             calculateContactBasis();
 
             // Store the relative position of the contact relative to each body
-            relativeContactPosition[0] = ContactPoint - body[0].Position;
+            relativeContactPosition[0] = _ContactPoint - body[0].Position;
             if (body[1] != null) {
-                relativeContactPosition[1] = ContactPoint - body[1].Position;
+                relativeContactPosition[1] = _ContactPoint - body[1].Position;
             }
 
             // Find the relative velocity of the bodies at the contact point.
@@ -876,10 +879,10 @@ namespace PhysiXEngine
 
                     // Use the same procedure as for calculating frictionless
                     // velocity change to work out the angular inertia.
-                    Vector3 angularInertiaWorld = Vector3.Cross(relativeContactPosition[i] , ContactNormal);
+                    Vector3 angularInertiaWorld = Vector3.Cross(relativeContactPosition[i] , _ContactNormal);
                     angularInertiaWorld = inverseInertiaTensor.transform(angularInertiaWorld);
                     angularInertiaWorld = Vector3.Cross(angularInertiaWorld , relativeContactPosition[i]);
-                    angularInertia[i] = Vector3.Dot(angularInertiaWorld , ContactNormal);
+                    angularInertia[i] = Vector3.Dot(angularInertiaWorld , _ContactNormal);
 
                     // The linear component is simply the inverse mass
                     linearInertia[i] = body[i].InverseMass;
@@ -904,7 +907,7 @@ namespace PhysiXEngine
 
                 // To avoid angular projections that are too great (when mass is large
                 // but inertia tensor is small) limit the angular move.
-                Vector3 projection = relativeContactPosition[1] + ContactNormal * Vector3.Dot(-relativeContactPosition[1],  ContactNormal);
+                Vector3 projection = relativeContactPosition[1] + _ContactNormal * Vector3.Dot(-relativeContactPosition[1],  _ContactNormal);
                 
                 float max = angularLimit*relativeContactPosition[0].Length();
 
@@ -938,7 +941,7 @@ namespace PhysiXEngine
                 Vector3 t;
                 if(angularMove[b]!=(0.0f))
                 {
-                    t = Vector3.Cross(relativeContactPosition[b],ContactNormal);
+                    t = Vector3.Cross(relativeContactPosition[b],_ContactNormal);
 
                     Matrix3 inverseInertiaTensor = body[b].InverseInertiaTensorWorld;
                     rotationDirection[b] = inverseInertiaTensor.transform(t);
@@ -953,10 +956,10 @@ namespace PhysiXEngine
                     rotationAmount[b]=1;
                 }
 
-                velocityChange[b] = ContactNormal;
+                velocityChange[b] = _ContactNormal;
                 velocityChange[b] *= linearMove[b]/rotationAmount[b];
 
-                body[b].Position = body[b].Position + ContactNormal * linearMove[b];
+                body[b].Position = body[b].Position + _ContactNormal * linearMove[b];
 
                 body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b], MathHelper.Pi)
                    * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
@@ -989,13 +992,13 @@ namespace PhysiXEngine
             Quaternion OrientationB = chosen.Orientation;
             
             // starting binary search loop
-            while ( Math.Abs(Penetration) > this.minimumPenetration)
+            while ( Math.Abs(_Penetration) > this.minimumPenetration)
             {
                 if ((PositionA - PositionB).Length() <= 0.1) throw new Exception("no more precision - will iterate to infinity");
                 chosen.Position = Vector3.Lerp(PositionA, PositionB, 0.5f);
                 chosen.Orientation = Quaternion.Slerp(OrientationA, OrientationB, 0.5f);
                 this.Check();
-                if (Penetration < 0)
+                if (_Penetration < 0)
                 {
                     PositionB = chosen.Position;
                     OrientationB = chosen.Orientation;
@@ -1014,17 +1017,17 @@ namespace PhysiXEngine
         public ContactData GetContactData()
         {
             ContactData contactData = new ContactData();
-            contactData.ContactNormal = ContactNormal;
-            contactData.ContactPoint = ContactPoint;
-            contactData.Penetration = Penetration;
+            contactData.ContactNormal = _ContactNormal;
+            contactData.ContactPoint = _ContactPoint;
+            contactData.Penetration = _Penetration;
             return contactData;
         }
 
         public void FillFromContactData(ContactData contactData)
         {
-            ContactNormal = contactData.ContactNormal;
-            ContactPoint = contactData.ContactPoint;
-            Penetration = contactData.Penetration;
+            _ContactNormal = contactData.ContactNormal;
+            _ContactPoint = contactData.ContactPoint;
+            _Penetration = contactData.Penetration;
         }
 
         /// <summary>

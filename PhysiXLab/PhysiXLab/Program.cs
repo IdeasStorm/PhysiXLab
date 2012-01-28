@@ -12,7 +12,7 @@ namespace Test
         {
             using (Collisions game = new Collisions())
             {
-                game.Run();
+                //game.Run();
             }
             //FrictionWithCrate fr = new FrictionWithCrate();
             //fr.Run();

@@ -99,12 +99,12 @@ namespace PhysiXEngine
             // Build a vector that shows the change in velocity in
             // world space for a unit impulse in the direction of the contact
             // normal.
-            Vector3 deltaVelWorldOne = Vector3.Cross(contactData.relativeContactPosition[0], contactData.ContactNormal);
+            Vector3 deltaVelWorldOne = Vector3.Cross(contactData.relativeContactPosition[0], contactData._ContactNormal);
             deltaVelWorldOne = inverseInertiaTensor[0].transform(deltaVelWorldOne);
             deltaVelWorldOne = Vector3.Cross(deltaVelWorldOne, contactData.relativeContactPosition[0]);
 
             // Work out the change in velocity in contact coordiantes.
-            float deltaVelocity = Vector3.Dot(deltaVelWorldOne, contactData.ContactNormal);
+            float deltaVelocity = Vector3.Dot(deltaVelWorldOne, contactData._ContactNormal);
 
             // Add the linear component of velocity change
             deltaVelocity += one.InverseMass;
@@ -113,12 +113,12 @@ namespace PhysiXEngine
             if (two != null)
             {
                 // Go through the same transformation sequence again
-                Vector3 deltaVelWorldTwo = Vector3.Cross(contactData.relativeContactPosition[1], contactData.ContactNormal);
+                Vector3 deltaVelWorldTwo = Vector3.Cross(contactData.relativeContactPosition[1], contactData._ContactNormal);
                 deltaVelWorldTwo = inverseInertiaTensor[1].transform(deltaVelWorldTwo);
                 deltaVelWorldTwo = Vector3.Cross(deltaVelWorldTwo, contactData.relativeContactPosition[1]);
 
                 // Add the change in velocity due to rotation
-                deltaVelocity += Vector3.Dot(deltaVelWorldTwo, contactData.ContactNormal);
+                deltaVelocity += Vector3.Dot(deltaVelWorldTwo, contactData._ContactNormal);
 
                 // Add the change in velocity due to linear motion
                 deltaVelocity += two.InverseMass;
@@ -275,12 +275,10 @@ namespace PhysiXEngine
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
-            // removing all uncollided contacts
-            contactDataList.RemoveAll((Contact contact) => { return !contact.IsColliding(); });
             // initializing contacts
             foreach (Contact contactData in contactDataList)
             {
-                contactData.Check();
+                contactData.body[0].generateContacts(contactData.body[1], contactData);
                 contactData.InitializeAtMoment(duration);
             }
         }
@@ -340,6 +338,7 @@ namespace PhysiXEngine
             // the needed ammount to ressolve penetration
             float[] rotationAmount = new float[2];
             float max;
+            Vector3 cp;
 
             // iteratively resolve interpenetration in order of severity.
             positionIterationsUsed = 0;
@@ -350,16 +349,20 @@ namespace PhysiXEngine
                 index = contactDataList.Count;
                 //for(i=0;i<contactDataList.Count;i++) {
                 foreach (Contact c in contactDataList) {
-                    if(c.Penetration > max)
+                    if(c._Penetration > max)
                     {
-                        max = c.Penetration;                        
+                        max = c._Penetration;                        
                         index=i;
                     }
                     i++;
                 }
                 if (index == contactDataList.Count) break;
                 // an item was chosen 
-                contactDataList[index].FixPenetration();
+                Collidable BodyOne = contactDataList[index].body[0];
+                Collidable BodyTwo = contactDataList[index].body[1];
+                if (BodyOne.IsMoving) BodyOne.RevertChanges();
+                else if (BodyTwo.IsMoving) BodyTwo.RevertChanges();
+                // TODO replace this bad algorithm
                 positionIterationsUsed++;
     }
 }
