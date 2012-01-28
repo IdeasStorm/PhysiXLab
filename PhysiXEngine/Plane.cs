@@ -42,6 +42,20 @@ namespace PhysiXEngine
                 contact.BoxAndHalfSpace();
             }
         }
+
+        public ContactData generateContacts(Collidable other)
+        {
+            Contact contact = new Contact(other, this.plane);
+            if (other as Sphere != null)
+            {
+                contact.SphereAndPlane();
+            }
+            if (other as Box != null)
+            {
+                contact.BoxAndHalfSpace();
+            }
+            return contact.GetContactData();
+        }
         /*
         public override Boolean CollidesWith(Collidable other)
         {
