@@ -970,7 +970,10 @@ namespace PhysiXEngine
         {
             // select the faster body
             Collidable chosen;
-            chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
+            if (body[0] == null) 
+                chosen = body[1];
+            else
+                chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
             // A = collision moment
             Vector3 PositionA = chosen.Position;
             Quaternion OrientationA = chosen.Orientation;
