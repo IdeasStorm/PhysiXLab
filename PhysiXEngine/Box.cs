@@ -9,7 +9,7 @@ namespace PhysiXEngine
     using PhysiXEngine.Helpers;
     public class Box : Collidable
     {
-        public Vector3 HalfSize { get; private set; }
+        public Vector3 HalfSize { get; protected set; }
         private BoundingBox _box = new BoundingBox();
         public BoundingBox box { get { return _box; } private set { _box = value; } }
 
@@ -22,7 +22,7 @@ namespace PhysiXEngine
         public override Contact generateContacts(Collidable other)
         {
             Contact contactData = null;
-            
+            //TODO add logic here
             return contactData;
         }
 
