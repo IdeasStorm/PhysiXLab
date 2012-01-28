@@ -26,6 +26,18 @@ namespace PhysiXEngine.Helpers
             }
         }
 
+        public static void setInertiaTensorCoeffs(this Matrix matrix, float ix, float iy, float iz,
+            float ixy = 0, float ixz = 0, float iyz = 0)
+        {
+            matrix.M11 = ix;
+            matrix.M22 = iy;
+            matrix.M33 = iz;
+            matrix.M12 = matrix.M21 = -ixy;
+            matrix.M13 = matrix.M31 = -ixz;
+            matrix.M23 = matrix.M32 = -iyz;
+            matrix.M44 = 1;
+            
+        }
         enum CollisionType
         {
             None = 0x0,
