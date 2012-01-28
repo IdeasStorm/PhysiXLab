@@ -1027,7 +1027,6 @@ namespace PhysiXEngine
             ContactData cd;
             if (WithPlane)
                 cd = plane.generateContacts(body[0]);
-                //throw new NotImplementedException();
             else
                 cd = body[0].generateContacts(body[1]);
         }
