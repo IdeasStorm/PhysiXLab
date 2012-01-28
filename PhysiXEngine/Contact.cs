@@ -1020,16 +1020,24 @@ namespace PhysiXEngine
             return contactData;
         }
 
+        public void FillFromContactData(ContactData contactData)
+        {
+            ContactNormal = contactData.ContactNormal;
+            ContactPoint = contactData.ContactPoint;
+            Penetration = contactData.Penetration;
+        }
+
         /// <summary>
         /// Refills contact data
         /// </summary>
-        private void Check()
+        public void Check()
         {
             ContactData cd;
             if (WithPlane)
                 cd = plane.generateContacts(body[0]);
             else
                 cd = body[0].generateContacts(body[1]);
+            FillFromContactData(cd);
         }
 
         /// <summary>
