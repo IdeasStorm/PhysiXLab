@@ -105,8 +105,6 @@ namespace PhysiXEngine
         /// </summary>
         public Matrix3 InverseInertiaTensorWorld { get; protected set; }
 
-        //TODO above matrices should be 3x3
-
         private Quaternion _oldOrientation;
         private Quaternion _orientation;
 
@@ -270,7 +268,6 @@ namespace PhysiXEngine
             _position = this._oldPosition;
             _orientation = _oldOrientation;
             UpdateMatices();
-            // TODO save this position somewhere
         }
 
         /// <summary>

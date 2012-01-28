@@ -23,7 +23,6 @@ namespace PhysiXEngine
         {
             Contact contact = null;
             contact = new Contact(this, other);
-            //TODO add logic here
             if (other as Box != null)
             {
                 contact.BoxAndBox();
@@ -39,7 +38,6 @@ namespace PhysiXEngine
         {
             _box.Min = Vector3.Transform(-HalfSize, TransformMatrix);
             _box.Max = Vector3.Transform(HalfSize, TransformMatrix);
-            //TODO be sure of meaning of halfSize @JOBORY
         }
 
         public override Boolean CollidesWith(Collidable other)

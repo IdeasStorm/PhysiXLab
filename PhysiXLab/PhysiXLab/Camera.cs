@@ -50,8 +50,7 @@ namespace Test
 
         public Camera(Game game)
             : base(game)
-        {
-            // TODO: Construct any child components here
+        {            
         }
 
         //define new view matrix
@@ -86,8 +85,6 @@ namespace Test
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-
             // Set mouse position and do initial get state
             Mouse.SetPosition(Game.Window.ClientBounds.Width / 2
                 , Game.Window.ClientBounds.Height / 2);
@@ -102,7 +99,6 @@ namespace Test
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
             // Move forward/backward
             if (Keyboard.GetState().IsKeyDown(Keys.W))
                 cameraPosition += cameraDirection * speed;
