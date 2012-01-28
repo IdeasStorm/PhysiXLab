@@ -45,7 +45,7 @@ namespace PhysiXEngine
         public float desiredDeltaVelocity { get; set; }
 
         public  Vector3[] relativeContactPosition = new Vector3[2];
-        private float minimumPenetration = 0.1f; //TODO put an appropriate value
+        private float minimumPenetration = 3.0f; //TODO put an appropriate value
 
         public float friction { get; set; }
 
@@ -991,6 +991,7 @@ namespace PhysiXEngine
             // starting binary search loop
             while ( Math.Abs(Penetration) > this.minimumPenetration)
             {
+                if ((PositionA - PositionB).Length() <= 0.1) throw new Exception("no more precision - will iterate to infinity");
                 chosen.Position = Vector3.Lerp(PositionA, PositionB, 0.5f);
                 chosen.Orientation = Quaternion.Slerp(OrientationA, OrientationB, 0.5f);
                 this.Check();
