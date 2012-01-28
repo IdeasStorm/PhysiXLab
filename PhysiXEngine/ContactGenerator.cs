@@ -362,6 +362,7 @@ namespace PhysiXEngine
                 Collidable BodyTwo = contactDataList[index].body[1];
                 if (BodyOne.IsMoving) BodyOne.RevertChanges();
                 else if (BodyTwo.IsMoving) BodyTwo.RevertChanges();
+                // TODO replace this bad algorithm
                 positionIterationsUsed++;
     }
 }
