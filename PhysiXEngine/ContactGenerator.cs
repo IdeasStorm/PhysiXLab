@@ -275,10 +275,11 @@ namespace PhysiXEngine
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
+            this.contactDataList.RemoveAll((Contact contact) => { return !contact.IsColliding(); });
             // initializing contacts
             foreach (Contact contactData in contactDataList)
             {
-                contactData.body[0].generateContacts(contactData.body[1], contactData);
+                contactData.Check();
                 contactData.InitializeAtMoment(duration);
             }
         }
@@ -338,7 +339,6 @@ namespace PhysiXEngine
             // the needed ammount to ressolve penetration
             float[] rotationAmount = new float[2];
             float max;
-            Vector3 cp;
 
             // iteratively resolve interpenetration in order of severity.
             positionIterationsUsed = 0;
@@ -358,11 +358,7 @@ namespace PhysiXEngine
                 }
                 if (index == contactDataList.Count) break;
                 // an item was chosen 
-                Collidable BodyOne = contactDataList[index].body[0];
-                Collidable BodyTwo = contactDataList[index].body[1];
-                if (BodyOne.IsMoving) BodyOne.RevertChanges();
-                else if (BodyTwo.IsMoving) BodyTwo.RevertChanges();
-                // TODO replace this bad algorithm
+                contactDataList[index].FixPenetration();
                 positionIterationsUsed++;
     }
 }
