@@ -19,11 +19,16 @@ namespace Test
         public Crate(Vector3 halfSize)
             : base(halfSize)
         {
+            this.Mass = 10f;
         }
 
         public void LoadContent(ContentManager content)
         {
             model = content.Load<Model>(@"Box");
+            Vector3 diag1 = model.Bones["diag01"].Transform.Translation;
+            Vector3 diag2 = model.Bones["diag02"].Transform.Translation;
+            HalfSize = (diag2 - diag1) / 2f;
+            updateBounding();
         }
 
         public void Draw(Camera camera)
@@ -35,7 +40,7 @@ namespace Test
                 foreach (BasicEffect be in mesh.Effects)
                 {
                     be.EnableDefaultLighting();
-                    be.World = mesh.ParentBone.Transform * Matrix.CreateScale(HalfSize.Length()) * TransformMatrix;
+                    be.World = mesh.ParentBone.Transform /* Matrix.CreateScale(HalfSize.Length()) */ * TransformMatrix;
                     be.View = camera.view;
                     be.Projection = camera.projection;
                 }
