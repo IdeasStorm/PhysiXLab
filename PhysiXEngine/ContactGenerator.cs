@@ -280,7 +280,7 @@ namespace PhysiXEngine
             // initializing contacts
             foreach (Contact contactData in contactDataList)
             {
-                contactData.body[0].generateContacts(contactData.body[1], contactData);
+                contactData.Check();
                 contactData.InitializeAtMoment(duration);
             }
         }
