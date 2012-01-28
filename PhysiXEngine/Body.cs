@@ -55,7 +55,7 @@ namespace PhysiXEngine
         private Vector3 forceAccumulator;
         private Vector3 torqueAccumulator;
 
-        private Matrix3 _inverseInertiaTensor = new Matrix3();
+        private Matrix _inverseInertiaTensor = new Matrix();
 
 
         public bool IsAsleep { 
@@ -78,7 +78,7 @@ namespace PhysiXEngine
         /// holds the inertia (independent of the axis)
         /// warning : this is in the body space
         /// </summary>
-        public Matrix3 InverseInertiaTensor {
+        public Matrix InverseInertiaTensor {
             get{
                 return _inverseInertiaTensor;
             }
@@ -87,15 +87,15 @@ namespace PhysiXEngine
             }
         }
 
-        public Matrix3 InertiaTensor 
+        public Matrix InertiaTensor 
         {
             get
             {
-                return _inverseInertiaTensor.inverse();
+                return Matrix.Invert(_inverseInertiaTensor);
             }
             set
             {
-                _inverseInertiaTensor.setInverse(value);
+                _inverseInertiaTensor = Matrix.Invert(value);
             }
         }
 
