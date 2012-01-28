@@ -21,7 +21,7 @@ namespace PhysiXEngine
         {
             this.radius = radius;
             sphere = new BoundingSphere(Position, radius);
-            
+            Mass = mass;
             float coeff = 0.4f * Mass * radius * radius;
             setInertiaTensorCoeffs(coeff, coeff, coeff);
             UpdateMatices();
