@@ -236,7 +236,7 @@ namespace PhysiXEngine
                 // Work out body one's linear and angular changes
                 Vector3 impulsiveTorqueTwo = Vector3.Cross(contactData.relativeContactPosition[1], impulse);
                 rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorqueTwo);
-                velocityChange[1] = - impulse * one.InverseMass;
+                velocityChange[1] = - impulse * two.InverseMass;
 
                 // And apply them.
                 two.AddVelocity(velocityChange[1]);
