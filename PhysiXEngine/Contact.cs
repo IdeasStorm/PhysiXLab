@@ -971,7 +971,7 @@ namespace PhysiXEngine
         /// based on penetration sign (+/-)
         /// <author>MhdSyrwan</author>
         /// </summary>
-        void interpolateToPenetrate()
+        public void FixPenetration()
         {
             // select the faster body
             Collidable chosen;
