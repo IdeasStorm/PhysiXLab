@@ -54,7 +54,7 @@ namespace Test
 
             cg = new ContactGenerator();
             cg.AddBody(fixedBall);
-            cg.AddBody(ball);
+            //cg.AddBody(ball);
             cg.AddBody(crate);
 
             fixedBall.model = Content.Load<Model>(@"ball");
