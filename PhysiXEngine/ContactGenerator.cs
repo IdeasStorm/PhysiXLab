@@ -296,7 +296,7 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 4;
+        uint positionIterations = 1;
 
         //TODO modify above values
 

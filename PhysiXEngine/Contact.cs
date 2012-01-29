@@ -440,6 +440,12 @@ namespace PhysiXEngine
             //return true;
         }
 
+        void ReOrder() {
+            Collidable temp = body[0];
+            body[0] = body[1];
+            body[1] = temp;
+        }
+
         //public bool BoxAndSphere()
         public void SphereAndBox()
         {
@@ -454,12 +460,21 @@ namespace PhysiXEngine
             {
                 box = (Box)body[1];
                 sphere = (Sphere)body[0];
+                ReOrder();
             }
             
             // Transform the centre of the sphere into box coordinates  
             Vector3 centre = sphere.Position;
             Vector3 spherToBoxCor = Vector3.Transform(centre, Matrix.Invert(box.TransformMatrix));
             //Vector3 spherToBoxCor = sphere.Position - box.Position;
+
+            if (Math.Abs(spherToBoxCor.X) - sphere.radius > box.HalfSize.X ||
+                Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||
+                Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
+            {
+                //_Penetration = -1;
+                //return;
+            }
 
             //Vector3 closestPt = new Vector3();
             Vector3 closestPt = Vector3.Zero;
@@ -492,6 +507,12 @@ namespace PhysiXEngine
             // Check we're in contact
             dist = (closestPt - spherToBoxCor).Length();
             dist = (float)Math.Pow(dist, 2);
+
+            if (dist > sphere.radius * sphere.radius)
+            {
+                //_Penetration = -1;
+                //return;
+            }
 
             Vector3 closestPtWorld = Vector3.Transform(closestPt, box.TransformMatrix);
             
@@ -956,6 +977,7 @@ namespace PhysiXEngine
         public void FixPenetration()
         {
             // select the faster body
+            //ReOrder();
             Collidable chosen;
             if (body[0] == null) 
                 chosen = body[1];
@@ -969,7 +991,8 @@ namespace PhysiXEngine
             // B = the moment before collision moment
             Vector3 PositionB = chosen.Position;
             Quaternion OrientationB = chosen.Orientation;
-            
+
+            return;
             // starting binary search loop
             while ( Math.Abs(_Penetration) > this.minimumPenetration)
             {
