@@ -133,10 +133,10 @@ namespace Test
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            ButtonTexture = Game.Content.Load<Texture2D>("texButton");
-            TextBoxTexture = Game.Content.Load<Texture2D>("texTextBox");
-            PenalTexture = Game.Content.Load<Texture2D>("texForm");
-            Font = Game.Content.Load<SpriteFont>("Arial");
+            ButtonTexture = Game.Content.Load<Texture2D>("GUI\texButton");
+            TextBoxTexture = Game.Content.Load<Texture2D>("GUI\texTextBox");
+            PenalTexture = Game.Content.Load<Texture2D>("GUI\texForm");
+            Font = Game.Content.Load<SpriteFont>("GUI\Arial");
             frm = new Form("MyForm", "", 
                 new Rectangle(Position.X, Position.Y, Width, Height), 
                 PenalTexture, Font, Color.Black);
