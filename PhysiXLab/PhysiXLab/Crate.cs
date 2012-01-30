@@ -19,7 +19,6 @@ namespace Test
         public Crate(Vector3 halfSize)
             : base(halfSize)
         {
-            this.Mass = 10f;
             Vector3 squaredSize = halfSize * halfSize;
             this.setInertiaTensorCoeffs(
                 0.3f*Mass*(squaredSize.Y+squaredSize.Z),
