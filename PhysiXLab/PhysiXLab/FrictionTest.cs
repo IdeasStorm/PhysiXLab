@@ -47,14 +47,14 @@ namespace Test
             
             ball = new Ball(10f);
             ball.Texture = Content.Load<Texture2D>(@"basic_material");
-            ball.Position = new Vector3(100,150, 0);
+            ball.Position = new Vector3(50,250, 0);
 
-            crate = new Crate(new Vector3(2,2,2));
+            crate = new Crate(new Vector3(5f,5f,5f));
             crate.Position = new Vector3(50,150,20);
 
             cg = new ContactGenerator();
             cg.AddBody(fixedBall);
-            //cg.AddBody(ball);
+            cg.AddBody(ball);
             cg.AddBody(crate);
 
             fixedBall.model = Content.Load<Model>(@"ball");
@@ -66,7 +66,7 @@ namespace Test
 
             fixedBall.InverseMass = 0;
             fixedBall.InverseInertiaTensor = new Matrix();
-            ball.Mass = 10;
+            ball.Mass = 50;
 
             base.Initialize();
         }
@@ -91,8 +91,8 @@ namespace Test
             if (Keyboard.GetState().IsKeyUp(Keys.Space) && spaceClicked)
             {
                 spaceClicked = false;
-                //g.AddBody(ball);
-                g.AddBody(crate);
+                g.AddBody(ball);
+                //g.AddBody(crate);
             }
 
             g.Update(duration);
