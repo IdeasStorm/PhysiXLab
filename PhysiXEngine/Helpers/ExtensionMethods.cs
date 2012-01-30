@@ -26,6 +26,16 @@ namespace PhysiXEngine.Helpers
             }
         }
 
+        public static void AddScaledVector(this Quaternion quat, Vector3 vector, float scale)
+        {
+            Quaternion q = new Quaternion(vector.X * scale, vector.Y * scale, vector.Z * scale, 0);
+            q = q * quat;
+            quat.W += q.W * 0.5f;
+            quat.X += q.X * 0.5f;
+            quat.Y += q.Y * 0.5f;
+            quat.Z += q.Z * 0.5f;
+        }
+
         enum CollisionType
         {
             None = 0x0,
