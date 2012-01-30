@@ -32,8 +32,8 @@ namespace Test
             model = content.Load<Model>(@"Box");
             Vector3 diag1 = (model.Bones["diag01"].Parent.Transform * model.Bones["diag01"].Transform).Translation;
             Vector3 diag2 = (model.Bones["diag02"].Parent.Transform * model.Bones["diag02"].Transform).Translation;
-            HalfSize = (diag2 - diag1) / 2f;
-            HalfSize = new Vector3(Math.Abs(HalfSize.X),Math.Abs(HalfSize.Y),Math.Abs(HalfSize.Z));
+            //HalfSize = (diag2 - diag1) / 2f;
+            //HalfSize = new Vector3(Math.Abs(HalfSize.X),Math.Abs(HalfSize.Y),Math.Abs(HalfSize.Z));
             //HalfSize = new Vector3(2,2,2);
             updateBounding();
         }
