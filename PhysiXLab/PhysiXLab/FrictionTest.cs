@@ -50,7 +50,7 @@ namespace Test
             ball.Position = new Vector3(100,150, 0);
 
             crate = new Crate(new Vector3(2,2,2));
-            crate.Position = new Vector3(100,150,20);
+            crate.Position = new Vector3(50,150,20);
 
             cg = new ContactGenerator();
             cg.AddBody(fixedBall);
