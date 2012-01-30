@@ -60,7 +60,7 @@ namespace PhysiXEngine
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
-            //friction = 0.4f; // TODO add a dynamic mechanism
+            friction = 0.4f; // TODO add a dynamic mechanism
         }
 
         public Contact(Collidable firstBody, Plane plane)
@@ -71,6 +71,7 @@ namespace PhysiXEngine
             this.plane = new HalfSpace(plane);
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
+            friction = 3f; // TODO add a dynamic mechanism
         }
 
         #region Calculate internel information 
@@ -97,9 +98,9 @@ namespace PhysiXEngine
 
             // If the velocity is very slow, limit the restitution
             float thisRestitution = this.restitution;
-            if (Math.Sqrt(this.contactVelocity.X) < velocityLimit)
+            if (Math.Abs(this.contactVelocity.X) < velocityLimit)
             {
-                thisRestitution = (float)0.0f;
+                thisRestitution = 0.0f;
             }
 
             // Combine the bounce velocity with the removed
@@ -130,7 +131,7 @@ namespace PhysiXEngine
             Body thisBody = this.body[bodyIndex];
 
             // Work out the velocity of the contact point.
-            Vector3 velocity = Vector3.Multiply(thisBody.Rotation, this.relativeContactPosition[bodyIndex]);
+            Vector3 velocity = Vector3.Cross(thisBody.Rotation, this.relativeContactPosition[bodyIndex]);
             velocity += thisBody.Velocity;
 
             // Turn the velocity into contact-coordinates.
