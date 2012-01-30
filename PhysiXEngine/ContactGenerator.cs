@@ -275,7 +275,9 @@ namespace PhysiXEngine
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
-            this.contactDataList.RemoveAll((Contact contact) => { return !contact.IsColliding(); });
+            this.contactDataList.RemoveAll((Contact contact) => { 
+                return !contact.IsColliding(); 
+            });
             // initializing contacts
             foreach (Contact contactData in contactDataList)
             {
@@ -290,7 +292,7 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations = 4;
+        uint velocityIterations = 1;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
@@ -333,34 +335,39 @@ namespace PhysiXEngine
 
         void resolvePenetration(float duration)
         {
-            int i=0,index;
+            int i = 0, index;
             Vector3[] velocityChange = new Vector3[2]
                     , rotationChange = new Vector3[2];
             // the needed ammount to ressolve penetration
             float[] rotationAmount = new float[2];
             float max;
+            Vector3 cp;
 
             // iteratively resolve interpenetration in order of severity.
             positionIterationsUsed = 0;
-            while(positionIterationsUsed < positionIterations)
+            while (positionIterationsUsed < positionIterations)
             {
                 // Find biggest penetration
                 max = positionEpsilon;
                 index = contactDataList.Count;
                 //for(i=0;i<contactDataList.Count;i++) {
-                foreach (Contact c in contactDataList) {
-                    if(c.Penetration > max)
+                foreach (Contact c in contactDataList)
+                {
+                    if (c.Penetration > max)
                     {
-                        max = c.Penetration;                        
-                        index=i;
+                        max = c.Penetration;
+                        index = i;
                     }
                     i++;
                 }
                 if (index == contactDataList.Count) break;
-                // an item was chosen 
+
+                // wake up the slept body of the pair
+                contactDataList[index].WakeUpPair();
                 contactDataList[index].FixPenetration();
                 positionIterationsUsed++;
-    }
+            }
+
 }
 
         //Level2 - resolving collison
