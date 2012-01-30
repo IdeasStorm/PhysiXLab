@@ -171,7 +171,7 @@ namespace PhysiXEngine
 
         protected void UpdateMatices()
         {
-            Orientation.Normalize();
+            _orientation.Normalize();
 
             // Calculate the transform matrix for the body.
             TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
