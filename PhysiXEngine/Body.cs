@@ -11,17 +11,17 @@ namespace PhysiXEngine
     public class Body
     {
         public bool HasFiniteMass { get; private set; }
-        private float _inverseMass;
+        private float inverseMass;
         public float InverseMass
         {
             get
             {
-                return _inverseMass;
+                return inverseMass;
             }
             set
             {
                 HasFiniteMass = (value != 0.0f);
-                _inverseMass = value;
+                inverseMass = value;
             }
         }
 
@@ -30,21 +30,21 @@ namespace PhysiXEngine
         /// </summary>
         public float Mass 
         {
-            get { return 1.0f / _inverseMass; }
+            get { return 1.0f / inverseMass; }
             set 
             {
                 HasFiniteMass = !float.IsInfinity(value);
-                _inverseMass = 1.0f / value;
+                inverseMass = 1.0f / value;
             }
         }
 
 
-        private Vector3 _position;
+        private Vector3 position;
         public Vector3 Position { 
-            get { return _position; } 
+            get { return position; } 
             set { 
-                _oldPosition = _position; 
-                _position = value; 
+                _oldPosition = position; 
+                position = value; 
             } 
         }
         public Vector3 Velocity {  get; protected set; }
@@ -55,7 +55,7 @@ namespace PhysiXEngine
         private Vector3 forceAccumulator;
         private Vector3 torqueAccumulator;
 
-        private Matrix _inverseInertiaTensor = new Matrix();
+        private Matrix inverseInertiaTensor = new Matrix();
 
 
         public bool IsAsleep { 
@@ -80,10 +80,10 @@ namespace PhysiXEngine
         /// </summary>
         public Matrix InverseInertiaTensor {
             get{
-                return _inverseInertiaTensor;
+                return inverseInertiaTensor;
             }
             set{
-                _inverseInertiaTensor = value;
+                inverseInertiaTensor = value;
             }
         }
 
@@ -91,11 +91,11 @@ namespace PhysiXEngine
         {
             get
             {
-                return Matrix.Invert(_inverseInertiaTensor);
+                return Matrix.Invert(inverseInertiaTensor);
             }
             set
             {
-                _inverseInertiaTensor = Matrix.Invert(value);
+                inverseInertiaTensor = Matrix.Invert(value);
             }
         }
 
@@ -106,18 +106,19 @@ namespace PhysiXEngine
         public Matrix3 InverseInertiaTensorWorld { get; protected set; }
 
         private Quaternion _oldOrientation;
-        private Quaternion _orientation;
+        private Quaternion orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward,0);
 
         /// <summary>
         /// Angular orientation in world space
         /// </summary>
         public Quaternion Orientation {
             set
-            {
-                _oldOrientation = _orientation;
-                _orientation = value;
+            {                    
+                _oldOrientation = orientation;
+                orientation = value;
+                orientation.Normalize();
             }
-            get { return _orientation; }
+            get { return orientation; }
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace PhysiXEngine
         {
             Mass = 1;
             InertiaTensor = Matrix.Identity;
-            Orientation = Quaternion.CreateFromYawPitchRoll(0, 0, 0);
+            Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward,0);
             Awake();
             UpdateMatices(); //TODO this must not be here!!
         }
@@ -155,15 +156,15 @@ namespace PhysiXEngine
         {
             if (IsAsleep) return;
             LastFrameAcceleration = Acceleration;
-            LastFrameAcceleration += forceAccumulator * _inverseMass;
+            LastFrameAcceleration += forceAccumulator * inverseMass;
             AngularAcceleration = InverseInertiaTensorWorld.transform(torqueAccumulator);
-            //AngularAcceleration = Vector3.Transform(AngularAcceleration,InverseInertiaTensorWorld);
 
             Velocity += LastFrameAcceleration * duration;
-            Rotation += AngularAcceleration;
+            Rotation += AngularAcceleration * duration;
 
-            Position += Velocity;
-            Orientation += Quaternion.CreateFromAxisAngle(Rotation, MathHelper.Pi) * (duration/2f) * Orientation;
+            Position += Velocity * duration;
+            orientation.AddScaledVector(Rotation, duration);
+
             UpdateMatices();
             clearAccumulators();
             // add damping 
@@ -171,13 +172,13 @@ namespace PhysiXEngine
 
         protected void UpdateMatices()
         {
-            _orientation.Normalize();
+            orientation.Normalize();
 
             // Calculate the transform matrix for the body.
             TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
-            InverseInertiaTensorWorld = TransformMatrix * InverseInertiaTensor ;
+            InverseInertiaTensorWorld = InverseInertiaTensor * TransformMatrix;
 
             //TODO rem 3x3 4x4 problems
         }
@@ -265,8 +266,8 @@ namespace PhysiXEngine
         /// </summary>
         public void RevertChanges()
         {
-            _position = this._oldPosition;
-            _orientation = _oldOrientation;
+            position = this._oldPosition;
+            orientation = _oldOrientation;
             UpdateMatices();
         }
 
