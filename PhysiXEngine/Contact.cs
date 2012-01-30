@@ -48,7 +48,7 @@ namespace PhysiXEngine
         public float desiredDeltaVelocity { get; set; }
 
         public  Vector3[] relativeContactPosition = new Vector3[2];
-        private float minimumPenetration = 3.0f; //TODO put an appropriate value
+        private float minimumPenetration = 5.0f; //TODO put an appropriate value
 
         public float friction { get; set; }
 
@@ -105,6 +105,7 @@ namespace PhysiXEngine
             // Combine the bounce velocity with the removed
             // acceleration velocity.            
             this.desiredDeltaVelocity = -this.contactVelocity.X - thisRestitution * ((this.contactVelocity.X - velocityFromAcc));
+            this.desiredDeltaVelocity = Math.Abs(this.desiredDeltaVelocity);
             //contactData.desiredDeltaVelocity = deltaVelocity;
         }
 
@@ -451,6 +452,7 @@ namespace PhysiXEngine
         {
             Sphere sphere = null;
             Box box = null;
+            bool reOrder = false;
             if (body[0] as Box != null)
             {
                 box = (Box)body[0];
@@ -461,6 +463,8 @@ namespace PhysiXEngine
                 box = (Box)body[1];
                 sphere = (Sphere)body[0];
                 ReOrder();
+                reOrder = true;
+                //TODO this is a copy !!!
             }
             
             // Transform the centre of the sphere into box coordinates  
@@ -473,7 +477,7 @@ namespace PhysiXEngine
                 Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
             {
                 //_Penetration = -1;
-                //return;
+                return;
             }
 
             //Vector3 closestPt = new Vector3();
@@ -491,33 +495,33 @@ namespace PhysiXEngine
             closestPt.X = dist;
 
             dist = spherToBoxCor.Y;
-            if (dist > box.HalfSize.Y) 
+            if (dist > box.HalfSize.Y)
                 dist = box.HalfSize.Y;
-            if (dist < -box.HalfSize.Y) 
+            if (dist < -box.HalfSize.Y)
                 dist = -box.HalfSize.Y;
             closestPt.Y = dist;
 
             dist = spherToBoxCor.Z;
-            if (dist > box.HalfSize.Z) 
+            if (dist > box.HalfSize.Z)
                 dist = box.HalfSize.Z;
-            if (dist < -box.HalfSize.Z) 
+            if (dist < -box.HalfSize.Z)
                 dist = -box.HalfSize.Z;
             closestPt.Z = dist;
 
             // Check we're in contact
-            dist = (closestPt - spherToBoxCor).Length();
-            dist = (float)Math.Pow(dist, 2);
+            dist = (closestPt - spherToBoxCor).LengthSquared();
 
             if (dist > sphere.radius * sphere.radius)
             {
-                //_Penetration = -1;
-                //return;
+                _Penetration = -1;
+                return;
             }
 
             Vector3 closestPtWorld = Vector3.Transform(closestPt, box.TransformMatrix);
             
             _ContactNormal = closestPtWorld - centre;
             _ContactNormal.Normalize();
+            if (reOrder) _ContactNormal = -_ContactNormal;
             _ContactPoint = closestPtWorld;
             _Penetration = sphere.radius - (float)Math.Sqrt(dist);
         }
@@ -991,25 +995,17 @@ namespace PhysiXEngine
             // B = the moment before collision moment
             Vector3 PositionB = chosen.Position;
             Quaternion OrientationB = chosen.Orientation;
-
-            return;
+            
             // starting binary search loop
-            while ( Math.Abs(_Penetration) > this.minimumPenetration)
+            while ( _Penetration < 0)
             {
                 if ((PositionA - PositionB).Length() <= 0.1) throw new Exception("no more precision - will iterate to infinity");
                 chosen.Position = Vector3.Lerp(PositionA, PositionB, 0.5f);
                 chosen.Orientation = Quaternion.Slerp(OrientationA, OrientationB, 0.5f);
                 this.Check();
-                if (_Penetration < 0)
-                {
-                    PositionB = chosen.Position;
-                    OrientationB = chosen.Orientation;
-                }
-                else // if (Penetration > 0) // zero is excluded according to "while loop" header
-                {
-                    PositionA = chosen.Position;
-                    OrientationA = chosen.Orientation;
-                }
+                
+                PositionB = chosen.Position;
+                OrientationB = chosen.Orientation;
                 
             }            
 
