@@ -282,7 +282,7 @@ namespace PhysiXEngine
             foreach (Contact contactData in contactDataList)
             {
                 contactData.Check();
-                contactData.InitializeAtMoment(duration);
+                contactData.InitializeAtMoment(duration); 
             }
         }
 
@@ -292,13 +292,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations = 1;
+        uint velocityIterations = 4;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 1;
+        uint positionIterations = 4;
 
         //TODO modify above values
 
@@ -365,6 +365,7 @@ namespace PhysiXEngine
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
                 contactDataList[index].FixPenetration();
+                contactDataList[index].InitializeAtMoment(duration); 
                 positionIterationsUsed++;
             }
 
@@ -456,6 +457,7 @@ namespace PhysiXEngine
                         }
                     }
                 }
+                contactDataList.RemoveAt(index);
                 velocityIterationsUsed++;
     }
         }
