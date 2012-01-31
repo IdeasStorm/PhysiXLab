@@ -347,6 +347,7 @@ namespace PhysiXEngine
             positionIterationsUsed = 0;
             while (positionIterationsUsed < positionIterations)
             {
+                i = 0;
                 // Find biggest penetration
                 max = positionEpsilon;
                 index = contactDataList.Count;
