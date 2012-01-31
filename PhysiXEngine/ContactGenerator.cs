@@ -12,12 +12,14 @@ namespace PhysiXEngine
         protected LinkedList<Collidable> bodies;
         protected LinkedList<HalfSpace> planes;
         protected List<Contact> contactDataList;
+        protected List<Conductor> conductorList;
 
         public ContactGenerator()
         {
             contactDataList = new List<Contact>();
             bodies = new LinkedList<Collidable>();
             planes = new LinkedList<HalfSpace>();
+            conductorList = new List<Conductor>();
         }
 
         public void AddContactData(Contact contactdata)
@@ -37,6 +39,11 @@ namespace PhysiXEngine
         public void AddBody(Collidable body)
         {
             this.bodies.AddLast(body);
+        }
+
+        public void AddConductor(Conductor conductor)
+        {
+            this.conductorList.Add(conductor);
         }
 
         /// <summary>
@@ -278,11 +285,21 @@ namespace PhysiXEngine
             this.contactDataList.RemoveAll((Contact contact) => { 
                 return !contact.IsColliding(); 
             });
+
+            
+
             // initializing contacts
             foreach (Contact contactData in contactDataList)
             {
                 contactData.Check();
                 contactData.InitializeAtMoment(duration); 
+            }
+
+            foreach (Conductor con in conductorList)
+            {
+                Contact temp = new Contact(con.body[0], con.body[1]);
+                con.addContact(temp);
+                contactDataList.Add(temp);
             }
         }
 

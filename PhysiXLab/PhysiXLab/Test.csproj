@@ -108,6 +108,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="DrawingSphere.cs" />
     <Compile Include="RayIndicator.cs" />
+    <Compile Include="RodAndCableTest.cs" />
     <Compile Include="SpringTest.cs" />
   </ItemGroup>
   <ItemGroup>
