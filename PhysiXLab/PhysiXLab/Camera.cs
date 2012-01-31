@@ -42,7 +42,7 @@ namespace Test
         Vector3 cameraUp;
 
         //speed of camera
-        float speed = 3;
+        float speed = 0.1f;
 
         //to rotate camera
         MouseState prevMouseState;
