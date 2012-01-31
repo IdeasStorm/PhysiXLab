@@ -50,7 +50,7 @@ namespace Test
             ball.Position = new Vector3(0.5f,2f, 0);
 
             crate = new Crate(new Vector3(0.07f,0.05f,0.05f));
-            crate.Position = new Vector3(0.1f,5f,0.20f);
+            crate.Position = new Vector3(0.3f,5f,0.20f);
             crate.Mass = 10;
 
             cg = new ContactGenerator();
@@ -92,7 +92,7 @@ namespace Test
             if (Keyboard.GetState().IsKeyUp(Keys.Space) && spaceClicked)
             {
                 spaceClicked = false;
-                g.AddBody(ball);
+                //g.AddBody(ball);
                 g.AddBody(crate);
             }
 
