@@ -16,9 +16,10 @@ namespace Test
             }
             //FrictionWithCrate fr = new FrictionWithCrate();
             //fr.Run();
-
             FrictionTest fr = new FrictionTest();
-            fr.Run();
+            SpringTest sp = new SpringTest();
+            //fr.Run();
+            sp.Run();
         }
     }
 #endif
