@@ -45,7 +45,9 @@
   <ItemGroup>
     <Compile Include="Body.cs" />
     <Compile Include="Box.cs" />
+    <Compile Include="Cable.cs" />
     <Compile Include="CollisionDetector.cs" />
+    <Compile Include="Conductor.cs" />
     <Compile Include="ContactData.cs" />
     <Compile Include="Helpers\BVHNode.cs" />
     <Compile Include="Collidable.cs" />
