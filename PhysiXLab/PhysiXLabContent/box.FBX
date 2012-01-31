@@ -10,18 +10,18 @@ FBXHeaderExtension:  {
         Version: 1000
         Year: 2012
         Month: 1
-        Day: 28
-        Hour: 14
-        Minute: 18
-        Second: 2
-        Millisecond: 171
+        Day: 31
+        Hour: 17
+        Minute: 33
+        Second: 16
+        Millisecond: 535
     }
     Creator: "FBX SDK/FBX Plugins version 2009.4"
     OtherFlags:  {
         FlagPLE: 0
     }
 }
-CreationTime: "2012-01-28 14:18:02:171"
+CreationTime: "2012-01-31 17:33:16:535"
 Creator: "FBX SDK/FBX Plugins build 20081101"
 
 ; Document Description
@@ -42,9 +42,9 @@ References:  {
 
 Definitions:  {
     Version: 100
-    Count: 5
+    Count: 4
     ObjectType: "Model" {
-        Count: 3
+        Count: 2
     }
     ObjectType: "SceneInfo" {
         Count: 1
@@ -94,15 +94,15 @@ Objects:  {
             Property: "RotationMaxZ", "bool", "",0
             Property: "InheritType", "enum", "",1
             Property: "ScalingActive", "bool", "",0
-            Property: "ScalingMin", "Vector3D", "",1,1,1
-            Property: "ScalingMax", "Vector3D", "",1,1,1
+            Property: "ScalingMin", "Vector3D", "",0.01,0.01,0.01
+            Property: "ScalingMax", "Vector3D", "",0.01,0.01,0.01
             Property: "ScalingMinX", "bool", "",0
             Property: "ScalingMinY", "bool", "",0
             Property: "ScalingMinZ", "bool", "",0
             Property: "ScalingMaxX", "bool", "",0
             Property: "ScalingMaxY", "bool", "",0
             Property: "ScalingMaxZ", "bool", "",0
-            Property: "GeometricTranslation", "Vector3D", "",0,0,-16.7847709655762
+            Property: "GeometricTranslation", "Vector3D", "",0,0,-5
             Property: "GeometricRotation", "Vector3D", "",0,0,0
             Property: "GeometricScaling", "Vector3D", "",1,1,1
             Property: "MinDampRangeX", "double", "",0
@@ -125,11 +125,11 @@ Objects:  {
             Property: "Show", "bool", "",1
             Property: "NegativePercentShapeSupport", "bool", "",1
             Property: "DefaultAttributeIndex", "int", "",0
-            Property: "Lcl Translation", "Lcl Translation", "A+",-0.200045585632324,16.7847709655762,-0.200494766235352
+            Property: "Lcl Translation", "Lcl Translation", "A+",0,0,0
             Property: "Lcl Rotation", "Lcl Rotation", "A+",0,0,0
-            Property: "Lcl Scaling", "Lcl Scaling", "A+",1,1,1
+            Property: "Lcl Scaling", "Lcl Scaling", "A+",0.01,0.01,0.01
             Property: "Visibility", "Visibility", "A+",1
-            Property: "Color", "ColorRGB", "N",0.0235294117647059,0.525490196078431,0.227450980392157
+            Property: "Color", "ColorRGB", "N",0.87843137254902,0.776470588235294,0.341176470588235
             Property: "BBoxMin", "Vector3D", "N",0,0,0
             Property: "BBoxMax", "Vector3D", "N",0,0,0
         }
@@ -137,9 +137,7 @@ Objects:  {
         MultiTake: 1
         Shading: T
         Culling: "CullingOff"
-        Vertices: -19.7143516540527,-19.7143611907959,0,19.7143516540527,-19.7143611907959,0,-19.7143516540527,19.7143611907959,0,19.7143516540527
-        ,19.7143611907959,0,-19.7143516540527,-19.7143611907959,33.5695419311523,19.7143516540527,-19.7143611907959,33.5695419311523
-        ,-19.7143516540527,19.7143611907959,33.5695419311523,19.7143516540527,19.7143611907959,33.5695419311523
+        Vertices: -5,-5,0,5,-5,0,-5,5,0,5,5,0,-5,-5,10,5,-5,10,-5,5,10,5,5,10
         PolygonVertexIndex: 0,2,-4,3,1,-1,4,5,-8,7,6,-5,0,1,-6,5,4,-1,1,3,-8,7,5,-2,3,2,-7,6,7,-4,2,0,-5,4,6,-3
         Edges: 0,1,2,3,4,6,7,8,9,10,13,14,16,19,20,25,26,32
         GeometryVersion: 124
@@ -157,9 +155,7 @@ Objects:  {
             Name: "UVChannel_1"
             MappingInformationType: "ByPolygonVertex"
             ReferenceInformationType: "IndexToDirect"
-            UV: 0,0,39.4287223815918,0,0,33.5695419311523,39.4287223815918,33.5695419311523,0,0,39.4287033081055,0,0,33.5695419311523
-             ,39.4287033081055,33.5695419311523,0,0,39.4287033081055,0,0,39.4287223815918,39.4287033081055,39.4287223815918
-             
+            UV: 0,0,10,0,0,10,10,10,0,0,10,0,0,10,10,10,0,0,10,0,0,10,10,10
             UVIndex: 9,11,10,10,8,9,8,9,11,11,10,8,4,5,7,7,6,4,0,1,3,3,2,0,4,5,7,7,6,4,0,1,3,3,2,0
         }
         LayerElementSmoothing: 0 {
@@ -197,7 +193,7 @@ Objects:  {
         }
         NodeAttributeName: "Geometry::Box01_ncl1_1"
     }
-    Model: "Model::diag02", "Null" {
+    Model: "Model::halfsize", "Null" {
         Version: 232
         Properties60:  {
             Property: "QuaternionInterpolate", "bool", "",0
@@ -233,8 +229,8 @@ Objects:  {
             Property: "RotationMaxZ", "bool", "",0
             Property: "InheritType", "enum", "",1
             Property: "ScalingActive", "bool", "",0
-            Property: "ScalingMin", "Vector3D", "",1,1,1
-            Property: "ScalingMax", "Vector3D", "",1,1,1
+            Property: "ScalingMin", "Vector3D", "",0.01,0.01,0.01
+            Property: "ScalingMax", "Vector3D", "",0.01,0.01,0.01
             Property: "ScalingMinX", "bool", "",0
             Property: "ScalingMinY", "bool", "",0
             Property: "ScalingMinZ", "bool", "",0
@@ -264,9 +260,9 @@ Objects:  {
             Property: "Show", "bool", "",1
             Property: "NegativePercentShapeSupport", "bool", "",1
             Property: "DefaultAttributeIndex", "int", "",0
-            Property: "Lcl Translation", "Lcl Translation", "A+",-19.9143981933594,33.5695419311523,-19.9148559570313
+            Property: "Lcl Translation", "Lcl Translation", "A+",0.05,0.05,-0.05
             Property: "Lcl Rotation", "Lcl Rotation", "A+",0,0,0
-            Property: "Lcl Scaling", "Lcl Scaling", "A+",1,1,1
+            Property: "Lcl Scaling", "Lcl Scaling", "A+",0.01,0.01,0.01
             Property: "Visibility", "Visibility", "A+",1
             Property: "Color", "ColorRGB", "N",0.8,0.8,0.8
             Property: "Size", "double", "N",100
@@ -277,89 +273,7 @@ Objects:  {
         Shading: T
         Culling: "CullingOff"
         TypeFlags: "Null"
-        NodeAttributeName: "NodeAttribute::diag02_ncl1_1"
-    }
-    Model: "Model::diag01", "Null" {
-        Version: 232
-        Properties60:  {
-            Property: "QuaternionInterpolate", "bool", "",0
-            Property: "RotationOffset", "Vector3D", "",0,0,0
-            Property: "RotationPivot", "Vector3D", "",0,0,0
-            Property: "ScalingOffset", "Vector3D", "",0,0,0
-            Property: "ScalingPivot", "Vector3D", "",0,0,0
-            Property: "TranslationActive", "bool", "",0
-            Property: "TranslationMin", "Vector3D", "",0,0,0
-            Property: "TranslationMax", "Vector3D", "",0,0,0
-            Property: "TranslationMinX", "bool", "",0
-            Property: "TranslationMinY", "bool", "",0
-            Property: "TranslationMinZ", "bool", "",0
-            Property: "TranslationMaxX", "bool", "",0
-            Property: "TranslationMaxY", "bool", "",0
-            Property: "TranslationMaxZ", "bool", "",0
-            Property: "RotationOrder", "enum", "",0
-            Property: "RotationSpaceForLimitOnly", "bool", "",0
-            Property: "RotationStiffnessX", "double", "",0
-            Property: "RotationStiffnessY", "double", "",0
-            Property: "RotationStiffnessZ", "double", "",0
-            Property: "AxisLen", "double", "",10
-            Property: "PreRotation", "Vector3D", "",-90,0,0
-            Property: "PostRotation", "Vector3D", "",0,0,0
-            Property: "RotationActive", "bool", "",1
-            Property: "RotationMin", "Vector3D", "",0,0,0
-            Property: "RotationMax", "Vector3D", "",0,0,0
-            Property: "RotationMinX", "bool", "",0
-            Property: "RotationMinY", "bool", "",0
-            Property: "RotationMinZ", "bool", "",0
-            Property: "RotationMaxX", "bool", "",0
-            Property: "RotationMaxY", "bool", "",0
-            Property: "RotationMaxZ", "bool", "",0
-            Property: "InheritType", "enum", "",1
-            Property: "ScalingActive", "bool", "",0
-            Property: "ScalingMin", "Vector3D", "",1,1,1
-            Property: "ScalingMax", "Vector3D", "",1,1,1
-            Property: "ScalingMinX", "bool", "",0
-            Property: "ScalingMinY", "bool", "",0
-            Property: "ScalingMinZ", "bool", "",0
-            Property: "ScalingMaxX", "bool", "",0
-            Property: "ScalingMaxY", "bool", "",0
-            Property: "ScalingMaxZ", "bool", "",0
-            Property: "GeometricTranslation", "Vector3D", "",0,0,0
-            Property: "GeometricRotation", "Vector3D", "",0,0,0
-            Property: "GeometricScaling", "Vector3D", "",1,1,1
-            Property: "MinDampRangeX", "double", "",0
-            Property: "MinDampRangeY", "double", "",0
-            Property: "MinDampRangeZ", "double", "",0
-            Property: "MaxDampRangeX", "double", "",0
-            Property: "MaxDampRangeY", "double", "",0
-            Property: "MaxDampRangeZ", "double", "",0
-            Property: "MinDampStrengthX", "double", "",0
-            Property: "MinDampStrengthY", "double", "",0
-            Property: "MinDampStrengthZ", "double", "",0
-            Property: "MaxDampStrengthX", "double", "",0
-            Property: "MaxDampStrengthY", "double", "",0
-            Property: "MaxDampStrengthZ", "double", "",0
-            Property: "PreferedAngleX", "double", "",0
-            Property: "PreferedAngleY", "double", "",0
-            Property: "PreferedAngleZ", "double", "",0
-            Property: "LookAtProperty", "object", ""
-            Property: "UpVectorProperty", "object", ""
-            Property: "Show", "bool", "",1
-            Property: "NegativePercentShapeSupport", "bool", "",1
-            Property: "DefaultAttributeIndex", "int", "",0
-            Property: "Lcl Translation", "Lcl Translation", "A+",19.5143051147461,0,19.5138664245605
-            Property: "Lcl Rotation", "Lcl Rotation", "A+",0,0,0
-            Property: "Lcl Scaling", "Lcl Scaling", "A+",1,1,1
-            Property: "Visibility", "Visibility", "A+",1
-            Property: "Color", "ColorRGB", "N",0.8,0.8,0.8
-            Property: "Size", "double", "N",100
-            Property: "Look", "enum", "N",0
-        }
-        MultiLayer: 0
-        MultiTake: 1
-        Shading: T
-        Culling: "CullingOff"
-        TypeFlags: "Null"
-        NodeAttributeName: "NodeAttribute::diag01_ncl1_1"
+        NodeAttributeName: "NodeAttribute::halfsize_ncl1_1"
     }
     SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
         Type: "UserData"
@@ -380,13 +294,13 @@ Objects:  {
             Property: "Original|ApplicationVendor", "KString", "", "Autodesk"
             Property: "Original|ApplicationName", "KString", "", "3ds Design"
             Property: "Original|ApplicationVersion", "KString", "", "2009.4"
-            Property: "Original|DateTime_GMT", "DateTime", "", "28/01/2012 12:18:02.169"
+            Property: "Original|DateTime_GMT", "DateTime", "", "31/01/2012 15:33:16.533"
             Property: "Original|FileName", "KString", "", "C:\Users\Mhd\Desktop\box.FBX"
             Property: "LastSaved", "Compound", ""
             Property: "LastSaved|ApplicationVendor", "KString", "", "Autodesk"
             Property: "LastSaved|ApplicationName", "KString", "", "3ds Design"
             Property: "LastSaved|ApplicationVersion", "KString", "", "2009.4"
-            Property: "LastSaved|DateTime_GMT", "DateTime", "", "28/01/2012 12:18:02.169"
+            Property: "LastSaved|DateTime_GMT", "DateTime", "", "31/01/2012 15:33:16.533"
         }
     }
     GlobalSettings:  {
@@ -398,7 +312,7 @@ Objects:  {
             Property: "FrontAxisSign", "int", "",1
             Property: "CoordAxis", "int", "",0
             Property: "CoordAxisSign", "int", "",1
-            Property: "UnitScaleFactor", "double", "",1
+            Property: "UnitScaleFactor", "double", "",100
         }
     }
 }
@@ -408,8 +322,7 @@ Objects:  {
 
 Connections:  {
     Connect: "OO", "Model::Box01", "Model::Scene"
-    Connect: "OO", "Model::diag02", "Model::Scene"
-    Connect: "OO", "Model::diag01", "Model::Scene"
+    Connect: "OO", "Model::halfsize", "Model::Scene"
 }
 ;Takes and animation section
 ;----------------------------------------------------
