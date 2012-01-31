@@ -33,9 +33,10 @@ namespace PhysiXEngine
 
         public void RecalculateBoundingVolume()
         {
-            if (isLeaf())
+            if (this.isLeaf())
                 Volume = Body.GetBoundingSphere();
-            Volume = BoundingSphere.CreateMerged(Children[0].Volume, Children[1].Volume);
+            else
+                Volume = BoundingSphere.CreateMerged(Children[0].Volume, Children[1].Volume);
             if (Parent != null)
                 Parent.RecalculateBoundingVolume();
         }
@@ -77,7 +78,7 @@ namespace PhysiXEngine
             if (this.isLeaf())
             {
                 if (this.Body.GetBoundingSphere().Intersects(P.plane) == PlaneIntersectionType.Intersecting)
-                    Potentials.Add(new Contact(this.Body,P.plane));
+                    Potentials.Add(new Contact(this.Body, P.plane));
             }
             else
             {
@@ -89,7 +90,13 @@ namespace PhysiXEngine
         public void FindPotentialCollisionsWith(List<Contact> Potentials, BVHNode other)
         {
             if (!CollidesWith(other))
+            {
+                if (!this.isLeaf())
+                    this.FindPotentialCollisions(Potentials);
+                if (!other.isLeaf())
+                    other.FindPotentialCollisions(Potentials);
                 return;
+            }
             if (this.isLeaf() && other.isLeaf())
                 Potentials.Add(new Contact(this.Body, other.Body));
             else if (other.isLeaf() && !this.isLeaf())
