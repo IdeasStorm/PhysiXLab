@@ -41,28 +41,29 @@ namespace Test
         /// </summary>
         protected override void Initialize()
         {
-            fixedBall = new Ball(100f);
+            fixedBall = new Ball(1f);
             fixedBall.Texture = Content.Load<Texture2D>(@"basic_material");          
-            fixedBall.Position = new Vector3(100, 0, 20);
+            fixedBall.Position = new Vector3(1, 0, 0.2f);
             
-            ball = new Ball(10f);
+            ball = new Ball(0.3f);
             ball.Texture = Content.Load<Texture2D>(@"basic_material");
-            ball.Position = new Vector3(50,250, 0);
+            ball.Position = new Vector3(0.5f,2f, 0);
 
-            crate = new Crate(new Vector3(5f,5f,5f));
-            crate.Position = new Vector3(50,150,20);
+            crate = new Crate(new Vector3(0.07f,0.05f,0.05f));
+            crate.Position = new Vector3(0.1f,5f,0.20f);
+            crate.Mass = 10;
 
             cg = new ContactGenerator();
             cg.AddBody(fixedBall);
-            cg.AddBody(ball);
+            //cg.AddBody(ball);
             cg.AddBody(crate);
 
             fixedBall.model = Content.Load<Model>(@"ball");
             ball.model = fixedBall.model;
-            camera = new Camera(this, new Vector3(0, 0, 100),
+            camera = new Camera(this, new Vector3(0, 0, 0.1f),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
-            g =new Gravity( new Vector3(0f, -1f, 0f));
+            g =new Gravity( new Vector3(0f, -10f, 0f));
 
             fixedBall.InverseMass = 0;
             fixedBall.InverseInertiaTensor = new Matrix();
@@ -92,7 +93,7 @@ namespace Test
             {
                 spaceClicked = false;
                 g.AddBody(ball);
-                //g.AddBody(crate);
+                g.AddBody(crate);
             }
 
             g.Update(duration);
