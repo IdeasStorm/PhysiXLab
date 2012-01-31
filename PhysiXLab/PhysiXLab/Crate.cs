@@ -15,7 +15,7 @@ namespace Test
     public class Crate : Box
     {
         public Model model {private set; get; }
-
+        private Vector3 modelSize;
         public Crate(Vector3 halfSize)
             : base(halfSize)
         {
@@ -29,11 +29,7 @@ namespace Test
         public void LoadContent(ContentManager content)
         {
             model = content.Load<Model>(@"Box");
-            Vector3 diag1 = (model.Bones["diag01"].Parent.Transform * model.Bones["diag01"].Transform).Translation;
-            Vector3 diag2 = (model.Bones["diag02"].Parent.Transform * model.Bones["diag02"].Transform).Translation;
-            //HalfSize = (diag2 - diag1) / 2f;
-            //HalfSize = new Vector3(Math.Abs(HalfSize.X),Math.Abs(HalfSize.Y),Math.Abs(HalfSize.Z));
-            //HalfSize = new Vector3(2,2,2);
+            Vector3 modelHalfSize = (model.Bones["halfsize"].Parent.Transform * model.Bones["halfsize"].Transform).Translation;
             updateBounding();
         }
 
@@ -47,7 +43,7 @@ namespace Test
                 foreach (BasicEffect be in mesh.Effects)
                 {
                     be.EnableDefaultLighting();
-                    be.World = mesh.ParentBone.Transform * Matrix.CreateScale(HalfSize) * TransformMatrix;
+                    be.World = mesh.ParentBone.Transform *  Matrix.CreateScale(HalfSize/5f) * TransformMatrix;
                     be.View = camera.view;
                     be.Projection = camera.projection;
                 }
