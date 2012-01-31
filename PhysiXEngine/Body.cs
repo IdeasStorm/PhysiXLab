@@ -163,7 +163,8 @@ namespace PhysiXEngine
             Rotation += AngularAcceleration * duration;
 
             Position += Velocity * duration;
-            orientation.AddScaledVector(Rotation, duration);
+            //orientation.AddScaledVector(Rotation, duration);
+            orientation += Quaternion.CreateFromYawPitchRoll(Rotation.Y,Rotation.X,Rotation.Z) * duration;
 
             UpdateMatices();
             clearAccumulators();
