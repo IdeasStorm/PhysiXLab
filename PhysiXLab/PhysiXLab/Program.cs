@@ -20,6 +20,9 @@ namespace Test
             SpringTest sp = new SpringTest();
             //fr.Run();
             sp.Run();
+
+            BoxAndBoxTest bab = new BoxAndBoxTest();
+            bab.Run();
         }
     }
 #endif
