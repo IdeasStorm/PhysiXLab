@@ -42,11 +42,10 @@ namespace PhysiXEngine
         /// </summary>
         protected abstract void updateBounding();
 
-        public override void Update(float duration)
+        protected override void onSituationChanged()
         {
-            base.Update(duration);
+            base.onSituationChanged();
             updateBounding();
-            //TODO after or before update ?
         }
     }
 }
