@@ -79,6 +79,20 @@ namespace Test
                 1, 3000);
         }
 
+        public Ray GetMouseRay(Vector2 mousePosition, Viewport viewport)
+        {
+            Vector3 nearPoint = new Vector3(mousePosition, 0);
+            Vector3 farPoint = new Vector3(mousePosition, 1);
+
+            nearPoint = viewport.Unproject(nearPoint, projection, view, Matrix.Identity);
+            farPoint = viewport.Unproject(farPoint, projection, view, Matrix.Identity);
+
+            Vector3 direction = farPoint - nearPoint;
+            direction.Normalize();
+
+            return new Ray(nearPoint, direction);
+        }
+
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
         /// to run.  This is where it can query for any required services and load content.
