@@ -144,9 +144,8 @@ namespace PhysiXEngine
         {
             Mass = 1;
             InertiaTensor = Matrix.Identity;
-            Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward,0);
             Awake();
-            UpdateMatices(); //TODO this must not be here!!
+            UpdateMatices();
         }
 
         /// <summary>
