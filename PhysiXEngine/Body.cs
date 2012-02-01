@@ -44,7 +44,8 @@ namespace PhysiXEngine
             get { return position; } 
             set { 
                 _oldPosition = position; 
-                position = value; 
+                position = value;
+                onSituationChanged();
             } 
         }
         public Vector3 Velocity {  get; protected set; }
@@ -116,7 +117,7 @@ namespace PhysiXEngine
             {                    
                 _oldOrientation = orientation;
                 orientation = value;
-                orientation.Normalize();
+                onSituationChanged();
             }
             get { return orientation; }
         }
@@ -162,13 +163,19 @@ namespace PhysiXEngine
             Velocity += LastFrameAcceleration * duration;
             Rotation += AngularAcceleration * duration;
 
-            Position += Velocity * duration;
+            position += Velocity * duration;
             //orientation.AddScaledVector(Rotation, duration);
-            orientation += Quaternion.CreateFromYawPitchRoll(Rotation.Y,Rotation.X,Rotation.Z) * duration;
+            AddScaledOrientation(Rotation,duration);
 
-            UpdateMatices();
+            onSituationChanged(); //trigger situation changed
             clearAccumulators();
             // add damping 
+        }
+
+        public void AddScaledOrientation(Vector3 rotation,float scale)
+        {
+            orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y * scale, rotation.X * scale, rotation.Z * scale);
+            onSituationChanged();
         }
 
         protected void UpdateMatices()
@@ -179,9 +186,8 @@ namespace PhysiXEngine
             TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
-            InverseInertiaTensorWorld = InverseInertiaTensor * TransformMatrix;
-
-            //TODO rem 3x3 4x4 problems
+            InverseInertiaTensorWorld = TransformMatrix * InverseInertiaTensor;
+            //TODO ho is first ?            
         }
 
         private void clearAccumulators()
@@ -269,7 +275,7 @@ namespace PhysiXEngine
         {
             position = this._oldPosition;
             orientation = _oldOrientation;
-            UpdateMatices();
+            onSituationChanged();
         }
 
         /// <summary>
@@ -279,6 +285,11 @@ namespace PhysiXEngine
             get { 
                 return (Velocity != Vector3.Zero);
             }
+        }
+
+        protected virtual void onSituationChanged()
+        {
+            UpdateMatices();
         }
     }
 }
