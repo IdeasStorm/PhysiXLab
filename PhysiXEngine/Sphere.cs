@@ -29,7 +29,7 @@ namespace PhysiXEngine
 
         protected override void updateBounding()
         {
-            _sphere.Center = Vector3.Transform(Vector3.Zero, TransformMatrix);
+            _sphere.Center = this.Position;
         }
 
         public override ContactData generateContacts(Collidable other) 
