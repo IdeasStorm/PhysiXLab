@@ -75,15 +75,17 @@ namespace PhysiXEngine
 
         public void FindPotentialCollisionsWithPlane(List<Contact> Potentials, HalfSpace P)
         {
-            if (this.isLeaf())
+            if (this.Volume.Intersects(P.plane) == PlaneIntersectionType.Intersecting)
             {
-                if (this.Body.GetBoundingSphere().Intersects(P.plane) == PlaneIntersectionType.Intersecting)
+                if (this.isLeaf())
+                {
                     Potentials.Add(new Contact(this.Body, P.plane));
-            }
-            else
-            {
-                this.Children[0].FindPotentialCollisionsWithPlane(Potentials, P);
-                this.Children[1].FindPotentialCollisionsWithPlane(Potentials, P);
+                }
+                else
+                {
+                    this.Children[0].FindPotentialCollisionsWithPlane(Potentials, P);
+                    this.Children[1].FindPotentialCollisionsWithPlane(Potentials, P);
+                }
             }
         }
 
