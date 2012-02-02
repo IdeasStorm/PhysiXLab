@@ -249,11 +249,10 @@ namespace PhysiXEngine
             Vector3 impulse = contactData.ContactToWorld.transform(impulseContact);
 
             // Split in the impulse into linear and rotational components
-            Vector3 impulsiveTorqueOne = Vector3.Cross(impulse, contactData.relativeContactPosition[0]);
+            Vector3 impulsiveTorqueOne = Vector3.Cross(contactData.relativeContactPosition[0], impulse);
             rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorqueOne);
-
-            velocityChange[0] = Vector3.Zero;
-            velocityChange[0] += impulse * one.InverseMass;
+            
+            velocityChange[0] = impulse * one.InverseMass;
 
             // Apply the changes
             one.AddVelocity(velocityChange[0]);
@@ -262,9 +261,9 @@ namespace PhysiXEngine
             if (two != null)
             {
                 // Work out body one's linear and angular changes
-                Vector3 impulsiveTorqueTwo = Vector3.Cross(-impulse, contactData.relativeContactPosition[1]);
+                Vector3 impulsiveTorqueTwo = Vector3.Cross(impulse,contactData.relativeContactPosition[1]);
                 rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorqueTwo);
-                velocityChange[1] -= impulse * two.InverseMass;
+                velocityChange[1] = -impulse * two.InverseMass;
 
                 // And apply them.
                 two.AddVelocity(velocityChange[1]);
@@ -309,13 +308,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations = 4;
+        uint velocityIterations = 1;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 4;
+        uint positionIterations = 1;
 
         //TODO modify above values
 
@@ -388,7 +387,7 @@ namespace PhysiXEngine
                     rotationChange,
                     rotationAmount,
                     max);//-positionEpsilon);
-
+                contactDataList[index].InitializeAtMoment(duration);
                 // Again this action may have changed the penetration of other 
                 // bodies, so we update contacts.
                 for (i = 0; i < contactDataList.Count; i++)
@@ -453,7 +452,7 @@ namespace PhysiXEngine
                 int index = contactDataList.Count;
                 for(int i = 0; i < contactDataList.Count; i++)
                 {
-                    if (contactDataList[i].desiredDeltaVelocity > max)
+                    if (Math.Abs(contactDataList[i].desiredDeltaVelocity) > max)
                     {
                         max = contactDataList[i].desiredDeltaVelocity;
                         index = i;
