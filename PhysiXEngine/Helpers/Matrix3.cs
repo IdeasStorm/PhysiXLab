@@ -32,8 +32,9 @@ namespace PhysiXEngine.Helpers
         /// Constructs a Matrix3x3 from a Matrix4x4
         /// </summary>
         /// <param name="m">Matrix to copy from</param>
-        public Matrix3(Matrix m)
+        public Matrix3(Matrix mat)
         {
+            Matrix m = Matrix.Transpose(mat);
             this.data[0] = m.M11;
             this.data[1] = m.M12;
             this.data[2] = m.M13;
