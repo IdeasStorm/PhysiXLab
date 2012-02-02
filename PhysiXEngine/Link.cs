@@ -10,7 +10,7 @@ namespace PhysiXEngine
     /// This is the basic polymorphic interface for contact generators
     /// applying to particles
     /// </summary>
-    public abstract class Conductor
+    public abstract class Link
     {
         public Collidable[] body = new Collidable[2];
 
@@ -25,7 +25,7 @@ namespace PhysiXEngine
         ///</summary>
         //public uint addContact(Contact contact);
         //public abstract uint addContact();
-        public abstract uint addContact(Contact contact);
+        public abstract bool Check(Contact contact);
 
         /**
         * Returns the current length of the link.
@@ -37,7 +37,7 @@ namespace PhysiXEngine
         }
     }
 
-    public class Cable : Conductor
+    public class Cable : Link
     {
 
         ///<summry>
@@ -62,7 +62,7 @@ namespace PhysiXEngine
         /// Fills the given contact structure with the contact needed
         /// to keep the cable from over-extending.
         ///</summry>
-        public override uint addContact(Contact contact)
+        public override bool Check(Contact contact)
         {
             // Find the length of the cable
             float length = currentLength();
@@ -70,14 +70,10 @@ namespace PhysiXEngine
             // Check if we're over-extended
             if (length < maxLength)
             {
-                return 0;
+                return false;
             }
 
             // Otherwise return the contact
-            contact.body[0] = body[0];
-            contact.body[1] = body[1];
-
-
             // Calculate the normal
             Vector3 normal = body[1].Position - body[0].Position;
             normal.Normalize();
@@ -86,12 +82,18 @@ namespace PhysiXEngine
             contact.Penetration = length - maxLength;
             contact.restitution = restitution;
 
-            return 1;
+            //if (body[0].HasFiniteMass)
+            //    contact.ContactPoint = body[1].Position + body[1].getHalfSize();
+
+            //if (body[1].HasFiniteMass)
+            //    contact.ContactPoint = body[0].Position + body[0].getHalfSize();
+
+            return true;
         }
 
     }
 
-    public class Rod : Conductor
+    public class Rod : Link
     {
 
         /**
@@ -99,7 +101,7 @@ namespace PhysiXEngine
          */
         float length;
 
-        public Rod(Collidable one, Collidable two, float len, float restitution)
+        public Rod(Collidable one, Collidable two, float len)
         {
             body[0] = one;
             body[1] = two;
@@ -110,7 +112,7 @@ namespace PhysiXEngine
          * Fills the given contact structure with the contact needed
          * to keep the rod from extending or compressing.
          */
-        public override uint addContact(Contact contact)
+        public override bool Check(Contact contact)
         {
             // Find the length of the rod
             float currentLen = currentLength();
@@ -118,13 +120,10 @@ namespace PhysiXEngine
             // Check if we're over-extended
             if (currentLen == length)
             {
-                return 0;
+                return false;
             }
 
             // Otherwise return the contact
-            contact.body[0] = body[0];
-            contact.body[1] = body[1];
-
             // Calculate the normal
             Vector3 normal = body[1].Position - body[0].Position;
             normal.Normalize();
@@ -142,9 +141,9 @@ namespace PhysiXEngine
             }
 
             // Always use zero restitution (no bounciness)
-            contact.restitution = 0;
+            contact.restitution = 1;
 
-            return 1;
+            return true;
         }
     }
 }
