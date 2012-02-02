@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using FuchsGUI;
 
 
-namespace App
+namespace Test
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
