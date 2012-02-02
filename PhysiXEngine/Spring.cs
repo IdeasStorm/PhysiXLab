@@ -20,9 +20,11 @@ namespace PhysiXEngine
         /** Holds the rest length of the spring. */
         public float restLength { get; private set; }
 
+        public float C { get; private set; }
+
         /** Creates a new spring with the given parameters. */
         public Spring(Body first, Body other, Vector3 otherConnectionPoint,
-            float springConstant, float restLength) : 
+            float springConstant, float restLength, float C) : 
             base(
             /** The particle at the first end of the spring. */
             first,
@@ -32,6 +34,7 @@ namespace PhysiXEngine
             this.otherConnectionPoint = otherConnectionPoint;
             this.springConstant = springConstant;
             this.restLength = restLength;
+            this.C = C;
         }
 
         /** Applies the spring force to the given rigid body. */
@@ -55,6 +58,10 @@ namespace PhysiXEngine
             bodys[0].AddForce(secondforce, lws);
             force *= magnitude;
             bodys[1].AddForce(force, ows);
+            if (bodys[0].InverseMass != 0)
+                bodys[0].AddVelocity(Vector3.Multiply(bodys[0].Velocity, (C - 1f) * bodys[0].Mass));
+            if (bodys[1].InverseMass != 0)
+                bodys[1].AddVelocity(Vector3.Multiply(bodys[1].Velocity, (C - 1f) * bodys[1].Mass));
         }
     }
 }

@@ -70,7 +70,7 @@ namespace Test
             fixedBall.InverseMass = 0;
             fixedBall.InverseInertiaTensor = new Matrix();
             ball.Mass = 1f;
-            sp = new Spring(fixedBall, ball, ball.Position, 3f, 2f);
+            sp = new Spring(fixedBall, ball, ball.Position, 3f, 2f, 0.995f);
             base.Initialize();
         }
 
