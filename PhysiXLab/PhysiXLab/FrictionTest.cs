@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -151,7 +151,7 @@ namespace Test
 
 
 /* OLD CODE:
-
+*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -203,7 +203,7 @@ namespace Test
             ball.Texture = Content.Load<Texture2D>(@"basic_material");
             ball.Position = new Vector3(0.5f,2f, 0);
 
-            crate = new Crate(new Vector3(0.07f,0.05f,0.05f));
+            crate = new Crate(new Vector3(0.7f,0.5f,0.5f));
             crate.Position = new Vector3(0.3f,5f,0.20f);
             crate.Mass = 10;
 
@@ -269,4 +269,3 @@ namespace Test
         }
     }
 }
-*/

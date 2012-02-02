@@ -59,7 +59,7 @@ namespace PhysiXEngine
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
-            friction = 0.4f; // TODO add a dynamic mechanism
+            //friction = 0.4f; // TODO add a dynamic mechanism
         }
 
         public Contact(Collidable firstBody, Plane plane)
@@ -70,7 +70,7 @@ namespace PhysiXEngine
             this.plane = new HalfSpace(plane);
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
-            friction = 3f; // TODO add a dynamic mechanism
+            //friction = 3f; // TODO add a dynamic mechanism
         }
 
         #region Calculate internel information 

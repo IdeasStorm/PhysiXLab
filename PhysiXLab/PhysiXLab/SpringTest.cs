@@ -45,11 +45,11 @@ namespace Test
         {
             fixedBall = new Ball(1f);
             fixedBall.Texture = Content.Load<Texture2D>(@"basic_material");
-            fixedBall.Position = new Vector3(1, 0, 0.2f);
+            fixedBall.Position = new Vector3(0f, 0, 0f);
 
             ball = new Ball(0.3f);
             ball.Texture = Content.Load<Texture2D>(@"basic_material");
-            ball.Position = new Vector3(0.5f, -2f, 0);
+            ball.Position = new Vector3(0f, -2f, 0f);
 
             crate = new Crate(new Vector3(0.07f, 0.05f, 0.05f));
             crate.Position = new Vector3(0.3f, 5f, 0.20f);
@@ -98,6 +98,7 @@ namespace Test
                 //g.AddBody(crate);
                 
             }
+            g.AddBody(ball);
             sp.Update(duration);
             g.Update(duration);
             fixedBall.Update(duration);
