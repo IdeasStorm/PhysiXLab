@@ -59,7 +59,7 @@ namespace PhysiXEngine
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
-            friction = 0.4f; // TODO add a dynamic mechanism
+            friction = 0.1f; // TODO add a dynamic mechanism
         }
 
         public Contact(Collidable firstBody, Plane plane)
@@ -70,7 +70,7 @@ namespace PhysiXEngine
             this.plane = new HalfSpace(plane);
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
-            friction = 3f; // TODO add a dynamic mechanism
+            friction = 0.3f; // TODO add a dynamic mechanism
         }
 
         #region Calculate internel information 
@@ -104,7 +104,7 @@ namespace PhysiXEngine
 
             // Combine the bounce velocity with the removed
             // acceleration velocity.            
-            this.desiredDeltaVelocity = - (1+thisRestitution) * ((this.contactVelocity.X - velocityFromAcc));
+            this.desiredDeltaVelocity = -contactVelocity.X - thisRestitution * ((this.contactVelocity.X - velocityFromAcc));
             //this.desiredDeltaVelocity = Math.Abs(this.desiredDeltaVelocity);
             //contactData.desiredDeltaVelocity = deltaVelocity;
         }
@@ -380,20 +380,10 @@ namespace PhysiXEngine
         {
             Sphere sphere = null;
             Box box = null;
-            bool reOrder = false;
-            if (body[0] as Box != null)
-            {
-                box = (Box)body[0];
-                sphere = (Sphere)body[1];
-            }
-            else
-            {
-                box = (Box)body[1];
-                sphere = (Sphere)body[0];
+            if (body[1] is Box)
                 ReOrder();
-                reOrder = true;
-                //TODO this is a copy !!!
-            }
+            box = (Box)body[0];
+            sphere = (Sphere)body[1];
             
             // Transform the centre of the sphere into box coordinates  
             Vector3 centre = sphere.Position;
@@ -449,7 +439,6 @@ namespace PhysiXEngine
             
             _ContactNormal = closestPtWorld - centre;
             _ContactNormal.Normalize();
-            if (reOrder) _ContactNormal = -_ContactNormal;
             _ContactPoint = closestPtWorld;
             _Penetration = sphere.radius - (float)Math.Sqrt(dist);
         }
@@ -791,7 +780,7 @@ namespace PhysiXEngine
         internal void applyPositionChange(Vector3[] velocityChange, Vector3[] rotationDirection, float[] rotationAmount,float Penetration)
             //unused penetration
         {
-            float angularLimit = (float)1000;//0.1f;
+            float angularLimit = 10f;//0.1f;
             float[] angularMove = new float[2],
                     linearMove = new float[2];
             int b;
@@ -923,19 +912,16 @@ namespace PhysiXEngine
             Vector3 PositionB = chosen.Position;
             Quaternion OrientationB = chosen.Orientation;
             // starting binary search loop
-            this.Check();
             while ( !IsColliding() )
             {
                 if ((PositionA - PositionB).Length() <= 0.001) throw new Exception("no more precision - will iterate to infinity");
-                chosen.Position = Vector3.Lerp(PositionA, PositionB, 0.5f);
-                chosen.Orientation = Quaternion.Slerp(OrientationA, OrientationB, 0.5f);
-                this.Check();
-                
+                chosen.Position = Vector3.Lerp(PositionB, PositionA, 0.5f);
+                chosen.Orientation = Quaternion.Slerp(OrientationB, OrientationA, 0.5f);
                 PositionB = chosen.Position;
                 OrientationB = chosen.Orientation;
                 
-            }            
-
+            }
+            this.Check();
 
         }
 
@@ -960,12 +946,19 @@ namespace PhysiXEngine
         /// </summary>
         public void Check()
         {
-            ContactData cd;
             if (WithPlane)
-                cd = plane.generateContacts(body[0]);
+                plane.generateContacts(body[0], this);
             else
-                cd = body[0].generateContacts(body[1]);
-            FillFromContactData(cd);
+            {
+                try // try if the first know any thing about the other
+                {
+                    body[0].generateContacts(body[1], this);
+                }
+                catch (Exception)
+                {
+                    body[1].generateContacts(body[0], this);
+                }
+            }
         }
 
         /// <summary>
