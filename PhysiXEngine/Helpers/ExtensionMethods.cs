@@ -26,7 +26,26 @@ namespace PhysiXEngine.Helpers
             }
         }
 
-        public static void AddScaledVector(this Quaternion quat, Vector3 vector, float scale)
+        public static void normalized(ref Quaternion q)
+        {
+            float d = q.W * q.W + q.X * q.X + q.Y * q.Y + q.Z * q.Z;
+
+            // Check for zero length quaternion, and use the no-rotation
+            // quaternion in that case.
+            if (d == 0)
+            {
+                q.W = 1;
+                return;
+            }
+
+            d = (1.0f) /((float) Math.Sqrt(d));
+            q.W *= d;
+            q.X *= d;
+            q.Y *= d;
+            q.Z *= d;
+        }
+
+        public static Quaternion AddScaledVector(this Quaternion quat, Vector3 vector, float scale)
         {
             Quaternion q = new Quaternion(vector.X * scale, vector.Y * scale, vector.Z * scale, 0);
             q = q * quat;
@@ -34,6 +53,7 @@ namespace PhysiXEngine.Helpers
             quat.X += q.X * 0.5f;
             quat.Y += q.Y * 0.5f;
             quat.Z += q.Z * 0.5f;
+            return quat;
         }
 
         enum CollisionType
