@@ -60,6 +60,7 @@ namespace PhysiXEngine
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
             friction = 0.1f; // TODO add a dynamic mechanism
+
         }
 
         public Contact(Collidable firstBody, Plane plane)

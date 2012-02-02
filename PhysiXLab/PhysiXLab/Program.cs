@@ -18,14 +18,14 @@ namespace Test
             //fr.Run();
             FrictionTest fr = new FrictionTest();
             SpringTest sp = new SpringTest();
-            //fr.Run();
+            fr.Run();
             //sp.Run();
 
             BoxAndBoxTest bab = new BoxAndBoxTest();
             //bab.Run();
 
             RestingTest rt = new RestingTest();
-            rt.Run();
+            //rt.Run();
 
             RodAndCableTest rodcable = new RodAndCableTest();
             //rodcable.Run();
