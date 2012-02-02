@@ -82,5 +82,10 @@ namespace PhysiXEngine
                 contact.SphereAndBox();
             }
         }
+
+        public override Vector3 getHalfSize()
+        {
+            return HalfSize;
+        }
     }
 }

@@ -86,5 +86,10 @@ namespace PhysiXEngine
         {
             return sphere;
         }
+
+        public override Vector3 getHalfSize()
+        {
+            return new Vector3(radius, radius, radius);
+        }
     }
 }

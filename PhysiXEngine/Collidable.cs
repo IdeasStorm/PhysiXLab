@@ -47,5 +47,7 @@ namespace PhysiXEngine
             base.onSituationChanged();
             updateBounding();
         }
+
+        public abstract Vector3 getHalfSize();
     }
 }
