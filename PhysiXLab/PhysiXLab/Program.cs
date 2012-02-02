@@ -24,8 +24,11 @@ namespace Test
             BoxAndBoxTest bab = new BoxAndBoxTest();
             //bab.Run();
 
+            RestingTest rt = new RestingTest();
+            rt.Run();
+
             RodAndCableTest rodcable = new RodAndCableTest();
-            rodcable.Run();
+            //rodcable.Run();
         }
     }
 #endif
