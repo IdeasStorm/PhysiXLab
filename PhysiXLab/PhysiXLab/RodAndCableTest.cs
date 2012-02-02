@@ -52,7 +52,8 @@ namespace Test
             cg = new ContactGenerator();
             cg.AddBody(fixedBall);
             cg.AddBody(ball);
-            cg.AddConductor(new Cable(fixedBall, ball, 10, 0.5f));
+            cg.AddConductor(new Cable(fixedBall, ball, 10, 0.7f));
+            //cg.AddConductor(new Rod(fixedBall, ball, 8));
             camera = new Camera(this, new Vector3(0, 0, 0.1f),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
@@ -70,7 +71,7 @@ namespace Test
         }
 
         bool spaceClicked;
-
+        Vector3 temp = Vector3.Zero;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -84,8 +85,15 @@ namespace Test
             {
                 spaceClicked = false;
                 g.AddBody(ball);
+                temp = Vector3.Right * 10;
             }
-
+            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            {
+                spaceClicked = false;
+                g.AddBody(ball);
+                temp = Vector3.Up * 1000;
+            }
+            ball.AddForce(temp);
             g.Update(duration);
             fixedBall.Update(duration);
             ball.Update(duration);
