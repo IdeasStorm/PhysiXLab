@@ -106,12 +106,12 @@ namespace PhysiXEngine
             // Build a vector that shows the change in velocity in
             // world space for a unit impulse in the direction of the contact
             // normal.
-            Vector3 deltaVelWorldOne = Vector3.Cross(contactData.relativeContactPosition[0], contactData.ContactNormal);
-            deltaVelWorldOne = inverseInertiaTensor[0].transform(deltaVelWorldOne);
-            deltaVelWorldOne = Vector3.Cross(deltaVelWorldOne, contactData.relativeContactPosition[0]);
+            Vector3 torquePerUnitImpulse1 = Vector3.Cross(contactData.relativeContactPosition[0], contactData.ContactNormal);
+            Vector3 rotationPerUnitImpluse1 = inverseInertiaTensor[0].transform(torquePerUnitImpulse1);
+            Vector3 VelocityPerUnitImpulse1 = Vector3.Cross(rotationPerUnitImpluse1, contactData.relativeContactPosition[0]);
 
             // Work out the change in velocity in contact coordiantes.
-            float deltaVelocity = Vector3.Dot(deltaVelWorldOne, contactData.ContactNormal);
+            float deltaVelocity = Vector3.Dot(VelocityPerUnitImpulse1, contactData.ContactNormal);
 
             // Add the linear component of velocity change
             deltaVelocity += one.InverseMass;
@@ -120,12 +120,12 @@ namespace PhysiXEngine
             if (two != null)
             {
                 // Go through the same transformation sequence again
-                Vector3 deltaVelWorldTwo = Vector3.Cross(contactData.relativeContactPosition[1], contactData.ContactNormal);
-                deltaVelWorldTwo = inverseInertiaTensor[1].transform(deltaVelWorldTwo);
-                deltaVelWorldTwo = Vector3.Cross(deltaVelWorldTwo, contactData.relativeContactPosition[1]);
+                Vector3 torquePerUnitImpulse2 = Vector3.Cross(contactData.relativeContactPosition[1], contactData.ContactNormal);
+                Vector3 rotationPerUnitImpluse2 = inverseInertiaTensor[1].transform(torquePerUnitImpulse2);
+                Vector3 VelocityPerUnitImpulse2 = Vector3.Cross(rotationPerUnitImpluse2, contactData.relativeContactPosition[1]);
 
                 // Add the change in velocity due to rotation
-                deltaVelocity += Vector3.Dot(deltaVelWorldTwo, contactData.ContactNormal);
+                deltaVelocity += Vector3.Dot(VelocityPerUnitImpulse2, contactData.ContactNormal);
 
                 // Add the change in velocity due to linear motion
                 deltaVelocity += two.InverseMass;
@@ -249,7 +249,7 @@ namespace PhysiXEngine
             Vector3 impulse = contactData.ContactToWorld.transform(impulseContact);
 
             // Split in the impulse into linear and rotational components
-            Vector3 impulsiveTorqueOne = Vector3.Cross(contactData.relativeContactPosition[0], impulse);
+            Vector3 impulsiveTorqueOne = Vector3.Cross(impulse, contactData.relativeContactPosition[0]);
             rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorqueOne);
 
             velocityChange[0] = Vector3.Zero;
@@ -262,7 +262,7 @@ namespace PhysiXEngine
             if (two != null)
             {
                 // Work out body one's linear and angular changes
-                Vector3 impulsiveTorqueTwo = Vector3.Cross(contactData.relativeContactPosition[1], impulse);
+                Vector3 impulsiveTorqueTwo = Vector3.Cross(-impulse, contactData.relativeContactPosition[1]);
                 rotationChange[1] = inverseInertiaTensor[1].transform(impulsiveTorqueTwo);
                 velocityChange[1] -= impulse * two.InverseMass;
 
@@ -338,7 +338,7 @@ namespace PhysiXEngine
         /// interpenetrate visually. A good starting point is the default 
         /// of 0.01.
         /// </summary>
-        float velocityEpsilon = 0.01f;
+        float velocityEpsilon = 0.001f;
 
         /// <summary>
         /// To avoid instability penetrations 
@@ -347,7 +347,7 @@ namespace PhysiXEngine
         /// bodies may interpenetrate visually. A good starting point is 
         /// the default of0.01.
         /// </summary>
-        float positionEpsilon = 0.01f;
+        float positionEpsilon = 0.001f;
 
 
         void resolvePenetration(float duration)
@@ -364,7 +364,7 @@ namespace PhysiXEngine
             positionIterationsUsed = 0;
             while (positionIterationsUsed < positionIterations)
             {
-                i = 0;
+                i=0;
                 // Find biggest penetration
                 max = positionEpsilon;
                 index = contactDataList.Count;
@@ -382,12 +382,61 @@ namespace PhysiXEngine
 
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
-                contactDataList[index].FixPenetration();
-                contactDataList[index].InitializeAtMoment(duration); 
+
+                // Resolve the penetration.
+                contactDataList[index].applyPositionChange(velocityChange,
+                    rotationChange,
+                    rotationAmount,
+                    max);//-positionEpsilon);
+
+                // Again this action may have changed the penetration of other 
+                // bodies, so we update contacts.
+                for (i = 0; i < contactDataList.Count; i++)
+                {
+                    if (contactDataList[i].body[0] == contactDataList[index].body[0])
+                    {
+                        cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[0]);
+
+                        cp += velocityChange[0];
+
+                        contactDataList[i].Penetration -=
+                            rotationAmount[0] * Vector3.Dot(cp, contactDataList[i].ContactNormal);
+                    }
+                    else if (contactDataList[i].body[0] == contactDataList[index].body[1])
+                    {
+                        cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[0]);
+
+                        cp += velocityChange[1];
+
+                        contactDataList[i].Penetration -= rotationAmount[1] *
+                            Vector3.Dot(cp, contactDataList[i].ContactNormal);
+                    }
+
+                    if (contactDataList[i].body[1] != null)
+                    {
+                        if (contactDataList[i].body[1] == contactDataList[index].body[0])
+                        {
+                            cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[1]);
+
+                            cp += velocityChange[0];
+
+                            contactDataList[i].Penetration += rotationAmount[0] *
+                                Vector3.Dot(cp, contactDataList[i].ContactNormal);
+                        }
+                        else if (contactDataList[i].body[1] == contactDataList[index].body[1])
+                        {
+                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[1]);
+
+                            cp += velocityChange[1];
+
+                            contactDataList[i].Penetration += rotationAmount[1] *
+                                Vector3.Dot(cp, contactDataList[i].ContactNormal);
+                        }
+                    }
+                }
                 positionIterationsUsed++;
             }
-
-}
+        }
 
         //Level2 - resolving collison
         void resolveCollisonVelocity(float duration)
