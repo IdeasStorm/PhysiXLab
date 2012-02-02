@@ -162,9 +162,14 @@ namespace PhysiXEngine
             Velocity += LastFrameAcceleration * duration;
             Rotation += AngularAcceleration * duration;
 
+            // saving old situation
+            _oldPosition = position;
+            _oldOrientation= orientation;
+
             position += Velocity * duration;
             //orientation.AddScaledVector(Rotation, duration);
-            AddScaledOrientation(Rotation,duration);
+            if (Rotation.Length() > 0 )
+                AddScaledOrientation(Rotation,duration);
 
             onSituationChanged(); //trigger situation changed
             clearAccumulators();
@@ -173,13 +178,14 @@ namespace PhysiXEngine
 
         public void AddScaledOrientation(Vector3 rotation,float scale)
         {
-            orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y * scale, rotation.X * scale, rotation.Z * scale);
+            //orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y * scale, rotation.X * scale, rotation.Z * scale);
+            orientation = orientation.AddScaledVector(rotation, scale);
             onSituationChanged();
         }
 
         protected void UpdateMatices()
         {
-            orientation.Normalize();
+            PhysiXEngine.Helpers.ExtensionMethods.normalized(ref orientation);
 
             // Calculate the transform matrix for the body.
             TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
