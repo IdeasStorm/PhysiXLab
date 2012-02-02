@@ -48,7 +48,6 @@ namespace PhysiXEngine
         public float desiredDeltaVelocity { get; set; }
 
         public  Vector3[] relativeContactPosition = new Vector3[2];
-        private float minimumPenetration = 5.0f; //TODO put an appropriate value
 
         public float friction { get; set; }
 
@@ -105,8 +104,8 @@ namespace PhysiXEngine
 
             // Combine the bounce velocity with the removed
             // acceleration velocity.            
-            this.desiredDeltaVelocity = -this.contactVelocity.X - thisRestitution * ((this.contactVelocity.X - velocityFromAcc));
-            this.desiredDeltaVelocity = Math.Abs(this.desiredDeltaVelocity);
+            this.desiredDeltaVelocity = - (1+thisRestitution) * ((this.contactVelocity.X - velocityFromAcc));
+            //this.desiredDeltaVelocity = Math.Abs(this.desiredDeltaVelocity);
             //contactData.desiredDeltaVelocity = deltaVelocity;
         }
 
@@ -117,78 +116,6 @@ namespace PhysiXEngine
             Collidable temp = this.body[0];
             this.body[0] = this.body[1];
             this.body[1] = temp;
-        }
-
-        /// <summary>
-        /// Calculate the velocity of body with index i for calculate the contact velocity
-        /// </summary>
-        /// <param name="contactData"></param>
-        /// <param name="bodyIndex"></param>
-        /// <param name="duration"></param>
-        /// <returns></returns>
-        public Vector3 CalculateLocalVelocity(float frameDuration, uint bodyIndex)
-        {
-            Body thisBody = this.body[bodyIndex];
-
-            // Work out the velocity of the contact point.
-            Vector3 velocity = Vector3.Cross(thisBody.Rotation, this.relativeContactPosition[bodyIndex]);
-            velocity += thisBody.Velocity;
-
-            // Turn the velocity into contact-coordinates.
-            Vector3 contactVelocity = this.ContactToWorld.transformTranspose(velocity);
-
-            // Calculate the ammount of velocity that is due to forces without
-            // reactions.
-            Vector3 accVelocity = thisBody.LastFrameAcceleration * frameDuration;
-
-            // Calculate the velocity in contact-coordinates.
-            accVelocity = this.ContactToWorld.transformTranspose(accVelocity);
-
-            // We ignore any component of acceleration in the contact normal
-            // direction, we are only interested in planar acceleration
-            accVelocity.X = 0;
-
-            // Add the planar velocities - if there's enough friction they will
-            // be removed during velocity resolution
-            contactVelocity += accVelocity;
-
-            // And return it
-            return contactVelocity;
-        }
-
-        /// <summary>
-        /// calculate Local Velocity "Closing velocity" then calculate deltavelocity
-        /// </summary>
-        /// <param name="frameDuration"></param>
-        public void CalculateInternals(float frameDuration)
-        {
-            // Check if the first object is NULL, and swap if it is.
-            if (this.body[0]==null) 
-                SwapBodies();
-
-            //TODO exit all program
-            if (this.body[0] == null)
-                return;
-
-            // Calculate an set of axis at the contact point.
-            this.calculateContactBasis();
-
-            // Store the relative position of the contact relative to each body
-            this.relativeContactPosition[0] = this._ContactPoint - this.body[0].Position;
-            if (this.body[1]!=null)
-            {
-                this.relativeContactPosition[1] = this._ContactPoint - this.body[1].Position;
-            }
-
-            // Find the relative velocity of the bodies at the contact point.
-            this.contactVelocity = CalculateLocalVelocity(frameDuration,0);
-            if (this.body[1]!=null)
-            {
-                this.contactVelocity -= CalculateLocalVelocity(frameDuration,1);
-            }
-
-            // Calculate the desired change in velocity for resolution
-            CalculateDeltaVelocity(frameDuration);
         }
 
         #endregion
@@ -799,8 +726,6 @@ namespace PhysiXEngine
                 body[0] = body[1];
                 body[1] = null;
             }
-            //assert(body[0]);
-            //TODO check what is assert floatly doing
 
             // Calculate an set of axis at the contact point.
             calculateContactBasis();
@@ -966,8 +891,9 @@ namespace PhysiXEngine
 
                 body[b].Position = body[b].Position + _ContactNormal * linearMove[b];
 
-                body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b], MathHelper.Pi)
-                   * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
+                body[b].AddScaledOrientation(rotationDirection[b] ,rotationAmount[b]/2);
+                //body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b], MathHelper.Pi)
+                //   * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
 
             }
         }
@@ -996,11 +922,11 @@ namespace PhysiXEngine
             // B = the moment before collision moment
             Vector3 PositionB = chosen.Position;
             Quaternion OrientationB = chosen.Orientation;
-            
             // starting binary search loop
-            while ( _Penetration < 0)
+            this.Check();
+            while ( !IsColliding() )
             {
-                if ((PositionA - PositionB).Length() <= 0.1) throw new Exception("no more precision - will iterate to infinity");
+                if ((PositionA - PositionB).Length() <= 0.001) throw new Exception("no more precision - will iterate to infinity");
                 chosen.Position = Vector3.Lerp(PositionA, PositionB, 0.5f);
                 chosen.Orientation = Quaternion.Slerp(OrientationA, OrientationB, 0.5f);
                 this.Check();
