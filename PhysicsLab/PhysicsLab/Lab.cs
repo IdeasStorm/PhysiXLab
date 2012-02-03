@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using PhysiXEngine;
 
 namespace PhysicsLab
 {
@@ -18,6 +19,9 @@ namespace PhysicsLab
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        public Camera camera { get; protected set; }
+        public BasicLab basicLab { get; set; }
 
         public Lab()
         {
@@ -34,6 +38,11 @@ namespace PhysicsLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            camera = new Camera(this, new Vector3(0, 0, 10f),
+                Vector3.Zero, Vector3.Up);
+            Components.Add(camera);
+            basicLab = new BasicLab(this);
+            Components.Add(basicLab);
 
             base.Initialize();
         }
@@ -48,6 +57,10 @@ namespace PhysicsLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            Ball ball = new Ball(0.5f);
+            basicLab.AddBall();
+            basicLab.AddCrate(new Vector3(0.5f, 0.2f, 0.3f), new Vector3(0f, -3, 0f));
+            
         }
 
         /// <summary>
