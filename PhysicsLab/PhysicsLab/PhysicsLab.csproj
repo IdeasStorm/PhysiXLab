@@ -115,6 +115,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Crate.cs" />
     <Compile Include="Drawable.cs" />
+    <Compile Include="IMoveable.cs" />
     <Compile Include="Lab.cs" />
     <Compile Include="Panel.cs" />
     <Compile Include="Program.cs" />
