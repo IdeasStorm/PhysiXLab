@@ -11,6 +11,7 @@ namespace PhysiXEngine.Helpers
     {
         public static Vector3 GetAxisVector(this Matrix matrix,int index)
         {
+            matrix = Matrix.Transpose(matrix);
             switch (index)
             {
                 case 0:
