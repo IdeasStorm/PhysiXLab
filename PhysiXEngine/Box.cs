@@ -36,8 +36,13 @@ namespace PhysiXEngine
 
         protected override void updateBounding()
         {
-            _box.Min = Vector3.Transform(-HalfSize, TransformMatrix);
-            _box.Max = Vector3.Transform(HalfSize, TransformMatrix);
+            BoundingBox zeroBox = new BoundingBox(-HalfSize,HalfSize);
+            foreach (Vector3 corner in zeroBox.GetCorners())
+            {
+                Vector3 tranformed_corner = Vector3.Transform(corner,TransformMatrix);
+                _box.Min = Vector3.Min(_box.Min,tranformed_corner);
+                _box.Max = Vector3.Max(_box.Max, tranformed_corner);
+            }
         }
 
         public override Boolean CollidesWith(Collidable other)
