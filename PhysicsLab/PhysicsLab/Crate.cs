@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace PhysicsLab
 {
-    public class Crate : Box
+    public class Crate : Box, Drawable
     {
         public Model model { set; get; }
         public Texture2D Texture { get; set; }
