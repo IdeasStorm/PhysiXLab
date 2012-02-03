@@ -41,8 +41,8 @@ namespace PhysiXEngine
         protected override void Affect()
         {
             // Calculate the two ends in world space
-            Vector3 lws = bodys[0].GetPointInWorldSpace(bodys[0].Position);
-            Vector3 ows = bodys[1].GetPointInWorldSpace(bodys[1].Position);
+            Vector3 lws = bodys[0].Position;
+            Vector3 ows = bodys[1].Position;
 
             // Calculate the vector of the spring
             Vector3 force = lws - ows;
