@@ -36,11 +36,11 @@ namespace Test
         /// </summary>
         protected override void Initialize()
         {
-            fixedCrate = new Crate(new Vector3(0.5f, 0.05f, 0.05f));
+            fixedCrate = new Crate(new Vector3(0.5f, 0.5f, 0.5f));
             fixedCrate.Position = new Vector3(0, 0, 0);
+            //fixedCrate.AddScaledOrientation(new Vector3(0,0,20));
 
-
-            crate = new Crate(new Vector3(0.5f, 0.05f, 0.05f));
+            crate = new Crate(new Vector3(0.5f, 0.5f, 0.5f));
             crate.Position = new Vector3(0, 4, 0);
             crate.Mass = 10;
 
@@ -74,7 +74,7 @@ namespace Test
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            float duration = gameTime.ElapsedGameTime.Milliseconds / 3000f;
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 spaceClicked = true;
             if (Keyboard.GetState().IsKeyUp(Keys.Space) && spaceClicked)
