@@ -88,6 +88,8 @@ namespace PhysicsLab
             Crate crate = new Crate(new Vector3(0.5f, 0.2f, 0.3f));
             crate.Mass = 1f;
             crate.model = basicLab.CrateModel;
+            crate.Texture = basicLab.CrateTexture;
+            crate.SelectedTexture = basicLab.SelectedCrateTexture;
             crate.Position = new Vector3(1f, -2f, 1f);
             basicLab.AddCrate(crate);
 
@@ -147,8 +149,8 @@ namespace PhysicsLab
                 cursorDelta *= dest / 10f;
                 cameraDelta *= dest / 10f;
 
-                ((IMoveable)bdy).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
-                ((Drawable)bdy).Selected = true;
+                ((IMoveable)prevBody).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
+                ((Drawable)prevBody).Selected = true;
             }
             if (keyboard.IsKeyUp(Keys.LeftControl)) bodySel = false;
         }
