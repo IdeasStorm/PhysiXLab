@@ -19,20 +19,20 @@ namespace PhysicsLab
     public class BasicLab : Microsoft.Xna.Framework.DrawableGameComponent
     {
         #region "Main Components"
-        SpriteBatch spriteBatch;
+        private SpriteBatch spriteBatch;
         #endregion
 
         #region "Physics Components"
-        List<Body> bodys = new List<Body>();
-        List<PhysiXEngine.Effect> effects = new List<PhysiXEngine.Effect>();
-        ContactGenerator cg = new ContactGenerator();
+        private List<Body> bodys = new List<Body>();
+        private List<PhysiXEngine.Effect> effects = new List<PhysiXEngine.Effect>();
+        private ContactGenerator cg = new ContactGenerator();
         #endregion
 
         #region "Graphics Components"
-        Texture2D BallTexture;
-        Model BallModel;
-        Texture2D CrateTexture;
-        Model CrateModel;
+        public Texture2D BallTexture;
+        public Model BallModel;
+        public Texture2D CrateTexture;
+        public Model CrateModel;
         public float speed = 1f;
         #endregion
 
@@ -103,7 +103,6 @@ namespace PhysicsLab
             bodys.Add(crate);
             cg.AddBody(crate);
         }
-
 
         public void AddEffect(PhysiXEngine.Effect effect)
         {
