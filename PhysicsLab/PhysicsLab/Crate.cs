@@ -51,7 +51,7 @@ namespace PhysicsLab
                         be.TextureEnabled = true;
                     }
                     be.EnableDefaultLighting();
-                    be.World = mesh.ParentBone.Transform *  Matrix.CreateScale(HalfSize/5f) * TransformMatrix;
+                    be.World = mesh.ParentBone.Transform *  Matrix.CreateScale(HalfSize) * TransformMatrix;
                     be.View = camera.view;
                     be.Projection = camera.projection;
                 }
