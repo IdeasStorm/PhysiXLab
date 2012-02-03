@@ -19,6 +19,8 @@ namespace Test
         #region "testing components"
         Ball fixedBall;
         Ball ball;
+        Ball fixedBall2;
+        Ball ball2;
         ContactGenerator cg;
         Camera camera;
         Gravity g;
@@ -53,7 +55,26 @@ namespace Test
             cg.AddBody(fixedBall);
             cg.AddBody(ball);
             cg.AddConductor(new Cable(fixedBall, ball, 10, 0.7f));
-            //cg.AddConductor(new Rod(fixedBall, ball, 8));
+
+            //////////////////////////////////////////////////
+            fixedBall2 = new Ball(1);
+            fixedBall2.model = Content.Load<Model>(@"ball");
+
+            fixedBall2.Texture = Content.Load<Texture2D>(@"basic_material");
+            fixedBall2.Position = new Vector3(-5, 4, 0);
+
+            ball2 = new Ball(1);
+            ball2.Texture = Content.Load<Texture2D>(@"basic_material");
+            ball2.Position = new Vector3(-5, 0, 0);
+            ball2.model = fixedBall.model;
+
+            ball2.Mass = 10;
+
+
+            cg.AddBody(fixedBall2);
+            cg.AddBody(ball2);
+            cg.AddConductor(new Cable(fixedBall2, ball2, 10, 0.7f));
+
             camera = new Camera(this, new Vector3(0, 0, 0.1f),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
@@ -61,6 +82,9 @@ namespace Test
 
             fixedBall.InverseMass = 0;
             fixedBall.InverseInertiaTensor = new Matrix();
+
+            fixedBall2.InverseMass = 0;
+            fixedBall2.InverseInertiaTensor = new Matrix();
 
             base.Initialize();
         }
@@ -78,13 +102,14 @@ namespace Test
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            float duration = gameTime.ElapsedGameTime.Milliseconds / 1400f;
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 spaceClicked = true;
             if (Keyboard.GetState().IsKeyUp(Keys.Space) && spaceClicked)
             {
                 spaceClicked = false;
                 g.AddBody(ball);
+                g.AddBody(ball2);
                 temp = Vector3.Right * 10;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.O))
@@ -97,6 +122,8 @@ namespace Test
             g.Update(duration);
             fixedBall.Update(duration);
             ball.Update(duration);
+            fixedBall2.Update(duration);
+            ball2.Update(duration);
             cg.Update(duration);
 
             base.Update(gameTime);
@@ -107,6 +134,9 @@ namespace Test
             GraphicsDevice.Clear(Color.CornflowerBlue);
             fixedBall.Draw(camera);
             ball.Draw(camera);
+
+            fixedBall2.Draw(camera);
+            ball2.Draw(camera);
             base.Draw(gameTime);
         }
     }
