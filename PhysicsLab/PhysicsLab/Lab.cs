@@ -84,12 +84,13 @@ namespace PhysicsLab
             ball1.SelectedTexture = basicLab.SelectedBallTexture;
             ball1.InverseMass = 0;
             basicLab.AddBall(ball1);
-            /*
+            
             Crate crate = new Crate(new Vector3(0.5f, 0.2f, 0.3f));
             crate.Mass = 1f;
             crate.model = basicLab.CrateModel;
-            crate.Position = new Vector3(1f, -2f, 0f);
-            basicLab.AddCrate(crate);*/
+            crate.Position = new Vector3(1f, -2f, 1f);
+            basicLab.AddCrate(crate);
+
             basicLab.AddEffect(new Spring(ball, ball1, ball1.Position, 1f, 0.2f, 0.995f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
 
@@ -105,35 +106,12 @@ namespace PhysicsLab
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
+        public void SelectedAndMoving(MouseState mouse, KeyboardState keyboard,
+            Vector2 cursorPosition,Vector2 previousCursorPosition, float totalSecond)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            // TODO: Add your update logic here
-            MouseState mouse = Mouse.GetState();
-            KeyboardState keyboard = Keyboard.GetState();
-
-            Vector2 cursorPosition = new Vector2(mouse.X, mouse.Y);
-            Vector2 previousCursorPosition = new Vector2(oldMouseState.X, oldMouseState.Y);
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                spaceClicked = true;
-            if (Keyboard.GetState().IsKeyUp(Keys.Space) && spaceClicked)
-            {
-                spaceClicked = false;
-                basicLab.pause = !basicLab.pause;
-            }
-
             Body bdy = null;
-            var cursorDelta = (cursorPosition - previousCursorPosition) *  (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var cameraDelta = (camera.cameraPosition - previousCameraPosition) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var cursorDelta = (cursorPosition - previousCursorPosition) * totalSecond;
+            var cameraDelta = (camera.cameraPosition - previousCameraPosition) * totalSecond;
 
             if (!bodySel)
             {
@@ -152,12 +130,12 @@ namespace PhysicsLab
                         {
                             bodySel = true;
                             prevBody = bdy;
-                            ((Ball)bdy).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
+                            ((IMoveable)bdy).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
                         }
                         else
                         {
-                            ((Ball)bdy).Translate(Vector3.Right, cameraDelta.X + cursorDelta.X);
-                            ((Ball)bdy).Translate(Vector3.Down, cameraDelta.Y + cursorDelta.Y);
+                            ((IMoveable)bdy).Translate(Vector3.Right, cameraDelta.X + cursorDelta.X);
+                            ((IMoveable)bdy).Translate(Vector3.Down, cameraDelta.Y + cursorDelta.Y);
                         }
                     }
                 }
@@ -169,10 +147,45 @@ namespace PhysicsLab
                 cursorDelta *= dest / 10f;
                 cameraDelta *= dest / 10f;
 
-                ((Ball)prevBody).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
-                ((Ball)prevBody).Selected = true;
+                ((IMoveable)bdy).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
+                ((Drawable)bdy).Selected = true;
             }
             if (keyboard.IsKeyUp(Keys.LeftControl)) bodySel = false;
+        }
+
+
+        public void PauseAndPlay(KeyboardState keyboard)
+        {
+            if (keyboard.IsKeyDown(Keys.Space))
+                spaceClicked = true;
+            if (keyboard.IsKeyUp(Keys.Space) && spaceClicked)
+            {
+                spaceClicked = false;
+                basicLab.pause = !basicLab.pause;
+            }
+        }
+        /// <summary>
+        /// Allows the game to run logic such as updating the world,
+        /// checking for collisions, gathering input, and playing audio.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime gameTime)
+        {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                this.Exit();
+
+            // TODO: Add your update logic here
+            MouseState mouse = Mouse.GetState();
+            KeyboardState keyboard = Keyboard.GetState();
+
+            Vector2 cursorPosition = new Vector2(mouse.X, mouse.Y);
+            Vector2 previousCursorPosition = new Vector2(oldMouseState.X, oldMouseState.Y);
+
+            PauseAndPlay(keyboard);
+
+            SelectedAndMoving(mouse, keyboard, cursorPosition, previousCursorPosition, 
+                (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             oldMouseState = mouse;
             previousCameraPosition = camera.cameraPosition;
