@@ -123,7 +123,7 @@ namespace PhysicsLab
                 cameraPosition += Vector3.Cross(cameraUp, cameraDirection) * speed;
             if (Keyboard.GetState().IsKeyDown(Keys.D))
                 cameraPosition -= Vector3.Cross(cameraUp, cameraDirection) * speed;
-
+            /*
             // Yaw rotation
             cameraDirection = Vector3.Transform(cameraDirection
                 , Matrix.CreateFromAxisAngle(cameraUp, (-MathHelper.PiOver4 / 200) *
@@ -139,7 +139,7 @@ namespace PhysicsLab
                 , Matrix.CreateFromAxisAngle(Vector3.Cross(cameraUp, cameraDirection)
                 , (MathHelper.PiOver4 / 180) * (Mouse.GetState().Y - prevMouseState.Y)));
 
-
+            */
 
             // Reset prevMouseState
             prevMouseState = Mouse.GetState();
