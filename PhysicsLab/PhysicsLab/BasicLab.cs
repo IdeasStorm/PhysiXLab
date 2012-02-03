@@ -30,10 +30,12 @@ namespace PhysicsLab
         #endregion
 
         #region "Graphics Components"
+        public Camera camera { protected set; get; }
         Texture2D BallTexture;
         Model BallModel;
         Texture2D CrateTexture;
         Model CrateModel;
+        public float speed = 1f;
         #endregion
 
         public BasicLab()
@@ -48,6 +50,7 @@ namespace PhysicsLab
         public void AddBall(Ball ball) 
         {
             bodys.Add(ball);
+            cg.AddBody(ball);
         }
 
         public void AddBall(float radius = 0.5f, float mass = 5f
@@ -59,6 +62,7 @@ namespace PhysicsLab
             ball.model = BallModel;
             ball.Texture = BallTexture;
             bodys.Add(ball);
+            cg.AddBody(ball);
         }
 
         public void AddBall(Model model, Texture2D texture, 
@@ -70,12 +74,14 @@ namespace PhysicsLab
             ball.model = model;
             ball.Texture = texture;
             bodys.Add(ball);
+            cg.AddBody(ball);
         }
 
 
         public void AddCrate(Crate crate)
         {
             bodys.Add(crate);
+            cg.AddBody(crate);
         }
 
         public void AddCrate(Vector3 halfSize, float mass = 5f, 
@@ -87,6 +93,7 @@ namespace PhysicsLab
             crate.model = CrateModel;
             crate.Texture = CrateTexture;
             bodys.Add(crate);
+            cg.AddBody(crate);
         }
 
         public void AddCrate(Model model, Texture2D texture, Vector3 halfSize, 
@@ -98,6 +105,13 @@ namespace PhysicsLab
             crate.model = model;
             crate.Texture = texture;
             bodys.Add(crate);
+            cg.AddBody(crate);
+        }
+
+
+        public void AddEffect(PhysiXEngine.Effect effect)
+        {
+            effects.Add(effect);
         }
 
         /// <summary>
@@ -107,6 +121,9 @@ namespace PhysicsLab
         protected override void Initialize()
         {
             // TODO: Add your initialization code here
+            camera = new Camera(this, new Vector3(0, 0, 10f),
+                Vector3.Zero, Vector3.Up);
+            Components.Add(camera);
 
             base.Initialize();
         }
@@ -148,6 +165,17 @@ namespace PhysicsLab
                 this.Exit();
 
             // TODO: Add your update logic here
+            float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            duration *= speed;
+            foreach (Body bdy in bodys)
+            {
+                bdy.Update(duration);
+            }
+            foreach (PhysiXEngine.Effect ef in effects)
+            {
+                ef.Update(duration);
+            }
+            cg.Update(duration);
 
             base.Update(gameTime);
         }
@@ -161,6 +189,10 @@ namespace PhysicsLab
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            foreach (Body bdy in bodys)
+            {
+                ((Drawable)bdy).Draw(camera);
+            }
 
             base.Draw(gameTime);
         }
