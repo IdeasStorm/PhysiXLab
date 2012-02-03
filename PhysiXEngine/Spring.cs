@@ -40,6 +40,7 @@ namespace PhysiXEngine
         /** Applies the spring force to the given rigid body. */
         protected override void Affect()
         {
+            //TODO Add GetPointInWorldSpace for box
             // Calculate the two ends in world space
             Vector3 lws = bodys[0].Position;
             Vector3 ows = bodys[1].Position;
