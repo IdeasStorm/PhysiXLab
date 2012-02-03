@@ -58,9 +58,27 @@ namespace PhysicsLab
 
             // TODO: use this.Content to load your game content here
             Ball ball = new Ball(0.5f);
-            basicLab.AddBall();
-            basicLab.AddCrate(new Vector3(0.5f, 0.2f, 0.3f), new Vector3(0f, -3, 0f));
-            
+            ball.model = basicLab.BallModel;
+            ball.Texture = basicLab.BallTexture;
+            //ball.Mass = 5f;
+            ball.InverseMass = 0;
+            basicLab.AddBall(ball);
+
+            Ball ball1 = new Ball(0.5f);
+            ball1.model = basicLab.BallModel;
+            ball1.Texture = basicLab.BallTexture;
+            ball1.Mass = 1f;
+            ball1.Position = new Vector3(1f, -2f, 0f);
+            //ball1.InverseMass = 0;
+            basicLab.AddBall(ball1);
+            /*
+            Crate crate = new Crate(new Vector3(0.5f, 0.2f, 0.3f));
+            crate.Mass = 1f;
+            crate.model = basicLab.CrateModel;
+            crate.Position = new Vector3(1f, -2f, 0f);
+            basicLab.AddCrate(crate);*/
+            basicLab.AddEffect(new Spring(ball, ball1, ball1.Position, 1f, 0.2f, 0.995f));
+            basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
         }
 
         /// <summary>
