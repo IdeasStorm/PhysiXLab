@@ -29,6 +29,9 @@ namespace Test
 
             RodAndCableTest rodcable = new RodAndCableTest();
             rodcable.Run();
+
+            Bridge bridge = new Bridge();
+            bridge.Run();
         }
     }
 #endif
