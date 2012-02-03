@@ -83,10 +83,10 @@ namespace PhysiXEngine
             contact.restitution = restitution;
 
             if (body[0].HasFiniteMass)
-                contact.ContactPoint = body[1].Position + body[1].getHalfSize();
+                contact.ContactPoint = body[1].Position;// +body[1].getHalfSize();
 
             if (body[1].HasFiniteMass)
-                contact.ContactPoint = body[0].Position + body[0].getHalfSize();
+                contact.ContactPoint = body[0].Position;// +body[0].getHalfSize();
 
             return true;
         }
@@ -141,10 +141,10 @@ namespace PhysiXEngine
             }
 
             if (body[0].HasFiniteMass)
-                contact.ContactPoint = body[1].Position + body[1].getHalfSize();
+                contact.ContactPoint = body[1].Position;// +body[1].getHalfSize();
 
             if (body[1].HasFiniteMass)
-                contact.ContactPoint = body[0].Position + body[0].getHalfSize();
+                contact.ContactPoint = body[0].Position;// +body[0].getHalfSize();
 
             // Always use zero restitution (no bounciness)
             contact.restitution = 1;
