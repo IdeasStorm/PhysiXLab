@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsLab
 {
-    public class Ball : Sphere, Drawable
+    public class Ball : Sphere, Drawable, IMoveable
     {
         public Model model { get; set; }
         public Texture2D Texture { get; set; }
@@ -52,11 +52,6 @@ namespace PhysicsLab
             }
         }
 
-        /// <summary>
-        /// Pans the entity along the X, Y, and Z directions.
-        /// </summary>
-        /// <param name="axis">The direction to pan the entity.</param>
-        /// <param name="distance">The amount of X, Y, and Z distance to pan the entity. Units are assumed to be world units.</param>
         public void Translate(Vector3 axis, float distance)
         {
             Position += axis * distance;

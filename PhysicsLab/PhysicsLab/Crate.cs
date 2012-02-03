@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace PhysicsLab
 {
-    public class Crate : Box, Drawable
+    public class Crate : Box, Drawable, IMoveable
     {
         public Model model { set; get; }
         public Texture2D Texture { get; set; }
@@ -57,6 +57,11 @@ namespace PhysicsLab
                 }
                 mesh.Draw();
             }
+        }
+
+        public void Translate(Vector3 axis, float distance)
+        {
+            Position += axis * distance;
         }
     }
 }
