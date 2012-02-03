@@ -93,7 +93,16 @@ namespace PhysicsLab
             crate.Position = new Vector3(1f, -2f, 1f);
             basicLab.AddCrate(crate);
 
-            basicLab.AddEffect(new Spring(ball, ball1, ball1.Position, 1f, 0.2f, 0.995f));
+
+            Crate ground = new Crate(new Vector3(10f, 0.01f, 10f));
+            ground.Position = new Vector3(0f, -5f, 0f);
+            ground.model = basicLab.CrateModel;
+            ground.Texture = null;
+            ground.SelectedTexture = null;
+            ground.InverseMass = 0;
+            basicLab.AddCrate(ground);
+
+            basicLab.AddEffect(new Spring(ball, ball1, new Vector3(1, 1, 1), 10f, 2f, 0.995f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
 
             
