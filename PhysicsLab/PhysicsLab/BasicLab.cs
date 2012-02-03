@@ -134,7 +134,7 @@ namespace PhysicsLab
                 {
                     if (((Box)bdy).box.Intersects(ray) != null)
                     {
-                        //((Crate)bdy).Selected = true;
+                        ((Crate)bdy).Selected = true;
                         return bdy;
                     }
                 }
