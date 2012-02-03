@@ -107,6 +107,11 @@ namespace PhysicsLab
         public void AddEffect(PhysiXEngine.Effect effect)
         {
             effects.Add(effect);
+            if (effect as Gravity != null)
+            {
+                foreach (Body bdy in bodys)
+                    ((Gravity)effect).AddBody(bdy);
+            }
         }
 
         /// <summary>
