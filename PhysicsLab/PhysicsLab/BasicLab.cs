@@ -33,6 +33,7 @@ namespace PhysicsLab
         public Texture2D SelectedBallTexture;
         public Model BallModel;
         public Texture2D CrateTexture;
+        public Texture2D SelectedCrateTexture;
         public Model CrateModel;
         public float speed = 1f;
         public bool pause = true;
@@ -163,11 +164,13 @@ namespace PhysicsLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            BallModel = Game.Content.Load<Model>(@"Models\ball");
             BallTexture = Game.Content.Load<Texture2D>(@"Textures\texBall");
             SelectedBallTexture = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBall");
-            BallModel = Game.Content.Load<Model>(@"Models\ball");
-            //CrateTexture = Game.Content.Load<Texture2D>("Texture/texBox");
+
             CrateModel = Game.Content.Load<Model>(@"Models\box");
+            CrateTexture = Game.Content.Load<Texture2D>(@"Textures\texBox");
+            SelectedCrateTexture = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBox");
         }
 
         /// <summary>
