@@ -176,7 +176,7 @@ namespace PhysiXEngine
             // add damping 
         }
 
-        public void AddScaledOrientation(Vector3 rotation,float scale)
+        public void AddScaledOrientation(Vector3 rotation,float scale=1)
         {
             //orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y * scale, rotation.X * scale, rotation.Z * scale);
             orientation = orientation.AddScaledVector(rotation, scale);
