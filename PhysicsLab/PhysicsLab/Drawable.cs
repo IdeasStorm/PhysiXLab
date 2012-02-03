@@ -8,5 +8,7 @@ namespace PhysicsLab
     public interface Drawable
     {
         void Draw(Camera camera);
+
+        bool Selected { get; set; }
     }
 }
