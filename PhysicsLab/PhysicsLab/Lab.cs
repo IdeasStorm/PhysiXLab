@@ -116,21 +116,37 @@ namespace PhysicsLab
         {
             // TODO: Unload any non ContentManager content here
         }
+        /// <summary>
+        /// indicates weather the bodu=y is being moved by mouse or not
+        /// </summary>
+        bool bodyMoving = false;
+        /// <summary>
+        /// the current body under cursor (is moving by mouse)
+        /// </summary>
+        Body bdy = null;
 
         public void SelectedAndMoving(MouseState mouse, KeyboardState keyboard,
             Vector2 cursorPosition,Vector2 previousCursorPosition, float totalSecond)
         {
-            Body bdy = null;
+            
             var cursorDelta = (cursorPosition - previousCursorPosition) * totalSecond;
             var cameraDelta = (camera.cameraPosition - previousCameraPosition) * totalSecond;
 
             if (!bodySel)
             {
                 Ray ray = camera.GetMouseRay(cursorPosition, GraphicsDevice.Viewport);
-                bdy = basicLab.CheckIntersect(ray);
+                if (!bodyMoving) bdy = basicLab.CheckIntersect(ray);
                 if (bdy != null)
                 {
                     if (mouse.LeftButton == ButtonState.Pressed)
+                        bodyMoving = true;
+                    else
+                    {
+                        bodyMoving = false;
+                        bdy = null;
+                    }
+
+                    if (bodyMoving)
                     {
                         Vector3 tocentre = camera.cameraPosition - bdy.Position;
                         float dest = tocentre.Length();
