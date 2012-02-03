@@ -61,7 +61,7 @@
     <Compile Include="Helpers\Matrix3.cs" />
     <Compile Include="ContactGenerator.cs" />
     <Compile Include="Joint.cs" />
-    <Compile Include="Plane.cs" />
+    <Compile Include="HalfSpace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="Spring.cs" />
