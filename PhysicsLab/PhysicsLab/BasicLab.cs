@@ -25,7 +25,7 @@ namespace PhysicsLab
         #region "Physics Components"
         List<Body> bodys = new List<Body>();
         List<PhysiXEngine.Effect> effects = new List<PhysiXEngine.Effect>();
-        ContactGenerator cg;
+        ContactGenerator cg = new ContactGenerator();
         #endregion
 
         #region "Graphics Components"
@@ -131,10 +131,10 @@ namespace PhysicsLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            BallTexture = Game.Content.Load<Texture2D>("Textures/texBall");
-            BallModel = Game.Content.Load<Model>("Models/ball");
+            BallTexture = Game.Content.Load<Texture2D>(@"Textures\texBall");
+            BallModel = Game.Content.Load<Model>(@"Models\ball");
             //CrateTexture = Game.Content.Load<Texture2D>("Texture/texBox");
-            CrateModel = Game.Content.Load<Model>("Models/box");
+            CrateModel = Game.Content.Load<Model>(@"Models\box");
         }
 
         /// <summary>
