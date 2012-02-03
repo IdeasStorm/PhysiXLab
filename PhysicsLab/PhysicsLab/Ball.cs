@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsLab
 {
-    class Ball : Sphere
+    public class Ball : Sphere
     {
         public Model model { get; set; }
         public Texture2D Texture { get; set; }
