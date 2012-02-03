@@ -18,6 +18,8 @@ namespace PhysicsLab
     {
         public Model model { set; get; }
         public Texture2D Texture { get; set; }
+        public Texture2D SelectedTexture { get; set; }
+        public bool Selected { get; set; }
 
         private Vector3 modelSize;
         public Crate(Vector3 halfSize)
@@ -54,6 +56,17 @@ namespace PhysicsLab
                     be.World = mesh.ParentBone.Transform *  Matrix.CreateScale(HalfSize) * TransformMatrix;
                     be.View = camera.view;
                     be.Projection = camera.projection;
+                    be.Alpha = 1f;
+                    if (Selected)
+                    {
+                        if (SelectedTexture != null)
+                        {
+                            be.Texture = this.SelectedTexture;
+                            be.TextureEnabled = true;
+                        }
+                        be.Alpha = 3;
+                        Selected = false;
+                    }
                 }
                 mesh.Draw();
             }
