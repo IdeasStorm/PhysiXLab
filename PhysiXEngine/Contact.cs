@@ -470,6 +470,8 @@ namespace PhysiXEngine
             // These values may be updated
             ref float smallestPenetration, ref int smallestCase)
         {
+            if (axis.LengthSquared() < 0.0001) return true;
+            axis.Normalize();
             float penetration = penetrationOnAxis(one, two, axis, toCentre);
             if (penetration < 0) // there is no Contact
                 return false;
@@ -525,8 +527,8 @@ namespace PhysiXEngine
             float denom, mua, mub;
 
 
-            smOne = (float)Math.Pow(dOne.Length(), 2);
-            smTwo = (float)Math.Pow(dTwo.Length(), 2);
+            smOne = dOne.LengthSquared();
+            smTwo = dTwo.LengthSquared();
             dpOneTwo = Vector3.Dot(dTwo, dOne);
 
             toSt = pOne - pTwo;
@@ -566,10 +568,11 @@ namespace PhysiXEngine
             Box one = (Box)body[0];
             Box two = (Box)body[1];
 
-            Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
+            //Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
+            Vector3 toCentre = two.Position - one.Position;
             // We start assuming there is no contact
             float pen = float.MaxValue;
-            int best = 0xffffff;
+            int best = int.MaxValue;
 
             // Now we check each axes, returning if it gives us
             // a separating axis, and keeping track of the axis with
@@ -582,7 +585,7 @@ namespace PhysiXEngine
 
             for (int i = 0; i < 3; i++)
             {
-                if (!tryAxis(one, two, two.GetAxis(i), toCentre, i, ref pen, ref best))
+                if (!tryAxis(one, two, two.GetAxis(i), toCentre, i+3, ref pen, ref best))
                     return 0;
             }
 
@@ -595,7 +598,7 @@ namespace PhysiXEngine
                 if (i % 3 == 0 && i != 0)
                 {
                     j++;
-                    j = 0;
+                    k = 0;
                 }
                 if (!tryAxis(one, two, Vector3.Cross(one.GetAxis(j), two.GetAxis(k)),
                     toCentre, w, ref pen, ref best))
@@ -625,12 +628,12 @@ namespace PhysiXEngine
             {
                 // We've got an edge-edge contact. Find out which axes
                 best -= 6;
-                UInt32 oneAxisIndex = (UInt32)best / 3;
-                UInt32 twoAxisIndex = (UInt32)best % 3;
+                int oneAxisIndex = best / 3;
+                int twoAxisIndex = best % 3;
                 Vector3 oneAxis = one.GetAxis((int)oneAxisIndex);
                 Vector3 twoAxis = two.GetAxis((int)twoAxisIndex);
                 Vector3 axis = Vector3.Cross(oneAxis, twoAxis);
-                axis.Normalize();
+                if (axis.Length() != 0 ) axis.Normalize();
 
                 // The axis should point from box one to box two.
                 if (Vector3.Dot(axis, toCentre) > 0) 
@@ -675,23 +678,24 @@ namespace PhysiXEngine
                         if (i == 2) ptOnTwoEdge.Z *= -1;
                     }
 
-                    // Move them into world coordinates (they are already oriented
-                    // correctly, since they have been derived from the axes).
-                    ptOnOneEdge = Vector3.Transform(ptOnOneEdge, one.TransformMatrix);
-                    ptOnTwoEdge = Vector3.Transform(ptOnTwoEdge, two.TransformMatrix);
-
-                    // So we have a point and a direction for the colliding edges.
-                    // We need to find out point of closes approach of the two 
-                    // line-segments.
-
-                    if (oneAxisIndex == 0) oneVal = one.HalfSize.X;
-                    if (oneAxisIndex == 1) oneVal = one.HalfSize.Y;
-                    if (oneAxisIndex >= 2) oneVal = one.HalfSize.Z;
-
-                    if (twoAxisIndex == 0) twoVal = two.HalfSize.X;
-                    if (twoAxisIndex == 1) twoVal = two.HalfSize.Y;
-                    if (twoAxisIndex >= 2) twoVal = two.HalfSize.Z;
                 }
+
+                // Move them into world coordinates (they are already oriented
+                // correctly, since they have been derived from the axes).
+                ptOnOneEdge = Vector3.Transform(ptOnOneEdge, one.TransformMatrix);
+                ptOnTwoEdge = Vector3.Transform(ptOnTwoEdge, two.TransformMatrix);
+
+                // So we have a point and a direction for the colliding edges.
+                // We need to find out point of closes approach of the two 
+                // line-segments.
+
+                if (oneAxisIndex == 0) oneVal = one.HalfSize.X;
+                if (oneAxisIndex == 1) oneVal = one.HalfSize.Y;
+                if (oneAxisIndex >= 2) oneVal = one.HalfSize.Z;
+
+                if (twoAxisIndex == 0) twoVal = two.HalfSize.X;
+                if (twoAxisIndex == 1) twoVal = two.HalfSize.Y;
+                if (twoAxisIndex >= 2) twoVal = two.HalfSize.Z;
 
                 Vector3 vertex = contactPoint(ptOnOneEdge, oneAxis, oneVal,
                         ptOnTwoEdge, twoAxis, twoVal, bestSingleAxis > 2);
