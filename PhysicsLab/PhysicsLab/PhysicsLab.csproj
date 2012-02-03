@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
+    <Compile Include="BasicLab.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Crate.cs" />
     <Compile Include="Panel.cs" />

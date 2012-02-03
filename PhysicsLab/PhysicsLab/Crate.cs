@@ -16,7 +16,9 @@ namespace PhysicsLab
 {
     public class Crate : Box
     {
-        public Model model {private set; get; }
+        public Model model { set; get; }
+        public Texture2D Texture { get; set; }
+
         private Vector3 modelSize;
         public Crate(Vector3 halfSize)
             : base(halfSize)
@@ -41,9 +43,13 @@ namespace PhysicsLab
             model.CopyAbsoluteBoneTransformsTo(transforms);
             foreach (ModelMesh mesh in model.Meshes)
             {
-                
                 foreach (BasicEffect be in mesh.Effects)
                 {
+                    if (Texture != null)
+                    {
+                        be.Texture = this.Texture;
+                        be.TextureEnabled = true;
+                    }
                     be.EnableDefaultLighting();
                     be.World = mesh.ParentBone.Transform *  Matrix.CreateScale(HalfSize/5f) * TransformMatrix;
                     be.View = camera.view;
