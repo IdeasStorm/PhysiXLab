@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace PhysiXEngine
 {
-    public class Spring : Constaint
+    public class Spring : Constraint
     {
         /**
          * The point of connection of the spring to the other object,

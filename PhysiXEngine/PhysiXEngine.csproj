@@ -51,7 +51,7 @@
     <Compile Include="ContactData.cs" />
     <Compile Include="Helpers\BVHNode.cs" />
     <Compile Include="Collidable.cs" />
-    <Compile Include="Constaint.cs" />
+    <Compile Include="Constraint.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Field.cs" />
