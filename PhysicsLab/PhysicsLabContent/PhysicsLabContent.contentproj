@@ -84,7 +84,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Texture\texBall.jpg">
+    <Compile Include="Textures\texBall.jpg">
       <Name>texBall</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
