@@ -20,8 +20,15 @@ namespace PhysicsLab
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        bool spaceClicked = false;
+        MouseState oldMouseState = new MouseState();
+        SpriteFont Font;
+
         public Camera camera { get; protected set; }
+        Vector3 previousCameraPosition = Vector3.Zero;
         public BasicLab basicLab { get; set; }
+        private Body prevBody = null;
+        private bool bodySel = false;
 
         public Lab()
         {
@@ -44,6 +51,8 @@ namespace PhysicsLab
             basicLab = new BasicLab(this);
             Components.Add(basicLab);
 
+            this.IsMouseVisible = true;
+
             base.Initialize();
         }
 
@@ -55,21 +64,25 @@ namespace PhysicsLab
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
+            Font = Content.Load<SpriteFont>(@"GUI\Arial");
+
             Ball ball = new Ball(0.5f);
+            ball.Position = new Vector3(2f, 0f, 0f);
             ball.model = basicLab.BallModel;
             ball.Texture = basicLab.BallTexture;
-            //ball.Mass = 5f;
-            ball.InverseMass = 0;
+            ball.SelectedTexture = basicLab.SelectedBallTexture;
+            ball.Mass = 5f;
+            //ball.InverseMass = 0;
             basicLab.AddBall(ball);
 
             Ball ball1 = new Ball(0.5f);
             ball1.model = basicLab.BallModel;
             ball1.Texture = basicLab.BallTexture;
             ball1.Mass = 1f;
-            ball1.Position = new Vector3(1f, -2f, 0f);
-            //ball1.InverseMass = 0;
+            ball1.Position = new Vector3(0.1f, -2f, 0f);
+            ball1.SelectedTexture = basicLab.SelectedBallTexture;
+            ball1.InverseMass = 0;
             basicLab.AddBall(ball1);
             /*
             Crate crate = new Crate(new Vector3(0.5f, 0.2f, 0.3f));
@@ -79,6 +92,8 @@ namespace PhysicsLab
             basicLab.AddCrate(crate);*/
             basicLab.AddEffect(new Spring(ball, ball1, ball1.Position, 1f, 0.2f, 0.995f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
+
+            
         }
 
         /// <summary>
@@ -102,6 +117,65 @@ namespace PhysicsLab
                 this.Exit();
 
             // TODO: Add your update logic here
+            MouseState mouse = Mouse.GetState();
+            KeyboardState keyboard = Keyboard.GetState();
+
+            Vector2 cursorPosition = new Vector2(mouse.X, mouse.Y);
+            Vector2 previousCursorPosition = new Vector2(oldMouseState.X, oldMouseState.Y);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                spaceClicked = true;
+            if (Keyboard.GetState().IsKeyUp(Keys.Space) && spaceClicked)
+            {
+                spaceClicked = false;
+                basicLab.pause = !basicLab.pause;
+            }
+
+            Body bdy = null;
+            var cursorDelta = (cursorPosition - previousCursorPosition) *  (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var cameraDelta = (camera.cameraPosition - previousCameraPosition) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (!bodySel)
+            {
+                Ray ray = camera.GetMouseRay(cursorPosition, GraphicsDevice.Viewport);
+                bdy = basicLab.CheckIntersect(ray);
+                if (bdy != null)
+                {
+                    if (mouse.LeftButton == ButtonState.Pressed)
+                    {
+                        Vector3 tocentre = camera.cameraPosition - bdy.Position;
+                        float dest = tocentre.Length();
+                        cursorDelta *= dest / 10f;
+                        cameraDelta *= dest / 10f;
+
+                        if (keyboard.IsKeyDown(Keys.LeftControl))
+                        {
+                            bodySel = true;
+                            prevBody = bdy;
+                            ((Ball)bdy).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
+                        }
+                        else
+                        {
+                            ((Ball)bdy).Translate(Vector3.Right, cameraDelta.X + cursorDelta.X);
+                            ((Ball)bdy).Translate(Vector3.Down, cameraDelta.Y + cursorDelta.Y);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Vector3 tocentre = camera.cameraPosition - prevBody.Position;
+                float dest = tocentre.Length();
+                cursorDelta *= dest / 10f;
+                cameraDelta *= dest / 10f;
+
+                ((Ball)prevBody).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
+                ((Ball)prevBody).Selected = true;
+            }
+            if (keyboard.IsKeyUp(Keys.LeftControl)) bodySel = false;
+
+            oldMouseState = mouse;
+            previousCameraPosition = camera.cameraPosition;
 
             base.Update(gameTime);
         }
@@ -115,7 +189,6 @@ namespace PhysicsLab
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
             base.Draw(gameTime);
         }
     }

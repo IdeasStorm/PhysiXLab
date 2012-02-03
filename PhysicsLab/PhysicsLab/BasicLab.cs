@@ -30,10 +30,12 @@ namespace PhysicsLab
 
         #region "Graphics Components"
         public Texture2D BallTexture;
+        public Texture2D SelectedBallTexture;
         public Model BallModel;
         public Texture2D CrateTexture;
         public Model CrateModel;
         public float speed = 1f;
+        public bool pause = true;
         #endregion
 
         public BasicLab(Game game)
@@ -57,18 +59,20 @@ namespace PhysicsLab
             ball.Position = position;
             ball.model = BallModel;
             ball.Texture = BallTexture;
+            ball.SelectedTexture = SelectedBallTexture;
             bodys.Add(ball);
             cg.AddBody(ball);
         }
 
-        public void AddBall(Model model, Texture2D texture, Vector3 position = new Vector3(), 
-            float radius = 0.5f, float mass = 5f)
+        public void AddBall(Model model, Texture2D texture, Texture2D selectedTexture, 
+            Vector3 position = new Vector3(), float radius = 0.5f, float mass = 5f)
         {
             Ball ball = new Ball(radius);
             ball.Mass = mass;
             ball.Position = position;
             ball.model = model;
             ball.Texture = texture;
+            ball.SelectedTexture = selectedTexture;
             bodys.Add(ball);
             cg.AddBody(ball);
         }
@@ -114,6 +118,30 @@ namespace PhysicsLab
             }
         }
 
+        public Body CheckIntersect(Ray ray)
+        {
+            foreach (Body bdy in bodys)
+            {
+                if (bdy as Sphere != null)
+                {
+                    if (((Sphere)bdy).sphere.Intersects(ray) != null)
+                    {
+                        ((Ball)bdy).Selected = true;
+                        return bdy;
+                    }
+                }
+                else if (bdy as Box != null)
+                {
+                    if (((Box)bdy).box.Intersects(ray) != null)
+                    {
+                        //((Crate)bdy).Selected = true;
+                        return bdy;
+                    }
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
         /// to run.  This is where it can query for any required services and load content.
@@ -136,6 +164,7 @@ namespace PhysicsLab
 
             // TODO: use this.Content to load your game content here
             BallTexture = Game.Content.Load<Texture2D>(@"Textures\texBall");
+            SelectedBallTexture = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBall");
             BallModel = Game.Content.Load<Model>(@"Models\ball");
             //CrateTexture = Game.Content.Load<Texture2D>("Texture/texBox");
             CrateModel = Game.Content.Load<Model>(@"Models\box");
@@ -160,15 +189,18 @@ namespace PhysicsLab
             // TODO: Add your update logic here
             float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
             duration *= speed;
-            foreach (Body bdy in bodys)
+            if (!pause)
             {
-                bdy.Update(duration);
+                foreach (Body bdy in bodys)
+                {
+                    bdy.Update(duration);
+                }
+                foreach (PhysiXEngine.Effect ef in effects)
+                {
+                    ef.Update(duration);
+                }
+                cg.Update(duration);
             }
-            foreach (PhysiXEngine.Effect ef in effects)
-            {
-                ef.Update(duration);
-            }
-            cg.Update(duration);
 
             base.Update(gameTime);
         }
