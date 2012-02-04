@@ -117,7 +117,7 @@ namespace PhysiXEngine
             deltaVelocity += one.InverseMass;
 
             // Check if we need to the second body's data
-            if (two != null && two.HasFiniteMass)
+            if (two != null)
             {
                 // Go through the same transformation sequence again
                 Vector3 torquePerUnitImpulse2 = Vector3.Cross(contactData.relativeContactPosition[1], contactData.ContactNormal);
@@ -159,7 +159,7 @@ namespace PhysiXEngine
             deltaVelWorld *= -1;
 
             // Check if we need to add body two's data
-            if (two != null && two.HasFiniteMass)
+            if (two != null)
             {
                 // Set the cross product matrix
                 impulseToTorque.setSkewSymmetric(contactData.relativeContactPosition[1]);
@@ -227,7 +227,7 @@ namespace PhysiXEngine
             // world coordinates.
             Matrix3[] inverseInertiaTensor = new Matrix3[2];
             inverseInertiaTensor[0] = one.InverseInertiaTensorWorld;
-            if (two != null && two.HasFiniteMass)
+            if (two != null)
                 inverseInertiaTensor[1] = two.InverseInertiaTensorWorld;
 
             // We will calculate the impulse for each contact axis
@@ -258,7 +258,7 @@ namespace PhysiXEngine
             one.AddVelocity(velocityChange[0]);
             one.Rotation += rotationChange[0];
 
-            if (two != null && two.HasFiniteMass)
+            if (two != null)
             {
                 // Work out body one's linear and angular changes
                 Vector3 impulsiveTorqueTwo = Vector3.Cross(impulse,contactData.relativeContactPosition[1]);
@@ -345,18 +345,17 @@ namespace PhysiXEngine
         /// bodies may interpenetrate visually. A good starting point is 
         /// the default of0.01.
         /// </summary>
-        float positionEpsilon = 0.01f;
+        float positionEpsilon = 0.001f;
 
 
         void resolvePenetration(float duration)
         {
             int i = 0, index;
-            Vector3[] velocityChange = new Vector3[2]
-                    , rotationChange = new Vector3[2];
+            Vector3[] linearChange = new Vector3[2]
+                    , angularChange = new Vector3[2];
             // the needed ammount to ressolve penetration
-            float[] rotationAmount = new float[2];
             float max;
-            Vector3 cp;
+            Vector3 deltaPosition;
 
             // iteratively resolve interpenetration in order of severity.
             positionIterationsUsed = 0;
@@ -384,11 +383,24 @@ namespace PhysiXEngine
                 //}
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
+                contactDataList[index].applyPositionChange(linearChange, angularChange, max);                
+                foreach (Contact contact in contactDataList)
+                {
+                    for (int b = 0; b < 2; b++)
+                    {
+                        if (contact.body[b] == null) continue;
+                        for (int d = 0; d < 2; d++)
+                        {
+                            if (contact.body[b] == contactDataList[index].body[d])
+                            {
+                                deltaPosition = linearChange[d] 
+                                    + angularChange[d] + Vector3.Cross(angularChange[d],contact.relativeContactPosition[b]);
 
-                // Resolve the penetration.
-                //contactDataList[index].InitializeAtMoment(duration);
-
-                contactDataList[index].FixPenetration();
+                                contact.Penetration += Vector3.Dot(deltaPosition, contact.ContactNormal) * ((b!=0) ? 1 : -1);
+                            }
+                        }
+                    }
+                }
                 positionIterationsUsed++;
             }
         }
