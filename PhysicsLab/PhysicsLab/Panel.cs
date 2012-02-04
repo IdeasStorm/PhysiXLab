@@ -90,6 +90,13 @@ namespace PhysicsLab
             Show = false;
         }
 
+        public void NewForm()
+        {
+            Frm = new Form("MyForm", "",
+                new Rectangle((int)Position.X, (int)Position.Y, Width, Height),
+                PanelTexture, Font, Color.Black);
+        }
+
         public void AddButton(String buttonName, String buttonText, String panelName,
             Vector2 position, int width, int height)
         {
@@ -231,6 +238,22 @@ namespace PhysicsLab
             _LabelPosition.Y += 25f;
         }
 
+        public void ClearAll()
+        {
+            TextBoxes.Clear();
+            Buttons.Clear();
+            Lables.Clear();
+            Fields.Clear();
+            Panels.Clear();
+            NewForm();
+        }
+
+        public void ResetAll()
+        {
+            _ButtonPosition = new Vector2(15, 15);
+            _LabelPosition = new Vector2(15, 15);
+        }
+
         public void AddOkButton(String panelName = "MainPanel")
         {
             AddButton("OK", "OK", panelName, new Vector2(Width - 160, Height - 30), 70, 20);
@@ -272,9 +295,7 @@ namespace PhysicsLab
             TextBoxTexture = Game.Content.Load<Texture2D>(@"GUI\texTextBox");
             PanelTexture = Game.Content.Load<Texture2D>(@"GUI\texForm");
             Font = Game.Content.Load<SpriteFont>(@"GUI\Arial");
-            Frm = new Form("MyForm", "",
-                new Rectangle((int)Position.X, (int)Position.Y, Width, Height),
-                PanelTexture, Font, Color.Black);
+            NewForm();
         }
 
         /// <summary>
