@@ -55,8 +55,8 @@ namespace PhysiXEngine
                 }
             } 
         }
-        public Vector3 Velocity {  get; protected set; }
-        public Vector3 Acceleration {  get; protected set; }
+        public Vector3 Velocity { get; protected set; }
+        public Vector3 Acceleration { get; protected set; }
         public Vector3 LastFrameAcceleration {  get; protected set; }
         public Vector3 AngularAcceleration {  get; set; }
 
@@ -65,6 +65,15 @@ namespace PhysiXEngine
 
         private Matrix inverseInertiaTensor = new Matrix();
 
+        public void SetVelocity(Vector3 velocity)
+        {
+            Velocity = velocity;
+        }
+
+        public void SetAcceleration(Vector3 acceleration)
+        {
+            Acceleration = acceleration;
+        }
 
         public bool IsAsleep { 
         set

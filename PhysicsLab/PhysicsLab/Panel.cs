@@ -90,6 +90,13 @@ namespace PhysicsLab
             Show = false;
         }
 
+        public void NewForm()
+        {
+            Frm = new Form("MyForm", "",
+                new Rectangle((int)Position.X, (int)Position.Y, Width, Height),
+                PanelTexture, Font, Color.Black);
+        }
+
         public void AddButton(String buttonName, String buttonText, String panelName,
             Vector2 position, int width, int height)
         {
@@ -187,7 +194,7 @@ namespace PhysicsLab
         {
             if (PanelName == "MainPanel")
             {
-                Label myLabel = new Label(labelName, labelName, new Vector2(_LabelPosition.X, _LabelPosition.Y),
+                Label myLabel = new Label(labelName, labelText, new Vector2(_LabelPosition.X, _LabelPosition.Y),
                 Font, Color.Black, 15, 2);
                 Lables.Add(myLabel);
                 Frm.AddControl(myLabel);
@@ -213,22 +220,38 @@ namespace PhysicsLab
                 PanelTexture, Font, Color.White));
         }
 
-        public void AddPosition(Vector3 position)
+        public void AddXYZ(Vector3 vec, String type)
         {
             _LabelPosition.X += 15f;
-            AddLabel("X","X: ",new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
-            AddTextBox("X", String.Format("{0:0.0}", position.X), "MainPanel", 5, 
+            AddLabel("X: ", type + "X", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
+            AddTextBox(type + "X", String.Format("{0:0.0}", vec.X), "MainPanel", 5, 
                 new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
             _LabelPosition.X += 60f;
-            AddLabel("Y", "Y: ", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
-            AddTextBox("Y", String.Format("{0:0.0}", position.Y), "MainPanel", 5,
+            AddLabel("Y: ", type + "Y", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
+            AddTextBox(type + "Y", String.Format("{0:0.0}", vec.Y), "MainPanel", 5,
                 new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
             _LabelPosition.X += 60f;
-            AddLabel("Z", "Z: ", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
-            AddTextBox("Z", String.Format("{0:0.0}", position.Z), "MainPanel", 5,
+            AddLabel("Z: ", type + "Z", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
+            AddTextBox(type + "Z", String.Format("{0:0.0}", vec.Z), "MainPanel", 5,
                 new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
             _LabelPosition.X = 15f;
             _LabelPosition.Y += 25f;
+        }
+
+        public void ClearAll()
+        {
+            TextBoxes.Clear();
+            Buttons.Clear();
+            Lables.Clear();
+            Fields.Clear();
+            Panels.Clear();
+            NewForm();
+        }
+
+        public void ResetAll()
+        {
+            _ButtonPosition = new Vector2(15, 15);
+            _LabelPosition = new Vector2(15, 15);
         }
 
         public void AddOkButton(String panelName = "MainPanel")
@@ -249,6 +272,15 @@ namespace PhysicsLab
             Fields.TryGetValue(fieldName, out value);
             return value;
         }
+
+        public void SetVlaue(String fieldName, float value)
+        {
+            foreach (TextBox tb in TextBoxes)
+            {
+                if (tb.Name == fieldName)
+                    tb.Text = String.Format("{0:0.0}", value);
+            }
+        }
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -263,9 +295,7 @@ namespace PhysicsLab
             TextBoxTexture = Game.Content.Load<Texture2D>(@"GUI\texTextBox");
             PanelTexture = Game.Content.Load<Texture2D>(@"GUI\texForm");
             Font = Game.Content.Load<SpriteFont>(@"GUI\Arial");
-            Frm = new Form("MyForm", "",
-                new Rectangle((int)Position.X, (int)Position.Y, Width, Height),
-                PanelTexture, Font, Color.Black);
+            NewForm();
         }
 
         /// <summary>

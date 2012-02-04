@@ -10,5 +10,7 @@ namespace PhysicsLab
         void Draw(Camera camera);
 
         bool Selected { get; set; }
+
+        bool ShowPanel { get; set; }
     }
 }

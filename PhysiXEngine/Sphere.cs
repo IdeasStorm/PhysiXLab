@@ -27,6 +27,11 @@ namespace PhysiXEngine
             UpdateMatices();
         }
 
+        public void SetRadius(float radius)
+        {
+            this.radius = radius;
+        }
+
         protected override void updateBounding()
         {
             _sphere.Center = this.Position;
