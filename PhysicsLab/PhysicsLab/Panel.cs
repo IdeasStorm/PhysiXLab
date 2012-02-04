@@ -226,14 +226,20 @@ namespace PhysicsLab
             AddLabel("X: ", type + "X", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
             AddTextBox(type + "X", String.Format("{0:0.0}", vec.X), "MainPanel", 5, 
                 new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
+            Fields.Add(type + "X", vec.X);
+            ////////////////////////////////////////////////////////////////////////////////////////////
             _LabelPosition.X += 60f;
             AddLabel("Y: ", type + "Y", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
             AddTextBox(type + "Y", String.Format("{0:0.0}", vec.Y), "MainPanel", 5,
                 new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
+            Fields.Add(type + "Y", vec.Y);
+            ////////////////////////////////////////////////////////////////////////////////////////////
             _LabelPosition.X += 60f;
             AddLabel("Z: ", type + "Z", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
             AddTextBox(type + "Z", String.Format("{0:0.0}", vec.Z), "MainPanel", 5,
                 new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
+            Fields.Add(type + "Z", vec.Z);
+            ////////////////////////////////////////////////////////////////////////////////////////////
             _LabelPosition.X = 15f;
             _LabelPosition.Y += 25f;
         }
@@ -252,6 +258,7 @@ namespace PhysicsLab
         {
             _ButtonPosition = new Vector2(15, 15);
             _LabelPosition = new Vector2(15, 15);
+            _TexBoxPosition = new Vector2(95, 15);
         }
 
         public void AddOkButton(String panelName = "MainPanel")
