@@ -30,6 +30,9 @@ namespace PhysicsLab
         private Body prevBody = null;
         private bool bodySel = false;
 
+        float timeOfGame = 0;
+        float timeToCreate = 100f;
+
         public Lab()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -45,7 +48,7 @@ namespace PhysicsLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, new Vector3(0, 0, 10f),
+            camera = new Camera(this, new Vector3(0, 0, 20f),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             basicLab = new BasicLab(this);
@@ -54,6 +57,45 @@ namespace PhysicsLab
             this.IsMouseVisible = true;
 
             base.Initialize();
+        }
+
+        void CreateRoom()
+        {
+            Crate ground = new Crate(new Vector3(10f, 4f, 10f));
+            ground.Position = new Vector3(0f, -9f, 0f);
+            ground.model = basicLab.CrateModel;
+            ground.Texture = Content.Load<Texture2D>(@"Textures\Ground");
+            ground.SelectedTexture = null;
+            ground.InverseMass = 0;
+            ground.Lock();
+            basicLab.AddToRoom(ground);
+
+            Crate RightWall = new Crate(new Vector3(0.01f, 10f, 10f));
+            RightWall.Position = new Vector3(10.01f, 5.01f, 0f);
+            RightWall.model = basicLab.CrateModel;
+            RightWall.Texture = Content.Load<Texture2D>(@"Textures\Wall");
+            RightWall.SelectedTexture = null;
+            RightWall.InverseMass = 0;
+            RightWall.Lock();
+            basicLab.AddToRoom(RightWall);
+
+            Crate FrontWall = new Crate(new Vector3(10f, 10f, 0.01f));
+            FrontWall.Position = new Vector3(0f, 5.01f, -10.01f);
+            FrontWall.model = basicLab.CrateModel;
+            FrontWall.Texture = Content.Load<Texture2D>(@"Textures\Wall");
+            FrontWall.SelectedTexture = null;
+            FrontWall.InverseMass = 0;
+            FrontWall.Lock();
+            basicLab.AddToRoom(FrontWall);
+
+            Crate LeftWall = new Crate(new Vector3(0.01f, 10f, 10f));
+            LeftWall.Position = new Vector3(-10.01f, 5.01f, 0f);
+            LeftWall.model = basicLab.CrateModel;
+            LeftWall.Texture = Content.Load<Texture2D>(@"Textures\Wall");
+            LeftWall.SelectedTexture = null;
+            LeftWall.InverseMass = 0;
+            LeftWall.Lock();
+            basicLab.AddToRoom(LeftWall);
         }
 
         /// <summary>
@@ -85,6 +127,22 @@ namespace PhysicsLab
             ball1.InverseMass = 0;
             basicLab.AddBall(ball1);
             
+            Ball ball2 = new Ball(0.5f);
+            ball2.model = basicLab.BallModel;
+            ball2.Texture = basicLab.BallTexture;
+            ball2.Mass = 10f;
+            ball2.Position = new Vector3(1f, 1f, 2f);
+            ball2.SelectedTexture = basicLab.SelectedBallTexture;
+            basicLab.AddBall(ball2);
+
+            Ball ball3 = new Ball(0.2f);
+            ball3.model = basicLab.BallModel;
+            ball3.Texture = basicLab.BallTexture;
+            ball3.Mass = 2f;
+            ball3.Position = new Vector3(2f, 1f, 2f);
+            ball3.SelectedTexture = basicLab.SelectedBallTexture;
+            basicLab.AddBall(ball3);
+            
             Crate crate = new Crate(new Vector3(0.5f, 0.2f, 0.3f));
             crate.Mass = 1f;
             crate.model = basicLab.CrateModel;
@@ -93,19 +151,10 @@ namespace PhysicsLab
             crate.Position = new Vector3(1f, -2f, 1f);
             basicLab.AddCrate(crate);
 
-
-            Crate ground = new Crate(new Vector3(10f, 0.01f, 10f));
-            ground.Position = new Vector3(0f, -5f, 0f);
-            ground.model = basicLab.CrateModel;
-            ground.Texture = null;
-            ground.SelectedTexture = null;
-            ground.InverseMass = 0;
-            basicLab.AddCrate(ground);
+            CreateRoom();
 
             basicLab.AddEffect(new Spring(ball, ball1, new Vector3(1, 1, 1), 10f, 2f, 0.995f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
-
-            
         }
 
         /// <summary>
@@ -152,6 +201,7 @@ namespace PhysicsLab
                         float dest = tocentre.Length();
                         cursorDelta *= dest / 10f;
                         cameraDelta *= dest / 10f;
+                        ((Drawable)bdy).Selected = true;
 
                         if (keyboard.IsKeyDown(Keys.LeftControl))
                         {
@@ -191,6 +241,34 @@ namespace PhysicsLab
                 basicLab.pause = !basicLab.pause;
             }
         }
+
+
+        void Crate(Vector2 cursorPosition, KeyboardState keyboard, float time)
+        {
+            if (keyboard.IsKeyDown(Keys.B))
+            {
+                timeOfGame += time;
+                if (timeOfGame > timeToCreate)
+                {
+                    timeOfGame = 0;
+                    Vector3 point = new Vector3(cursorPosition, 0.9f);
+                    point = GraphicsDevice.Viewport.Unproject(point, camera.projection, camera.view, Matrix.Identity);
+                    basicLab.CreateBall(point);
+                }
+            }
+            if (keyboard.IsKeyDown(Keys.C))
+            {
+                timeOfGame += time;
+                if (timeOfGame > timeToCreate)
+                {
+                    timeOfGame = 0;
+                    Vector3 point = new Vector3(cursorPosition, 0.9f);
+                    point = GraphicsDevice.Viewport.Unproject(point, camera.projection, camera.view, Matrix.Identity);
+                    basicLab.CreateCrate(point);
+                }
+            }
+        }
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -210,7 +288,7 @@ namespace PhysicsLab
             Vector2 previousCursorPosition = new Vector2(oldMouseState.X, oldMouseState.Y);
 
             PauseAndPlay(keyboard);
-
+            Crate(cursorPosition, keyboard, gameTime.ElapsedGameTime.Milliseconds);
             SelectedAndMoving(mouse, keyboard, cursorPosition, previousCursorPosition, 
                 (float)gameTime.ElapsedGameTime.TotalSeconds);
 
