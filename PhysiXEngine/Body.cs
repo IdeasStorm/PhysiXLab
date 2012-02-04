@@ -297,6 +297,10 @@ namespace PhysiXEngine
             UpdateMatices();
         }
 
+        /// <summary>
+        /// Make this Body immovable 
+        /// warning : if you want to re-Enable Movement, you should Set Mass and inertia
+        /// </summary>
         public void Lock()
         {
             inverseInertiaTensor = new Matrix();
