@@ -281,15 +281,15 @@ namespace PhysiXEngine
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
+            if (contactDataList.Count == 0) return;
             this.contactDataList.RemoveAll((Contact contact) => { 
-                return !contact.IsColliding(); 
+                return !contact.Check(); 
             });
 
 
             // initializing contacts
             foreach (Contact contactData in contactDataList)
             {
-                contactData.Check();
                 contactData.InitializeAtMoment(duration); 
             }
 
@@ -307,13 +307,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations = 4;
+        uint velocityIterations = 8;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 4;
+        uint positionIterations = 8;
 
         //TODO modify above values
 
@@ -336,7 +336,7 @@ namespace PhysiXEngine
         /// interpenetrate visually. A good starting point is the default 
         /// of 0.01.
         /// </summary>
-        float velocityEpsilon = 0.01f;
+        float velocityEpsilon = 0.001f;
 
         /// <summary>
         /// To avoid instability penetrations 
@@ -491,7 +491,7 @@ namespace PhysiXEngine
                         }
                     }
                 }
-                contactDataList.RemoveAt(index);
+                contactDataList[index].desiredDeltaVelocity = 0;
                 velocityIterationsUsed++;
     }
         }
