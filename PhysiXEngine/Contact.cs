@@ -573,8 +573,7 @@ namespace PhysiXEngine
                 Vector3 b = intersectedCorners1[2] - intersectedCorners1[0];
                 Vector3 axis = Vector3.Cross(a,b);
                 axis.Normalize();
-                Vector3 cp = Vector3.Lerp(intersectedCorners1[1],intersectedCorners1[2],0.5f);
-                Penetration = 0.1f;
+                Vector3 cp = Vector3.Lerp(intersectedCorners1[1],intersectedCorners1[2],0.5f);                
                 ContactPoint = cp;
                 ContactNormal = axis;
                 return true;
@@ -586,8 +585,7 @@ namespace PhysiXEngine
         {
             Box one = (Box)body[0];
             Box two = (Box)body[1];
-            if (CheckBoxBoxQuick(one, two) || CheckBoxBoxQuick(two, one))
-                return 1;
+           
             //Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
             Vector3 toCentre = two.Position - one.Position;
             // We start assuming there is no contact
@@ -633,7 +631,6 @@ namespace PhysiXEngine
             {
                 // We've got a vertex of box two on a face of box one.
                 fillPointFaceBoxBox(one, two, toCentre, best, pen);
-                return 1;
             }
             else if (best < 6)
             {
@@ -642,7 +639,6 @@ namespace PhysiXEngine
                 // one and two (and therefore also the vector between their 
                 // centres).
                 fillPointFaceBoxBox(two, one, toCentre * -1.0f, best - 3, pen);
-                return 1;
             }
             else
             {
@@ -725,10 +721,10 @@ namespace PhysiXEngine
                 _Penetration = pen;
                 _ContactNormal = axis;
                 _ContactPoint = vertex;
-
-                return 1;
             }
-            //return 0;
+            if (CheckBoxBoxQuick(one, two) || CheckBoxBoxQuick(two, one))
+                return 1;
+            return 1;
         }
         #endregion
 
@@ -803,13 +799,12 @@ namespace PhysiXEngine
             }
         }
 
-        internal void applyPositionChange(Vector3[] velocityChange, Vector3[] rotationDirection, float[] rotationAmount,float Penetration)
+        internal void applyPositionChange(Vector3[] linearChange, Vector3[] angularChange,float Penetration)
             //unused penetration
         {
-            float angularLimit = 0.25f;//0.1f;
+            float angularLimit = 0.01f;//0.1f;
             float[] angularMove = new float[2],
                     linearMove = new float[2];
-            int b;
 
             float totalInertia = 0;
             float[] linearInertia = new float[2];
@@ -819,7 +814,7 @@ namespace PhysiXEngine
             // We need to work out the inertia of each object in the direction
             // of the contact normal, due to angular inertia only. 
             for (int i = 0; i < 2; i++) {
-                if (body[i] != null && body[i].HasFiniteMass)
+                if (body[i] != null)
                 {
                     Matrix3 inverseInertiaTensor = body[i].InverseInertiaTensorWorld;
 
@@ -832,86 +827,75 @@ namespace PhysiXEngine
 
                     // The linear component is simply the inverse mass
                     linearInertia[i] = body[i].InverseMass;
-
                     // Keep track of the total inertia from all components
                     totalInertia += linearInertia[i] + angularInertia[i];
                 }
             }
-        ///<AngularInertia
 
-            float[] inverseMass = new float[2];
+            
 
-            totalInertia = angularInertia[0] + body[0].InverseMass;
-
-            if(body[1] != null)
+            for (int i = 0; i < 2; i++)
             {
-                inverseMass[1] = angularInertia[1] + body[1].InverseMass ;
-                totalInertia+=inverseMass[1];
-
-                angularMove[1] = -Penetration*angularInertia[1]/totalInertia;
-                linearMove[1] = -Penetration*body[1].InverseMass /totalInertia;
-
-                // To avoid angular projections that are too great (when mass is large
-                // but inertia tensor is small) limit the angular move.
-                Vector3 projection = relativeContactPosition[1] + _ContactNormal * Vector3.Dot(-relativeContactPosition[1],  _ContactNormal);
-                
-                float max = angularLimit*relativeContactPosition[0].Length();
-
-                if(Math.Abs(angularMove[1]) > max)
+                if (body[i] != null)
                 {
-                    float pp=angularMove[1]+linearMove[1];
-                    angularMove[1]=angularMove[1]>0?max:-max;
-                    linearMove[1]=pp-angularMove[1];
+                    float sign = (i == 0) ? 1 : -1;
+                    angularMove[i] = sign * Penetration * (angularInertia[i] / totalInertia);
+                    linearMove[i] = sign * Penetration * (linearInertia[i] / totalInertia);
+
+                    // To avoid angular projections that are too great (when mass is large
+                    // but inertia tensor is small) limit the angular move.
+                    Vector3 projection = relativeContactPosition[i] 
+                        + ContactNormal * Vector3.Dot(-relativeContactPosition[i],ContactNormal);
+                    
+                    // Use the small angle approximation for the sine of the angle (i.e.
+                    // the magnitude would be sine(angularLimit) * projection.magnitude
+                    // but we approximate sine(angularLimit) to angularLimit).
+                    float maxMagnitude = angularLimit * projection.Length();
+
+                    if (angularMove[i] < -maxMagnitude)
+                    {
+                        float totalMove = angularMove[i] + linearMove[i];
+                        angularMove[i] = -maxMagnitude;
+                        linearMove[i] = totalMove - angularMove[i];
+                    }
+                    else if (angularMove[i] > maxMagnitude)
+                    {
+                        float totalMove = angularMove[i] + linearMove[i];
+                        angularMove[i] = maxMagnitude;
+                        linearMove[i] = totalMove - angularMove[i];
+                    }
+
+                    // We have the linear amount of movement required by turning
+                    // the rigid body (in angularMove[i]). We now need to
+                    // calculate the desired rotation to achieve that.
+                    if (angularMove[i] == 0)
+                    {
+                        // Easy case - no angular movement means no rotation.
+                        angularChange[i] = Vector3.Zero;
+                    }
+                    else
+                    {
+                        // Work out the direction we'd like to rotate in.
+                        Vector3 targetAngularDirection = Vector3.Cross(relativeContactPosition[i], ContactNormal);
+
+                        Matrix3 inverseInertiaTensor = body[i].InverseInertiaTensorWorld;
+
+                        // Work out the direction we'd need to rotate to achieve that
+                        angularChange[i] =
+                            inverseInertiaTensor.transform(targetAngularDirection) *
+                            (angularMove[i] / angularInertia[i]);
+                    }
+
+                    //calculate linear change
+                    linearChange[i] = ContactNormal * linearMove[i];
+
+                    // applying changes
+                    body[i].Position += linearChange[i];
+                    body[i].AddScaledOrientation(angularChange[i],1f);
+
                 }
             }
-
-            angularMove[0] = Penetration*angularInertia[0]/totalInertia;
-            linearMove[0] = Penetration*body[0].InverseMass/totalInertia;
-
-            // To avoid angular projections that are too great (when mass is large
-            // but inertia tensor is small) limit the angular move.
-            //Vector3 projection = relativeContactPosition[0];
-            //projection.addScaledVector(contactNormal, 
-            //    -relativeContactPosition[0].scalarProduct(contactNormal));
-            float max2 = angularLimit*relativeContactPosition[0].Length();
-
-            if(Math.Abs(angularMove[0]) > max2)
-            {
-                float pp=angularMove[0]+linearMove[0];
-                angularMove[0]=angularMove[0]>0?max2:-max2;
-                linearMove[0]=pp-angularMove[0];
-            }
-
-            for(b=0;b<2;b++) if(body[b] != null)
-            {
-                Vector3 t;
-                if(angularMove[b]!=(0.0f))
-                {
-                    t = Vector3.Cross(relativeContactPosition[b],_ContactNormal);
-
-                    Matrix3 inverseInertiaTensor = body[b].InverseInertiaTensorWorld;
-                    rotationDirection[b] = inverseInertiaTensor.transform(t);
-
-                    rotationAmount[b] = angularMove[b] / angularInertia[b];
-
-                    //assert(rotationAmount[b]!=((real)0.0));
-                }
-                else
-                {
-                    rotationDirection[b] = Vector3.Zero;
-                    rotationAmount[b]=1;
-                }
-
-                velocityChange[b] = _ContactNormal;
-                velocityChange[b] *= linearMove[b]/rotationAmount[b];
-
-                body[b].Position = body[b].Position + _ContactNormal * linearMove[b];
-
-                body[b].AddScaledOrientation(rotationDirection[b] ,rotationAmount[b]);
-                //body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b], MathHelper.Pi)
-                //   * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
-
-            }
+            
         }
         #endregion
 
@@ -921,7 +905,7 @@ namespace PhysiXEngine
         /// based on penetration sign (+/-)
         /// <author>MhdSyrwan</author>
         /// </summary>
-        public void FixPenetration()
+        public void FixPenetration(float duration)
         {
             // select the faster body
             //ReOrder();
@@ -930,27 +914,18 @@ namespace PhysiXEngine
                 chosen = body[1];
             else
                 chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
-            // A = collision moment
-            Vector3 PositionA = chosen.Position;
-            Quaternion OrientationA = chosen.Orientation;
+
             // revert to the moment before collision moment
             chosen.RevertChanges();
-            //this.Check();
-            //return;
-            // B = the moment before collision moment
-            Vector3 PositionB = chosen.Position;
-            Quaternion OrientationB = chosen.Orientation;
             // starting binary search loop
             while ( !IsColliding() )
             {
-                if ((PositionA - PositionB).Length() <= 0.001) return;
-                chosen.Position = Vector3.Lerp(PositionB, PositionA, 0.5f);
-                chosen.Orientation = OrientationB.AddScaledVector(chosen.Rotation, 0.5f);
-                PositionB = chosen.Position;
-                OrientationB = chosen.Orientation;
+                //if ((PositionA - PositionB).Length() <= 0.00001) return;
+                chosen.Position += chosen.Velocity * duration * 0.01f;
+                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.01f);
                 
             }
-            this.Check();
+            this.Penetration = 0;
             
         }
 
