@@ -49,6 +49,10 @@ namespace PhysiXEngine
                     position = value;
                     onSituationChanged();
                 }
+                else
+                {
+                    throw new Exception("invalid value");
+                }
             } 
         }
         public Vector3 Velocity {  get; protected set; }
@@ -123,6 +127,10 @@ namespace PhysiXEngine
                     _oldOrientation = orientation;
                     orientation = value;
                     onSituationChanged();
+                }
+                else
+                {
+                    throw new Exception("invalid value");
                 }
             }
             get { return orientation; }
@@ -225,6 +233,7 @@ namespace PhysiXEngine
         /// <param name="velocity"></param>
         public void AddVelocity(Vector3 velocity)
         {
+            if (velocity.HasNan()) throw new Exception("invalid input");
             this.Velocity += velocity;
         }
 
