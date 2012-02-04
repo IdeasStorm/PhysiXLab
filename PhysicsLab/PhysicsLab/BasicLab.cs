@@ -166,6 +166,8 @@ namespace PhysicsLab
             ball.model = BallModel;
             ball.Texture = BallTexture;
             ball.SelectedTexture = SelectedBallTexture;
+            ball.SelectedTexture_Panel = SelectedBallTexture2;
+            ball.ShowPanel = true;
             AddBall(ball);
             PhysiXEngine.Effect e = effects.Last<PhysiXEngine.Effect>();
             if (e as Gravity != null)
