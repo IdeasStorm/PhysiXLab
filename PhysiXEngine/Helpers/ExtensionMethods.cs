@@ -27,6 +27,15 @@ namespace PhysiXEngine.Helpers
             }
         }
 
+        public static bool HasNan(this Vector3 v)
+        {
+            return (float.IsNaN(v.X)) || (float.IsNaN(v.Y)) || (float.IsNaN(v.Z));
+        }
+
+        public static bool HasNan(this Quaternion q)
+        {
+            return (float.IsNaN(q.X)) || (float.IsNaN(q.Y)) || (float.IsNaN(q.Z)) || (float.IsNaN(q.W));
+        }
         public static void normalized(ref Quaternion q)
         {
             float d = q.W * q.W + q.X * q.X + q.Y * q.Y + q.Z * q.Z;
