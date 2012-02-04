@@ -161,7 +161,11 @@ namespace PhysiXEngine
 
             Velocity += LastFrameAcceleration * duration;
             Rotation += AngularAcceleration * duration;
-
+            // debugging code
+            //if (float.IsNaN(position.X) || float.IsNaN(orientation.X))
+            //{
+            //    int a = 2;
+            //}
             // saving old situation
             _oldPosition = position;
             _oldOrientation= orientation;
@@ -178,7 +182,7 @@ namespace PhysiXEngine
 
         public void AddScaledOrientation(Vector3 rotation,float scale=1)
         {
-            //orientation += Quaternion.CreateFromYawPitchRoll(rotation.Y * scale, rotation.X * scale, rotation.Z * scale);
+            //orientation *= Quaternion.CreateFromYawPitchRoll(rotation.Y * scale, rotation.X * scale, rotation.Z * scale);
             orientation = orientation.AddScaledVector(rotation, scale);
             onSituationChanged();
         }
@@ -192,7 +196,6 @@ namespace PhysiXEngine
             
             // Calculate the inertiaTensor in world space.
             InverseInertiaTensorWorld = TransformMatrix * InverseInertiaTensor;
-            //TODO ho is first ?            
         }
 
         private void clearAccumulators()
@@ -219,7 +222,11 @@ namespace PhysiXEngine
             this.Velocity += velocity;
         }
 
-
+        /// <summary>
+        /// Converts from local coordinates to World coordinates
+        /// </summary>
+        /// <param name="point">a vector representing a point in body space</param>
+        /// <returns></returns>
         public Vector3 GetPointInWorldSpace(Vector3 point)
         {
             return Vector3.Transform(point, TransformMatrix);            
