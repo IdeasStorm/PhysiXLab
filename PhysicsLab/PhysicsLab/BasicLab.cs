@@ -24,6 +24,7 @@ namespace PhysicsLab
 
         #region "Physics Components"
         private List<Body> bodys = new List<Body>();
+        private List<Body> room = new List<Body>();
         private List<PhysiXEngine.Effect> effects = new List<PhysiXEngine.Effect>();
         private ContactGenerator cg = new ContactGenerator();
         #endregion
@@ -109,6 +110,18 @@ namespace PhysicsLab
             cg.AddBody(crate);
         }
 
+        public void AddToRoom(Crate crate)
+        {
+            room.Add(crate);
+            cg.AddBody(crate);
+        }
+
+        public void AddToRoom(Ball ball)
+        {
+            room.Add(ball);
+            cg.AddBody(ball);
+        }
+
         public void AddEffect(PhysiXEngine.Effect effect)
         {
             effects.Add(effect);
@@ -141,6 +154,38 @@ namespace PhysicsLab
                 }
             }
             return null;
+        }
+
+        public void CreateBall(Vector3 position)
+        {
+            Ball ball = new Ball(0.5f);
+            ball.Position = position;
+            ball.Mass = 1f;
+            ball.model = BallModel;
+            ball.Texture = BallTexture;
+            ball.SelectedTexture = SelectedBallTexture;
+            AddBall(ball);
+            PhysiXEngine.Effect e = effects.Last<PhysiXEngine.Effect>();
+            if (e as Gravity != null)
+                ((Gravity)e).AddBody(ball);
+            else
+                throw new Exception();
+        }
+
+        public void CreateCrate(Vector3 position)
+        {
+            Crate crate = new Crate(new Vector3(0.5f, 0.5f, 0.5f));
+            crate.Position = position;
+            crate.Mass = 1f;
+            crate.model = CrateModel;
+            crate.Texture = CrateTexture;
+            crate.SelectedTexture = SelectedCrateTexture;
+            AddCrate(crate);
+            PhysiXEngine.Effect e = effects.Last<PhysiXEngine.Effect>();
+            if (e as Gravity != null)
+                ((Gravity)e).AddBody(crate);
+            else
+                throw new Exception();
         }
 
         /// <summary>
@@ -198,6 +243,10 @@ namespace PhysicsLab
                 {
                     bdy.Update(duration);
                 }
+                foreach (Body bdy in room)
+                {
+                    bdy.Update(duration);
+                }
                 foreach (PhysiXEngine.Effect ef in effects)
                 {
                     ef.Update(duration);
@@ -218,6 +267,10 @@ namespace PhysicsLab
 
             // TODO: Add your drawing code here
             foreach (Body bdy in bodys)
+            {
+                ((Drawable)bdy).Draw(((Lab)Game).camera);
+            }
+            foreach (Body bdy in room)
             {
                 ((Drawable)bdy).Draw(((Lab)Game).camera);
             }
