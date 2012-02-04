@@ -296,5 +296,11 @@ namespace PhysiXEngine
         {
             UpdateMatices();
         }
+
+        public void Lock()
+        {
+            inverseInertiaTensor = new Matrix();
+            InverseMass = 0;
+        }
     }
 }
