@@ -38,7 +38,7 @@ namespace Test
         {
             fixedCrate = new Crate(new Vector3(0.5f, 0.5f, 0.5f));
             fixedCrate.Position = new Vector3(0, 0, 0);
-            //fixedCrate.AddScaledOrientation(new Vector3(0,0,20));
+            fixedCrate.AddScaledOrientation(new Vector3(0,0,20));
 
             crate = new Crate(new Vector3(0.5f, 0.5f, 0.5f));
             crate.Position = new Vector3(0, 4, 0);
@@ -53,8 +53,8 @@ namespace Test
             Components.Add(camera);
             g = new Gravity(new Vector3(0f, -10f, 0f));
 
-            fixedCrate.InverseMass = 0;
-            fixedCrate.InverseInertiaTensor = new Matrix();
+            //fixedCrate.InverseMass = 0;
+            //fixedCrate.InverseInertiaTensor = new Matrix();
 
             base.Initialize();
         }
