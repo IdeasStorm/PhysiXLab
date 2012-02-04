@@ -32,9 +32,11 @@ namespace PhysicsLab
         #region "Graphics Components"
         public Texture2D BallTexture;
         public Texture2D SelectedBallTexture;
+        public Texture2D SelectedBallTexture2;
         public Model BallModel;
         public Texture2D CrateTexture;
         public Texture2D SelectedCrateTexture;
+        public Texture2D SelectedCrateTexture2;
         public Model CrateModel;
         public float speed = 1f;
         public bool pause = true;
@@ -213,10 +215,13 @@ namespace PhysicsLab
             BallModel = Game.Content.Load<Model>(@"Models\ball");
             BallTexture = Game.Content.Load<Texture2D>(@"Textures\texBall");
             SelectedBallTexture = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBall");
+            SelectedBallTexture2 = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBall2");
+
 
             CrateModel = Game.Content.Load<Model>(@"Models\box");
             CrateTexture = Game.Content.Load<Texture2D>(@"Textures\texBox");
             SelectedCrateTexture = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBox");
+            SelectedCrateTexture2 = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBox2");
         }
 
         /// <summary>
