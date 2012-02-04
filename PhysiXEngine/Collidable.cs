@@ -22,7 +22,7 @@ namespace PhysiXEngine
         /// <param name="other"></param>
         /// <param name="contact">a contact to fill</param>
         /// <returns></returns>
-        public abstract void generateContacts(Collidable other,Contact contact);
+        public abstract bool generateContacts(Collidable other,Contact contact);
 
         /// <summary>
         /// Checks whether the body collides with another collidable or not
