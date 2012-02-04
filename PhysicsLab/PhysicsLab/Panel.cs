@@ -37,8 +37,8 @@ namespace PhysicsLab
         }
 
         protected Vector2 Position;
-        protected int Width;
-        protected int Height;
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         private Form Frm;
 
@@ -59,6 +59,7 @@ namespace PhysicsLab
         public Vector2 TexBoxPosition { get { return _TexBoxPosition; } set { _TexBoxPosition = value; } }
 
         public bool Show = false;
+        public bool Applied = false;
 
         private Dictionary<String, float> Fields;
         private Dictionary<String, Form> Panels;
@@ -72,6 +73,17 @@ namespace PhysicsLab
         {
 
             base.Initialize();
+        }
+
+        void ApplyButtonClicked(Control sender)
+        {
+            foreach (TextBox tb in TextBoxes)
+            {
+                float val;
+                float.TryParse(tb.Text, out val);
+                Fields[tb.Name] = val;
+            }
+            Applied = true;
         }
 
         void OkButtonClicked(Control sender)
@@ -88,6 +100,11 @@ namespace PhysicsLab
         void CancelButtonClicked(Control sender)
         {
             Show = false;
+        }
+
+        void Changed(Control sender)
+        {
+            Applied = false;
         }
 
         public void NewForm()
@@ -152,6 +169,7 @@ namespace PhysicsLab
                     myFrm.AddControl(myTextBox);
                 }
             }
+            TextBoxes.Last<TextBox>().onChange += new EHandler(Changed);
         }
 
         public void AddTextBox(String textBoxName = "txt", String value = "", String PanelName = "MainPanel",
@@ -164,11 +182,13 @@ namespace PhysicsLab
                 TextBoxTexture, Font, Color.Black);
                 TextBoxes.Add(myText);
                 Frm.AddControl(myText);
+                TextBoxes.Last<TextBox>().onChange += new EHandler(Changed);
             }
             else
             {
                 AddTextBox(textBoxName, value, PanelName, maxLength, _TexBoxPosition, width, height);
             }
+            
             _TexBoxPosition.Y += 25;
         }
 
@@ -261,9 +281,15 @@ namespace PhysicsLab
             _TexBoxPosition = new Vector2(95, 15);
         }
 
+        public void AddApplyButton(String panelName = "MainPanel")
+        {
+            AddButton("Apply", "Apply", "MainPanel", new Vector2(Width - 80 * 3, Height - 30), 70, 20);
+            Buttons.Last<Button>().onClick += new EHandler(ApplyButtonClicked);
+        }
+
         public void AddOkButton(String panelName = "MainPanel")
         {
-            AddButton("OK", "OK", panelName, new Vector2(Width - 160, Height - 30), 70, 20);
+            AddButton("OK", "OK", panelName, new Vector2(Width - 80 * 2, Height - 30), 70, 20);
             Buttons.Last<Button>().onClick += new EHandler(OkButtonClicked);
         }
 
