@@ -20,6 +20,7 @@ namespace PhysicsLab
         public Texture2D Texture { get; set; }
         public Texture2D SelectedTexture { get; set; }
         public bool Selected { get; set; }
+        public bool ShowPanel { get; set; }
 
         private Vector3 modelSize;
         public Crate(Vector3 halfSize)
