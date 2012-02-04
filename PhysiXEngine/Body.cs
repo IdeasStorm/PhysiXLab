@@ -42,10 +42,13 @@ namespace PhysiXEngine
         private Vector3 position;
         public Vector3 Position { 
             get { return position; } 
-            set { 
-                _oldPosition = position; 
-                position = value;
-                onSituationChanged();
+            set {
+                if (!value.HasNan())
+                {
+                    _oldPosition = position;
+                    position = value;
+                    onSituationChanged();
+                }
             } 
         }
         public Vector3 Velocity {  get; protected set; }
@@ -114,10 +117,13 @@ namespace PhysiXEngine
         /// </summary>
         public Quaternion Orientation {
             set
-            {                    
-                _oldOrientation = orientation;
-                orientation = value;
-                onSituationChanged();
+            {
+                if (!value.HasNan())
+                {
+                    _oldOrientation = orientation;
+                    orientation = value;
+                    onSituationChanged();
+                }
             }
             get { return orientation; }
         }
