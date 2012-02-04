@@ -117,7 +117,7 @@ namespace PhysiXEngine
             deltaVelocity += one.InverseMass;
 
             // Check if we need to the second body's data
-            if (two != null)
+            if (two != null && two.HasFiniteMass)
             {
                 // Go through the same transformation sequence again
                 Vector3 torquePerUnitImpulse2 = Vector3.Cross(contactData.relativeContactPosition[1], contactData.ContactNormal);
@@ -159,7 +159,7 @@ namespace PhysiXEngine
             deltaVelWorld *= -1;
 
             // Check if we need to add body two's data
-            if (two != null)
+            if (two != null && two.HasFiniteMass)
             {
                 // Set the cross product matrix
                 impulseToTorque.setSkewSymmetric(contactData.relativeContactPosition[1]);
@@ -227,7 +227,7 @@ namespace PhysiXEngine
             // world coordinates.
             Matrix3[] inverseInertiaTensor = new Matrix3[2];
             inverseInertiaTensor[0] = one.InverseInertiaTensorWorld;
-            if (two != null)
+            if (two != null && two.HasFiniteMass)
                 inverseInertiaTensor[1] = two.InverseInertiaTensorWorld;
 
             // We will calculate the impulse for each contact axis
@@ -258,7 +258,7 @@ namespace PhysiXEngine
             one.AddVelocity(velocityChange[0]);
             one.Rotation += rotationChange[0];
 
-            if (two != null)
+            if (two != null && two.HasFiniteMass)
             {
                 // Work out body one's linear and angular changes
                 Vector3 impulsiveTorqueTwo = Vector3.Cross(impulse,contactData.relativeContactPosition[1]);
@@ -285,7 +285,6 @@ namespace PhysiXEngine
                 return !contact.IsColliding(); 
             });
 
-            
 
             // initializing contacts
             foreach (Contact contactData in contactDataList)
@@ -308,13 +307,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations = 8;
+        uint velocityIterations = 4;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 8;
+        uint positionIterations = 4;
 
         //TODO modify above values
 
@@ -337,7 +336,7 @@ namespace PhysiXEngine
         /// interpenetrate visually. A good starting point is the default 
         /// of 0.01.
         /// </summary>
-        float velocityEpsilon = 0.001f;
+        float velocityEpsilon = 0.01f;
 
         /// <summary>
         /// To avoid instability penetrations 
@@ -346,7 +345,7 @@ namespace PhysiXEngine
         /// bodies may interpenetrate visually. A good starting point is 
         /// the default of0.01.
         /// </summary>
-        float positionEpsilon = 0.001f;
+        float positionEpsilon = 0.01f;
 
 
         void resolvePenetration(float duration)
@@ -378,61 +377,18 @@ namespace PhysiXEngine
                     i++;
                 }
                 if (index == contactDataList.Count) break;
-
+                //debugging code
+                //if (Keyboard.GetState().IsKeyDown(Keys.R))
+                //{
+                //    int q = 0;
+                //}
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
 
                 // Resolve the penetration.
-                contactDataList[index].applyPositionChange(velocityChange,
-                    rotationChange,
-                    rotationAmount,
-                    max);//-positionEpsilon);
-                contactDataList[index].InitializeAtMoment(duration);
-                // Again this action may have changed the penetration of other 
-                // bodies, so we update contacts.
-                for (i = 0; i < contactDataList.Count; i++)
-                {
-                    if (contactDataList[i].body[0] == contactDataList[index].body[0])
-                    {
-                        cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[0]);
+                //contactDataList[index].InitializeAtMoment(duration);
 
-                        cp += velocityChange[0];
-
-                        contactDataList[i].Penetration -=
-                            rotationAmount[0] * Vector3.Dot(cp, contactDataList[i].ContactNormal);
-                    }
-                    else if (contactDataList[i].body[0] == contactDataList[index].body[1])
-                    {
-                        cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[0]);
-
-                        cp += velocityChange[1];
-
-                        contactDataList[i].Penetration -= rotationAmount[1] *
-                            Vector3.Dot(cp, contactDataList[i].ContactNormal);
-                    }
-
-                    if (contactDataList[i].body[1] != null)
-                    {
-                        if (contactDataList[i].body[1] == contactDataList[index].body[0])
-                        {
-                            cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[0];
-
-                            contactDataList[i].Penetration += rotationAmount[0] *
-                                Vector3.Dot(cp, contactDataList[i].ContactNormal);
-                        }
-                        else if (contactDataList[i].body[1] == contactDataList[index].body[1])
-                        {
-                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[1];
-
-                            contactDataList[i].Penetration += rotationAmount[1] *
-                                Vector3.Dot(cp, contactDataList[i].ContactNormal);
-                        }
-                    }
-                }
+                contactDataList[index].FixPenetration();
                 positionIterationsUsed++;
             }
         }
