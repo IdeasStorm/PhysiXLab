@@ -59,7 +59,7 @@ namespace PhysiXEngine
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
-            friction = 0.1f; // TODO add a dynamic mechanism
+            //friction = 0.1f; // TODO add a dynamic mechanism
 
         }
 
@@ -563,11 +563,31 @@ namespace PhysiXEngine
             }
         }
 
+        bool CheckBoxBoxQuick(Box one, Box two)
+        {
+            List<Vector3> intersectedCorners1 = one.box.GetCorners().ToList();
+            intersectedCorners1.RemoveAll((corner) => (two.box.Contains(corner) == ContainmentType.Disjoint));
+            if (intersectedCorners1.Count > 2)
+            {
+                Vector3 a = intersectedCorners1[0] - intersectedCorners1[1];
+                Vector3 b = intersectedCorners1[2] - intersectedCorners1[0];
+                Vector3 axis = Vector3.Cross(a,b);
+                axis.Normalize();
+                Vector3 cp = Vector3.Lerp(intersectedCorners1[1],intersectedCorners1[2],0.5f);
+                Penetration = 0.1f;
+                ContactPoint = cp;
+                ContactNormal = axis;
+                return true;
+            }
+            return false;
+        }
+
         public int BoxAndBox()
         {
             Box one = (Box)body[0];
             Box two = (Box)body[1];
-
+            if (CheckBoxBoxQuick(one, two) || CheckBoxBoxQuick(two, one))
+                return 1;
             //Vector3 toCentre = two.GetAxis(3) - one.GetAxis(3);
             Vector3 toCentre = two.Position - one.Position;
             // We start assuming there is no contact
@@ -701,6 +721,7 @@ namespace PhysiXEngine
                         ptOnTwoEdge, twoAxis, twoVal, bestSingleAxis > 2);
 
                 // We can fill the contact.
+                axis.Normalize();
                 _Penetration = pen;
                 _ContactNormal = axis;
                 _ContactPoint = vertex;
@@ -785,7 +806,7 @@ namespace PhysiXEngine
         internal void applyPositionChange(Vector3[] velocityChange, Vector3[] rotationDirection, float[] rotationAmount,float Penetration)
             //unused penetration
         {
-            float angularLimit = 10f;//0.1f;
+            float angularLimit = 0.25f;//0.1f;
             float[] angularMove = new float[2],
                     linearMove = new float[2];
             int b;
@@ -798,7 +819,8 @@ namespace PhysiXEngine
             // We need to work out the inertia of each object in the direction
             // of the contact normal, due to angular inertia only. 
             for (int i = 0; i < 2; i++) {
-                if (body[i] != null) {
+                if (body[i] != null && body[i].HasFiniteMass)
+                {
                     Matrix3 inverseInertiaTensor = body[i].InverseInertiaTensorWorld;
 
                     // Use the same procedure as for calculating frictionless
@@ -885,7 +907,7 @@ namespace PhysiXEngine
 
                 body[b].Position = body[b].Position + _ContactNormal * linearMove[b];
 
-                body[b].AddScaledOrientation(rotationDirection[b] ,rotationAmount[b]/2);
+                body[b].AddScaledOrientation(rotationDirection[b] ,rotationAmount[b]);
                 //body[b].Orientation += Quaternion.CreateFromAxisAngle(rotationDirection[b], MathHelper.Pi)
                 //   * rotationAmount[b] * 0.25f; // 0.5/2 , dt/2
 
@@ -913,21 +935,23 @@ namespace PhysiXEngine
             Quaternion OrientationA = chosen.Orientation;
             // revert to the moment before collision moment
             chosen.RevertChanges();
+            //this.Check();
+            //return;
             // B = the moment before collision moment
             Vector3 PositionB = chosen.Position;
             Quaternion OrientationB = chosen.Orientation;
             // starting binary search loop
             while ( !IsColliding() )
             {
-                if ((PositionA - PositionB).Length() <= 0.001) throw new Exception("no more precision - will iterate to infinity");
+                if ((PositionA - PositionB).Length() <= 0.001) return;
                 chosen.Position = Vector3.Lerp(PositionB, PositionA, 0.5f);
-                chosen.Orientation = Quaternion.Slerp(OrientationB, OrientationA, 0.5f);
+                chosen.Orientation = OrientationB.AddScaledVector(chosen.Rotation, 0.5f);
                 PositionB = chosen.Position;
                 OrientationB = chosen.Orientation;
                 
             }
             this.Check();
-
+            
         }
 
         public ContactData GetContactData()
