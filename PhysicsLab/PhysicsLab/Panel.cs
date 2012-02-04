@@ -31,9 +31,9 @@ namespace PhysicsLab
             this.Position = position;
             this.Width = width;
             this.Height = height;
-            _ButtonPosition = new Point(position.X + 15, position.Y + 15);
-            _LabelPosition = new Point(position.X + 15, position.Y + 15);
-            _TexBoxPosition = new Point(position.X + 95, position.Y + 15);
+            _ButtonPosition = new Point(15, 15);
+            _LabelPosition = new Point(15,  15);
+            _TexBoxPosition = new Point(95, 15);
         }
 
         protected Point Position;
@@ -249,10 +249,10 @@ namespace PhysicsLab
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            ButtonTexture = Game.Content.Load<Texture2D>("texButton");
-            TextBoxTexture = Game.Content.Load<Texture2D>("texTextBox");
-            PanelTexture = Game.Content.Load<Texture2D>("texForm");
-            Font = Game.Content.Load<SpriteFont>("Arial");
+            ButtonTexture = Game.Content.Load<Texture2D>(@"GUI\texButton");
+            TextBoxTexture = Game.Content.Load<Texture2D>(@"GUI\texTextBox");
+            PanelTexture = Game.Content.Load<Texture2D>(@"GUI\texForm");
+            Font = Game.Content.Load<SpriteFont>(@"GUI\Arial");
             Frm = new Form("MyForm", "",
                 new Rectangle(Position.X, Position.Y, Width, Height),
                 PanelTexture, Font, Color.Black);
