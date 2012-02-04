@@ -70,7 +70,6 @@ namespace PhysicsLab
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
 
             base.Initialize();
         }
@@ -109,17 +108,11 @@ namespace PhysicsLab
                     myFrm.AddControl(myButton);
                 }
             }
-            //Frm.AddControl(Buttons.Last<Button>());
         }
 
         public void AddButton(String buttonName = "Btn", String buttonText = "Button",
             String PanelName = "MainPanel", int width = 70, int height = 20)
         {
-            /*
-            Buttons.Add(new Button(buttonName, buttonText, 
-                new Rectangle(_ButtonPosition.X, _ButtonPosition.Y, width, height), 
-                ButtonTexture, Font, Color.Black));*/
-            //Frm.AddControl(Buttons.Last<Button>());
             if (PanelName == "MainPanel")
             {
                 Button myButton = new Button(buttonName, buttonText,
@@ -132,7 +125,6 @@ namespace PhysicsLab
             {
                 AddButton(buttonName, buttonText, PanelName, _ButtonPosition, width, height);
             }
-            //Buttons.Last<Button>().onClick += new EHandler(ButtonClicked);
             _ButtonPosition.Y += 25;
         }
 
@@ -158,8 +150,6 @@ namespace PhysicsLab
         public void AddTextBox(String textBoxName = "txt", String value = "", String PanelName = "MainPanel",
             int maxLength = 5, int width = 70, int height = 20)
         {
-
-            //Frm.AddControl(TextBoxes.Last<TextBox>());
             if (PanelName == "MainPanel")
             {
                 TextBox myText = new TextBox(textBoxName, value, maxLength,
@@ -206,10 +196,6 @@ namespace PhysicsLab
             {
                 AddLabel(labelName, labelText, _LabelPosition, PanelName);
             }
-            /*
-            Lables.Add(new Label(labelName, labelText,
-                new Vector2(_LabelPosition.X, _LabelPosition.Y), Font, Color.White, 15, 2));
-            Frm.AddControl(Lables.Last<Label>());*/
             _LabelPosition.Y += 25;
         }
 
@@ -217,7 +203,6 @@ namespace PhysicsLab
         {
             Fields.Add(name, value);
             AddLabel(name, name, panelName);
-            //_TexBoxPosition.X += 80;
             AddTextBox(name, value.ToString(), panelName);
         }
 
@@ -311,12 +296,10 @@ namespace PhysicsLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Draw(GameTime gameTime)
         {
-
             // TODO: Add your drawing code here
             if (Show)
             {
                 spriteBatch.Begin();
-                //Frm.Draw(spriteBatch);
                 Frm.Draw(spriteBatch);
                 foreach (Form frm in Panels.Values)
                 {
@@ -324,7 +307,6 @@ namespace PhysicsLab
                 }
                 spriteBatch.End();
             }
-
             base.Draw(gameTime);
         }
     }
