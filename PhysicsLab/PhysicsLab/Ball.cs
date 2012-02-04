@@ -13,7 +13,9 @@ namespace PhysicsLab
         public Model model { get; set; }
         public Texture2D Texture { get; set; }
         public Texture2D SelectedTexture { get; set; }
+        public Texture2D SelectedTexture_Panel { get; set; }
         public bool Selected { get; set; }
+        public bool ShowPanel { get; set; }
 
         public Ball(float radius) 
             : base(radius)
@@ -46,6 +48,15 @@ namespace PhysicsLab
                         }
                         be.Alpha = 3;
                         Selected = false;
+                    }
+                    if (ShowPanel)
+                    {
+                        if (SelectedTexture_Panel != null)
+                        {
+                            be.Texture = this.SelectedTexture_Panel;
+                            be.TextureEnabled = true;
+                        }
+                        be.Alpha = 3;
                     }
                 }
                 mesh.Draw();
