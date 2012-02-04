@@ -28,10 +28,13 @@ namespace Test
             //rt.Run();
 
             RodAndCableTest rodcable = new RodAndCableTest();
-            rodcable.Run();
+            //rodcable.Run();
 
             Bridge bridge = new Bridge();
-            bridge.Run();
+            //bridge.Run();
+
+            RopeTest rope = new RopeTest();
+            rope.Run();
         }
     }
 #endif
