@@ -59,7 +59,7 @@ namespace PhysicsLab
         public Vector2 TexBoxPosition { get { return _TexBoxPosition; } set { _TexBoxPosition = value; } }
 
         public bool Show = false;
-        public bool Applied = false;
+        public bool Applied = true;
 
         private Dictionary<String, float> Fields;
         private Dictionary<String, Form> Panels;
@@ -83,7 +83,7 @@ namespace PhysicsLab
                 float.TryParse(tb.Text, out val);
                 Fields[tb.Name] = val;
             }
-            Applied = true;
+            Applied = false;
         }
 
         void OkButtonClicked(Control sender)
@@ -104,7 +104,7 @@ namespace PhysicsLab
 
         void Changed(Control sender)
         {
-            Applied = false;
+            Applied = true;
         }
 
         public void NewForm()
