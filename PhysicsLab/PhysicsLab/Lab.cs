@@ -29,6 +29,7 @@ namespace PhysicsLab
         public BasicLab basicLab { get; set; }
         private Body prevBody = null;
         private bool bodySel = false;
+        private Panel bodyPanel = null;
 
         float timeOfGame = 0;
         float timeToCreate = 100f;
@@ -48,11 +49,16 @@ namespace PhysicsLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            basicLab = new BasicLab(this);
+            Components.Add(basicLab);
+            bodyPanel = new Panel(this, new 
+                Vector2(Window.ClientBounds.Width - 255, 
+                Window.ClientBounds.Height - 255), 
+                250, 250);
+            Components.Add(bodyPanel);
             camera = new Camera(this, new Vector3(0, 0, 20f),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
-            basicLab = new BasicLab(this);
-            Components.Add(basicLab);
 
             this.IsMouseVisible = true;
 
@@ -242,6 +248,23 @@ namespace PhysicsLab
             }
         }
 
+        protected void CreateDialog(Panel pnl, Body body)
+        {
+            if (body as Ball != null)
+            {
+                Ball ball= (Ball)body;
+                pnl.AddField("Mass", ball.Mass);
+                pnl.AddField("Radius", ball.radius);
+                pnl.AddLabel("Position");
+                pnl.AddPosition(ball.Position);
+                pnl.AddLabel("Velocity");
+                pnl.AddPosition(ball.Velocity);
+                pnl.AddLabel("Acceleration");
+                pnl.AddPosition(ball.Acceleration);
+                pnl.AddOkButton();
+                pnl.AddCancelButton();
+            }
+        }
 
         void Crate(Vector2 cursorPosition, KeyboardState keyboard, float time)
         {
@@ -253,7 +276,8 @@ namespace PhysicsLab
                     timeOfGame = 0;
                     Vector3 point = new Vector3(cursorPosition, 0.9f);
                     point = GraphicsDevice.Viewport.Unproject(point, camera.projection, camera.view, Matrix.Identity);
-                    basicLab.CreateBall(point);
+                    CreateDialog(bodyPanel, basicLab.CreateBall(point));
+                    bodyPanel.Show = true;
                 }
             }
             if (keyboard.IsKeyDown(Keys.C))
