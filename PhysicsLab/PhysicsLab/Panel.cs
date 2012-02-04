@@ -18,7 +18,7 @@ namespace PhysicsLab
     /// </summary>
     public class Panel : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        public Panel(Game game, Point position, int width, int height)
+        public Panel(Game game, Vector2 position, int width, int height)
             : base(game)
         {
             // TODO: Construct any child components here
@@ -31,12 +31,12 @@ namespace PhysicsLab
             this.Position = position;
             this.Width = width;
             this.Height = height;
-            _ButtonPosition = new Point(15, 15);
-            _LabelPosition = new Point(15,  15);
-            _TexBoxPosition = new Point(95, 15);
+            _ButtonPosition = new Vector2(15, 15);
+            _LabelPosition = new Vector2(15,  15);
+            _TexBoxPosition = new Vector2(95, 15);
         }
 
-        protected Point Position;
+        protected Vector2 Position;
         protected int Width;
         protected int Height;
 
@@ -51,12 +51,12 @@ namespace PhysicsLab
         private List<TextBox> TextBoxes;
         private List<Label> Lables;
 
-        private Point _ButtonPosition;
-        public Point ButtonPosition { get { return _ButtonPosition; } set { _ButtonPosition = value; } }
-        private Point _LabelPosition;
-        public Point LabelPosition { get { return _LabelPosition; } set { _LabelPosition = value; } }
-        private Point _TexBoxPosition;
-        public Point TexBoxPosition { get { return _TexBoxPosition; } set { _TexBoxPosition = value; } }
+        private Vector2 _ButtonPosition;
+        public Vector2 ButtonPosition { get { return _ButtonPosition; } set { _ButtonPosition = value; } }
+        private Vector2 _LabelPosition;
+        public Vector2 LabelPosition { get { return _LabelPosition; } set { _LabelPosition = value; } }
+        private Vector2 _TexBoxPosition;
+        public Vector2 TexBoxPosition { get { return _TexBoxPosition; } set { _TexBoxPosition = value; } }
 
         public bool Show = false;
 
@@ -92,11 +92,11 @@ namespace PhysicsLab
         }
 
         public void AddButton(String buttonName, String buttonText, String panelName,
-            Point position, int width, int height)
+            Vector2 position, int width, int height)
         {
 
             Button myButton = new Button(buttonName, buttonText,
-                new Rectangle(position.X, position.Y, width, height), ButtonTexture, Font, Color.Black);
+                new Rectangle((int)position.X, (int)position.Y, width, height), ButtonTexture, Font, Color.Black);
             Buttons.Add(myButton);
             if (panelName == "MainPanel")
                 Frm.AddControl(myButton);
@@ -123,7 +123,7 @@ namespace PhysicsLab
             if (PanelName == "MainPanel")
             {
                 Button myButton = new Button(buttonName, buttonText,
-                new Rectangle(_ButtonPosition.X, _ButtonPosition.Y, width, height),
+                new Rectangle((int)_ButtonPosition.X, (int)_ButtonPosition.Y, width, height),
                 ButtonTexture, Font, Color.Black);
                 Buttons.Add(myButton);
                 Frm.AddControl(myButton);
@@ -137,18 +137,21 @@ namespace PhysicsLab
         }
 
         public void AddTextBox(String textBoxName, String value, String PanelName,
-            int maxLength, Point position, int width, int height)
+            int maxLength, Vector2 position, int width, int height)
         {
             TextBox myTextBox = new TextBox(textBoxName, value, maxLength,
-                new Rectangle(position.X, position.Y, width, height),
+                new Rectangle((int)position.X, (int)position.Y, width, height),
                 TextBoxTexture, Font, Color.Black);
             TextBoxes.Add(myTextBox);
-            //Frm.AddControl(TextBoxes.Last<TextBox>());
-            Form myFrm = null;
-            Panels.TryGetValue(PanelName, out myFrm);
-            if (myFrm != null)
+            if (PanelName == "MainPanel")
+                Frm.AddControl(myTextBox);
             {
-                myFrm.AddControl(myTextBox);
+                Form myFrm = null;
+                Panels.TryGetValue(PanelName, out myFrm);
+                if (myFrm != null)
+                {
+                    myFrm.AddControl(myTextBox);
+                }
             }
         }
 
@@ -160,7 +163,7 @@ namespace PhysicsLab
             if (PanelName == "MainPanel")
             {
                 TextBox myText = new TextBox(textBoxName, value, maxLength,
-                new Rectangle(_TexBoxPosition.X, _TexBoxPosition.Y, width, height),
+                new Rectangle((int)_TexBoxPosition.X, (int)_TexBoxPosition.Y, width, height),
                 TextBoxTexture, Font, Color.Black);
                 TextBoxes.Add(myText);
                 Frm.AddControl(myText);
@@ -172,17 +175,21 @@ namespace PhysicsLab
             _TexBoxPosition.Y += 25;
         }
 
-        public void AddLabel(String labelName, String labelText, Point position, String PanelName)
+        public void AddLabel(String labelName, String labelText, Vector2 position, String PanelName)
         {
             Label myLabel = new Label(labelName, labelName, new Vector2(position.X, position.Y),
                 Font, Color.Black, 15, 2);
             Lables.Add(myLabel);
-            //Frm.AddControl(Lables.Last<Label>());
-            Form myFrm = null;
-            Panels.TryGetValue(PanelName, out myFrm);
-            if (myFrm != null)
+            if (PanelName == "MainPanel")
+                Frm.AddControl(myLabel);
+            else
             {
-                myFrm.AddControl(myLabel);
+                Form myFrm = null;
+                Panels.TryGetValue(PanelName, out myFrm);
+                if (myFrm != null)
+                {
+                    myFrm.AddControl(myLabel);
+                }
             }
         }
 
@@ -214,22 +221,40 @@ namespace PhysicsLab
             AddTextBox(name, value.ToString(), panelName);
         }
 
-        public void AddPanel(String panelName, Point position, int width, int height)
+        public void AddPanel(String panelName, Vector2 position, int width, int height)
         {
             Panels.Add(panelName, new Form(panelName, "",
-                new Rectangle(position.X, position.Y, width, height),
+                new Rectangle((int)position.X, (int)position.Y, width, height),
                 PanelTexture, Font, Color.White));
+        }
+
+        public void AddPosition(Vector3 position)
+        {
+            _LabelPosition.X += 15f;
+            AddLabel("X","X: ",new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
+            AddTextBox("X", String.Format("{0:0.0}", position.X), "MainPanel", 5, 
+                new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
+            _LabelPosition.X += 60f;
+            AddLabel("Y", "Y: ", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
+            AddTextBox("Y", String.Format("{0:0.0}", position.Y), "MainPanel", 5,
+                new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
+            _LabelPosition.X += 60f;
+            AddLabel("Z", "Z: ", new Vector2(LabelPosition.X, LabelPosition.Y), "MainPanel");
+            AddTextBox("Z", String.Format("{0:0.0}", position.Z), "MainPanel", 5,
+                new Vector2(LabelPosition.X + 15, LabelPosition.Y - 0.5f), 30, 20);
+            _LabelPosition.X = 15f;
+            _LabelPosition.Y += 25f;
         }
 
         public void AddOkButton(String panelName = "MainPanel")
         {
-            AddButton("OK", "OK", panelName, new Point(Width - 160, Height - 30), 70, 20);
+            AddButton("OK", "OK", panelName, new Vector2(Width - 160, Height - 30), 70, 20);
             Buttons.Last<Button>().onClick += new EHandler(OkButtonClicked);
         }
 
         public void AddCancelButton(String panelName = "MainPanel")
         {
-            AddButton("Cancel", "Cancel", panelName, new Point(Width - 80, Height - 30), 70, 20);
+            AddButton("Cancel", "Cancel", panelName, new Vector2(Width - 80, Height - 30), 70, 20);
             Buttons.Last<Button>().onClick += new EHandler(CancelButtonClicked);
         }
 
@@ -254,7 +279,7 @@ namespace PhysicsLab
             PanelTexture = Game.Content.Load<Texture2D>(@"GUI\texForm");
             Font = Game.Content.Load<SpriteFont>(@"GUI\Arial");
             Frm = new Form("MyForm", "",
-                new Rectangle(Position.X, Position.Y, Width, Height),
+                new Rectangle((int)Position.X, (int)Position.Y, Width, Height),
                 PanelTexture, Font, Color.Black);
         }
 
