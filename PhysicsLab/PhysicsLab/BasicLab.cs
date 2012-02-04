@@ -156,7 +156,7 @@ namespace PhysicsLab
             return null;
         }
 
-        public void CreateBall(Vector3 position)
+        public Ball CreateBall(Vector3 position)
         {
             Ball ball = new Ball(0.5f);
             ball.Position = position;
@@ -170,6 +170,7 @@ namespace PhysicsLab
                 ((Gravity)e).AddBody(ball);
             else
                 throw new Exception();
+            return ball;
         }
 
         public void CreateCrate(Vector3 position)
@@ -266,14 +267,15 @@ namespace PhysicsLab
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            foreach (Body bdy in bodys)
-            {
-                ((Drawable)bdy).Draw(((Lab)Game).camera);
-            }
             foreach (Body bdy in room)
             {
                 ((Drawable)bdy).Draw(((Lab)Game).camera);
             }
+            foreach (Body bdy in bodys)
+            {
+                ((Drawable)bdy).Draw(((Lab)Game).camera);
+            }
+            
 
             base.Draw(gameTime);
         }
