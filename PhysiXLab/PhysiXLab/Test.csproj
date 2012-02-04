@@ -112,6 +112,8 @@
     <Compile Include="RayIndicator.cs" />
     <Compile Include="RestingTest.cs" />
     <Compile Include="RodAndCableTest.cs" />
+    <Compile Include="Rope.cs" />
+    <Compile Include="RopeTest.cs" />
     <Compile Include="SpringTest.cs" />
   </ItemGroup>
   <ItemGroup>
