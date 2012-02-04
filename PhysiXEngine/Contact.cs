@@ -59,7 +59,7 @@ namespace PhysiXEngine
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
             restitution = 0.7f;
-            //friction = 0.1f; // TODO add a dynamic mechanism
+            friction = 0.1f; // TODO add a dynamic mechanism
 
         }
 
@@ -123,12 +123,15 @@ namespace PhysiXEngine
 
         #region "contactData Extraction "
 
-        public void SphereAndSphere()
-        {
+        public bool SphereAndSphere()
+        {            
             //Cache the sphere positions
-            Vector3 positionOne = ((Sphere)body[0]).Position;
-            Vector3 positionTwo = ((Sphere)body[1]).Position;
-
+            Sphere s1=((Sphere)body[0]);
+            Sphere s2=((Sphere)body[1]);
+            Vector3 positionOne = s1.Position;
+            Vector3 positionTwo = s2.Position;
+            if ((positionOne - positionTwo).Length() > s1.radius + s2.radius)
+                return false;
             // Find the vector between the objects
             Vector3 midline = positionOne - positionTwo;
             float size = midline.Length();
@@ -138,6 +141,7 @@ namespace PhysiXEngine
             _ContactNormal = Vector3.Multiply(midline, (float)(1.0f / size));
             _ContactPoint = positionOne + Vector3.Multiply(midline, 0.5f);
             _Penetration = ((Sphere)body[0]).radius + ((Sphere)body[1]).radius - size;
+            return true;
         }
 
         public void SphereAndHalfSpace()
@@ -189,7 +193,8 @@ namespace PhysiXEngine
             // We have an intersection, so find the intersection points. We can make
             // do with only checking vertices. If the box is resting on a plane
             // or on an edge, it will be reported as four or two contact points.
-            Vector3[] cornars = box.box.GetCorners();
+            Vector3[] cornars = new Vector3[12];//= box.box.GetCorners();
+            //TODO HORRIBLE  initiate the var above
             // Go through each combination of + and - for each half-size
 
             for (int i = 0; i < 8; i++)
@@ -377,7 +382,7 @@ namespace PhysiXEngine
         }
 
         //public bool BoxAndSphere()
-        public void SphereAndBox()
+        public bool SphereAndBox()
         {
             Sphere sphere = null;
             Box box = null;
@@ -395,8 +400,7 @@ namespace PhysiXEngine
                 Math.Abs(spherToBoxCor.Y) - sphere.radius > box.HalfSize.Y ||
                 Math.Abs(spherToBoxCor.Z) - sphere.radius > box.HalfSize.Z)
             {
-                //_Penetration = -1;
-                return;
+                return false;
             }
 
             //Vector3 closestPt = new Vector3();
@@ -432,8 +436,7 @@ namespace PhysiXEngine
 
             if (dist > sphere.radius * sphere.radius)
             {
-                _Penetration = -1;
-                return;
+                return false;
             }
 
             Vector3 closestPtWorld = Vector3.Transform(closestPt, box.TransformMatrix);
@@ -442,6 +445,7 @@ namespace PhysiXEngine
             _ContactNormal.Normalize();
             _ContactPoint = closestPtWorld;
             _Penetration = sphere.radius - (float)Math.Sqrt(dist);
+            return true;
         }
 
         public static float penetrationOnAxis(Box one, Box two, Vector3 axis, Vector3 toCentre)
@@ -565,8 +569,10 @@ namespace PhysiXEngine
 
         bool CheckBoxBoxQuick(Box one, Box two)
         {
-            List<Vector3> intersectedCorners1 = one.box.GetCorners().ToList();
-            intersectedCorners1.RemoveAll((corner) => (two.box.Contains(corner) == ContainmentType.Disjoint));
+            // TODO fix this Code |
+            //                    v
+            List<Vector3> intersectedCorners1 = new List<Vector3>();
+            intersectedCorners1.RemoveAll((corner) => (false /* add prediction code */));
             if (intersectedCorners1.Count > 2)
             {
                 Vector3 a = intersectedCorners1[0] - intersectedCorners1[1];
@@ -581,7 +587,7 @@ namespace PhysiXEngine
             return false;
         }
 
-        public int BoxAndBox()
+        public bool BoxAndBox()
         {
             Box one = (Box)body[0];
             Box two = (Box)body[1];
@@ -598,13 +604,13 @@ namespace PhysiXEngine
             for (int i = 0; i < 3; i++)
             {
                 if (!tryAxis(one, two, one.GetAxis(i), toCentre, i, ref pen, ref best))
-                    return 0;
+                    return false;
             }
 
             for (int i = 0; i < 3; i++)
             {
                 if (!tryAxis(one, two, two.GetAxis(i), toCentre, i+3, ref pen, ref best))
-                    return 0;
+                    return false;
             }
 
             // Store the best axis-major, in case we run into almost
@@ -620,7 +626,7 @@ namespace PhysiXEngine
                 }
                 if (!tryAxis(one, two, Vector3.Cross(one.GetAxis(j), two.GetAxis(k)),
                     toCentre, w, ref pen, ref best))
-                    return 0;
+                    return false;
             }
 
             // We now know there's a collision, and we know which
@@ -723,8 +729,8 @@ namespace PhysiXEngine
                 _ContactPoint = vertex;
             }
             if (CheckBoxBoxQuick(one, two) || CheckBoxBoxQuick(two, one))
-                return 1;
-            return 1;
+                return true;
+            return true;
         }
         #endregion
 
@@ -814,7 +820,7 @@ namespace PhysiXEngine
             // We need to work out the inertia of each object in the direction
             // of the contact normal, due to angular inertia only. 
             for (int i = 0; i < 2; i++) {
-                if (body[i] != null)
+                if (body[i] != null && body[i].HasFiniteMass)
                 {
                     Matrix3 inverseInertiaTensor = body[i].InverseInertiaTensorWorld;
 
@@ -948,19 +954,19 @@ namespace PhysiXEngine
         /// <summary>
         /// Refills contact data
         /// </summary>
-        public void Check()
+        public bool Check()
         {
             if (WithPlane)
-                plane.generateContacts(body[0], this);
+                return plane.generateContacts(body[0], this);
             else
             {
                 try // try if the first know any thing about the other
                 {
-                    body[0].generateContacts(body[1], this);
+                    return body[0].generateContacts(body[1], this);
                 }
                 catch (Exception)
                 {
-                    body[1].generateContacts(body[0], this);
+                    return body[1].generateContacts(body[0], this);
                 }
             }
         }
@@ -976,6 +982,22 @@ namespace PhysiXEngine
             else
                 return body[0].CollidesWith(body[1]);
             //TODO add try catch IDontKnowException
+        }
+
+        public bool BothFixed()
+        {
+            return (body[0].InverseMass + body[1].InverseMass == 0);
+        }
+
+        public override bool Equals(object obj)
+        {
+            Contact other = obj as Contact;
+            if (other != null)
+            {
+                if ((other.body[0] == body[0]) && (other.body[1] == body[1]))
+                    return true;
+            }
+            return false;
         }
     }
 }

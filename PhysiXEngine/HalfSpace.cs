@@ -31,8 +31,10 @@ namespace PhysiXEngine
             return contactData;
         }
         */
-        public void generateContacts(Collidable other, Contact contact)
+        public bool generateContacts(Collidable other, Contact contact)
         {
+            //TODO FixME
+            return false;
             if (other as Sphere != null)
             {
                 contact.SphereAndPlane();

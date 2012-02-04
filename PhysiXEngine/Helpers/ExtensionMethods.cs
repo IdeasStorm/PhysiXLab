@@ -29,12 +29,14 @@ namespace PhysiXEngine.Helpers
 
         public static bool HasNan(this Vector3 v)
         {
-            return (float.IsNaN(v.X)) || (float.IsNaN(v.Y)) || (float.IsNaN(v.Z));
+            return (float.IsNaN(v.X)) || (float.IsNaN(v.Y)) || (float.IsNaN(v.Z))
+                || float.IsInfinity(v.X) || float.IsInfinity(v.Y) || float.IsInfinity(v.Y);
         }
 
         public static bool HasNan(this Quaternion q)
         {
-            return (float.IsNaN(q.X)) || (float.IsNaN(q.Y)) || (float.IsNaN(q.Z)) || (float.IsNaN(q.W));
+            return (float.IsNaN(q.X)) || (float.IsNaN(q.Y)) || (float.IsNaN(q.Z)) || (float.IsNaN(q.W))
+                || float.IsInfinity(q.X) || float.IsInfinity(q.Y) || float.IsInfinity(q.Y) || float.IsInfinity(q.W) ;
         }
         public static void normalized(ref Quaternion q)
         {

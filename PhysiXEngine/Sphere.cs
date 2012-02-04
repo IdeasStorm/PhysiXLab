@@ -51,27 +51,28 @@ namespace PhysiXEngine
             return contact.GetContactData();
         }
 
-        public override void generateContacts(Collidable other, Contact contact)
+        public override bool generateContacts(Collidable other, Contact contact)
         {
             if (other as Sphere != null)
             {
-                contact.SphereAndSphere();
+                return contact.SphereAndSphere();
             }
             else if (other as Box != null)
             {
-                contact.SphereAndBox();
+                return contact.SphereAndBox();
             }
+            return false;
         }
 
         public override Boolean CollidesWith(Collidable other)
         {
             if (other as Sphere != null)
             {
-                return sphere.Intersects(other.GetBoundingSphere());
+                return true;
             }
             else if (other as Box != null)
             {
-                return sphere.Intersects(((Box)other).box);
+                return true;
             }
             return false;
         }

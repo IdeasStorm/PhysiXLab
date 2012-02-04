@@ -9,9 +9,7 @@ namespace PhysiXEngine
     using PhysiXEngine.Helpers;
     public class Box : Collidable
     {
-        public Vector3 HalfSize { get; protected set; }
-        private BoundingBox _box = new BoundingBox();
-        public BoundingBox box { get { return _box; } private set { _box = value; } }
+        public Vector3 HalfSize { get; protected set; }        
 
         public Box(Vector3 halfSize)
         {
@@ -36,15 +34,7 @@ namespace PhysiXEngine
 
         protected override void updateBounding()
         {
-            BoundingBox zeroBox = new BoundingBox(-HalfSize,HalfSize);
-            _box.Max = new Vector3(int.MinValue);
-            _box.Min = new Vector3(int.MaxValue);
-            foreach (Vector3 corner in zeroBox.GetCorners())
-            {
-                Vector3 tranformed_corner = Vector3.Transform(corner,TransformMatrix);
-                _box.Min = Vector3.Min(_box.Min,tranformed_corner);
-                _box.Max = Vector3.Max(_box.Max, tranformed_corner);
-            }
+            // todo : no code should be here
         }
 
         public override Boolean CollidesWith(Collidable other)
@@ -53,41 +43,36 @@ namespace PhysiXEngine
             if (other as Box != null)
             {
                 //box.Intersects(((Sphere)other).GetBoundingSphere);
-                return box.Intersects(((Box)other).box);
+                return true;
             }
             else if (other as Sphere != null)
-            {
-                return box.Intersects(((Sphere)other).GetBoundingSphere());
-            }
-            return false;
-        }
-
-        public override Boolean CollidesWith(HalfSpace plane)
-        {
-            //TOOD add CollidesWith() code here
-            PlaneIntersectionType p = box.Intersects(plane.plane);
-            if (p == PlaneIntersectionType.Intersecting)
             {
                 return true;
             }
             return false;
         }
 
-        public override BoundingSphere GetBoundingSphere()
+        public override Boolean CollidesWith(HalfSpace plane)
         {
-            return BoundingSphere.CreateFromBoundingBox(box);
+            return true;
         }
 
-        public override void generateContacts(Collidable other, Contact contact)
+        public override BoundingSphere GetBoundingSphere()
+        {
+            return new BoundingSphere(Position,HalfSize.Length());
+        }
+
+        public override bool generateContacts(Collidable other, Contact contact)
         {
             if (other as Box != null)
             {
-                contact.BoxAndBox();
+                return contact.BoxAndBox();
             }
-            if (other as Sphere != null)
+            else if (other as Sphere != null)
             {
-                contact.SphereAndBox();
+                return contact.SphereAndBox();
             }
+            return false;
         }
 
         public override Vector3 getHalfSize()
