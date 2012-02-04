@@ -37,6 +37,8 @@ namespace PhysiXEngine
         protected override void updateBounding()
         {
             BoundingBox zeroBox = new BoundingBox(-HalfSize,HalfSize);
+            _box.Max = new Vector3(int.MinValue);
+            _box.Min = new Vector3(int.MaxValue);
             foreach (Vector3 corner in zeroBox.GetCorners())
             {
                 Vector3 tranformed_corner = Vector3.Transform(corner,TransformMatrix);
