@@ -146,7 +146,8 @@ namespace PhysicsLab
                 }
                 else if (bdy as Box != null)
                 {
-                    if (((Box)bdy).box.Intersects(ray) != null)
+                    //TODO make a better algo for intersecting
+                    if (((Box)bdy).GetBoundingSphere().Intersects(ray) != null)
                     {
                         ((Crate)bdy).Selected = true;
                         return bdy;
