@@ -927,12 +927,10 @@ namespace PhysiXEngine
             do
             {
                 //if ((PositionA - PositionB).Length() <= 0.00001) return;
-                chosen.Position += chosen.Velocity * duration * 0.01f;
-                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.01f);
-                this.Check();
-
-            } while (this.Penetration > 0.001f);
-            this.InitializeAtMoment(duration);
+                chosen.Position += chosen.Velocity * duration * 0.1f;
+                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.1f);
+            } while (!this.Check());
+            //this.InitializeAtMoment(duration);
             
         }
 
@@ -990,12 +988,13 @@ namespace PhysiXEngine
             return (body[0].InverseMass + body[1].InverseMass == 0);
         }
 
-        public override bool Equals(object obj)
+        public bool equals(object obj)
         {
             Contact other = obj as Contact;
             if (other != null)
             {
-                if ((other.body[0] == body[0]) && (other.body[1] == body[1]))
+                if ( ((other.body[0] == body[0]) && (other.body[1] == body[1]))
+                    || ((other.body[0] == body[1] ) && (other.body[1]==body[0]) ) )
                     return true;
             }
             return false;
