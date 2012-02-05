@@ -448,62 +448,27 @@ namespace PhysiXEngine
                 // With the change in velocity of the two bodies, the update of 
                 // contact velocities means that some of the relative closing 
                 // velocities need recomputing.
-                for (int i = 0; i < contactDataList.Count; i++)
+
+                foreach (Contact c in contactDataList)
                 {
-                    if (contactDataList[i].body[0] != null)
+                    for (int b = 0; b < 2; b++)
                     {
-                        if (contactDataList[i].body[0] == contactDataList[index].body[0])
+                        for (int d = 0; d < 2; d++)
                         {
-                            cp = Vector3.Cross(rotationChange[0],contactDataList[i].relativeContactPosition[0]);
-
-                            cp += velocityChange[0];
-
-                            contactDataList[i].contactVelocity += 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
-                        }
-                        else if (contactDataList[i].body[0]==contactDataList[index].body[1])
-                        {
-                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[0]);
-
-                            cp += velocityChange[1];
-
-                            contactDataList[i].contactVelocity += 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
+                            if (c.body[b] == contactDataList[index].body[d])
+                            {
+                                Vector3 deletaVelocity = velocityChange[d]
+                                    + Vector3.Cross(rotationChange[d], c.relativeContactPosition[b]);
+                                // second or first ?
+                                c.contactVelocity += c.ContactToWorld.transformTranspose(deletaVelocity) * ((b != 0) ? -1 : 1);
+                                c.CalculateDeltaVelocity(duration);
+                            }
                         }
                     }
+                }
 
-                    if (contactDataList[i].body[1] != null )
-                    {
-                        if (contactDataList[i].body[1]==contactDataList[index].body[0])
-                        {
-                            cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[0];
-
-                            contactDataList[i].contactVelocity -= 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
-                        }
-                        else if (contactDataList[i].body[1]==contactDataList[index].body[1])
-                        {
-                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[1];
-
-                            contactDataList[i].contactVelocity -= 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
-                        }
-                    }
-                }                
                 velocityIterationsUsed++;
-    }
+            }
         }
         #endregion
 
