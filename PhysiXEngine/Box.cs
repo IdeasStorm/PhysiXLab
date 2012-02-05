@@ -17,6 +17,11 @@ namespace PhysiXEngine
             updateBounding();
         }
 
+        public void SetHalfSize(Vector3 halfSize)
+        {
+            this.HalfSize = halfSize;
+        }
+
         public override ContactData generateContacts(Collidable other)
         {
             Contact contact = null;
