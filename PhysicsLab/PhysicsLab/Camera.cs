@@ -38,8 +38,8 @@ namespace PhysicsLab
 
         // Camera vectors to rotate and Move Camera
         public Vector3 cameraPosition { get; protected set; }
-        Vector3 cameraDirection;
-        Vector3 cameraUp;
+        public Vector3 cameraDirection;
+        public Vector3 cameraUp;
 
         //speed of camera
         float speed = 0.1f;
