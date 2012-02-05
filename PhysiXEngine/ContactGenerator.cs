@@ -307,13 +307,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        uint velocityIterations = 8;
+        public int velocityIterations = 8;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        uint positionIterations = 8;
+        public int positionIterations = 8;
 
         //TODO modify above values
 
@@ -336,7 +336,7 @@ namespace PhysiXEngine
         /// interpenetrate visually. A good starting point is the default 
         /// of 0.01.
         /// </summary>
-        float velocityEpsilon = 0.001f;
+        public float velocityEpsilon = 0.001f;
 
         /// <summary>
         /// To avoid instability penetrations 
@@ -345,7 +345,7 @@ namespace PhysiXEngine
         /// bodies may interpenetrate visually. A good starting point is 
         /// the default of0.01.
         /// </summary>
-        float positionEpsilon = 0.001f;
+        public float positionEpsilon = 0.001f;
 
 
         void resolvePenetration(float duration)
