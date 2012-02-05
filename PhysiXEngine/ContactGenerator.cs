@@ -392,6 +392,7 @@ namespace PhysiXEngine
                 {
 
                     contactDataList[index].revertState();
+                    positionIterations++;
                     continue;
                 }
                 foreach (Contact contact in contactDataList)
