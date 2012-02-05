@@ -44,10 +44,7 @@ namespace PhysicsLab
 
         public BasicLab(Game game)
             : base(game)
-        {
-            // TODO: Construct any child components here
-
-        }
+        { }
 
         public void AddBall(Ball ball) 
         {
@@ -168,7 +165,6 @@ namespace PhysicsLab
             ball.Texture = BallTexture;
             ball.SelectedTexture = SelectedBallTexture;
             ball.SelectedTexture_Panel = SelectedBallTexture2;
-            ball.ShowPanel = true;
             AddBall(ball);
             PhysiXEngine.Effect e = effects.Last<PhysiXEngine.Effect>();
             if (e as Gravity != null)
@@ -178,7 +174,7 @@ namespace PhysicsLab
             return ball;
         }
 
-        public void CreateCrate(Vector3 position)
+        public Crate CreateCrate(Vector3 position)
         {
             Crate crate = new Crate(new Vector3(0.5f, 0.5f, 0.5f));
             crate.Position = position;
@@ -186,12 +182,14 @@ namespace PhysicsLab
             crate.model = CrateModel;
             crate.Texture = CrateTexture;
             crate.SelectedTexture = SelectedCrateTexture;
+            crate.SelectedTexture_Panel = SelectedCrateTexture2;
             AddCrate(crate);
             PhysiXEngine.Effect e = effects.Last<PhysiXEngine.Effect>();
             if (e as Gravity != null)
                 ((Gravity)e).AddBody(crate);
             else
                 throw new Exception();
+            return crate;
         }
 
         /// <summary>
@@ -200,8 +198,6 @@ namespace PhysicsLab
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-
             base.Initialize();
         }
 
@@ -214,7 +210,6 @@ namespace PhysicsLab
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             BallModel = Game.Content.Load<Model>(@"Models\ball");
             BallTexture = Game.Content.Load<Texture2D>(@"Textures\texBall");
             SelectedBallTexture = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBall");
@@ -243,7 +238,6 @@ namespace PhysicsLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
             float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
             duration *= speed;
             if (!pause)
@@ -270,7 +264,6 @@ namespace PhysicsLab
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             foreach (Body bdy in room)
             {
                 ((Drawable)bdy).Draw(((Lab)Game).camera);
