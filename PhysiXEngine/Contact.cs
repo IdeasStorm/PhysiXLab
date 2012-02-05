@@ -123,6 +123,41 @@ namespace PhysiXEngine
 
         #region "contactData Extraction "
 
+        bool overlapOnAxis(Box one, Box two, Vector3 axis, Vector3 toCentre)
+        {
+            // Project the half-size of one onto axis
+            float oneProject = transformToAxis(one, axis);
+            float twoProject = transformToAxis(two, axis);
+
+            // Project this onto the axis
+            float distance = Math.Abs(Vector3.Dot(toCentre, axis));
+
+            // Check for overlap
+            return (distance < oneProject + twoProject);
+        }
+
+        bool CheckBoxAndCheck(Box one, Box two)
+        {
+            //#define TEST_OVERLAP(axis) overlapOnAxis(one, two, (axis), toCentre)
+            Vector3 toCentre = two.Position - one.Position;
+            bool first = true, second = true, third = true;
+            for (int i = 0; i < 3; i++)
+            {
+                first = first && overlapOnAxis(one, two, one.GetAxis(i), toCentre);
+                second = second && overlapOnAxis(one, two, two.GetAxis(i), toCentre);
+            }
+            for (int i = 0,j=0, k=0; i < 9; i++, j++)
+            {
+                if (i % 3 == 0 && i != 0)
+                {
+                    j = 0;
+                    k++;
+                }
+                third = third && overlapOnAxis(one, two, Vector3.Cross(one.GetAxis(k), two.GetAxis(j)),toCentre);
+            }
+            return first && second && third;
+        }
+
         public bool SphereAndSphere()
         {            
             //Cache the sphere positions
