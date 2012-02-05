@@ -141,10 +141,10 @@ namespace PhysicsLab
             {
                 if (currentBody != null)
                 {
-                    if (previousBody != null)
-                        ((Drawable)previousBody).ShowPanel = false;
                     if (currentBody.InverseMass != 0)
                     {
+                        if (previousBody != null)
+                            ((Drawable)previousBody).ShowPanel = false;
                         Reset();
                         CreateDialog(currentBody);
                         ((Drawable)currentBody).ShowPanel = true;
