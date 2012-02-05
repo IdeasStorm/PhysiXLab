@@ -242,13 +242,13 @@ namespace PhysicsLab
             duration *= speed;
             if (!pause)
             {
-                foreach (PhysiXEngine.Effect ef in effects)
-                {
-                    ef.Update(duration);
-                }
                 foreach (Body bdy in bodys)
                 {
                     bdy.Update(duration);
+                }
+                foreach (PhysiXEngine.Effect ef in effects)
+                {
+                    ef.Update(duration);
                 }
                 cg.Update(duration);
             }
