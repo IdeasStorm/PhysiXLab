@@ -37,6 +37,8 @@ namespace PhysicsLab
         public Texture2D CrateTexture;
         public Texture2D SelectedCrateTexture;
         public Texture2D SelectedCrateTexture2;
+        public Texture2D Ground;
+        public Texture2D Wall;
         public Model CrateModel;
         public float speed = 1f;
         public bool pause = true;
@@ -220,6 +222,10 @@ namespace PhysicsLab
             CrateTexture = Game.Content.Load<Texture2D>(@"Textures\texBox");
             SelectedCrateTexture = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBox");
             SelectedCrateTexture2 = Game.Content.Load<Texture2D>(@"Textures\SelectedtexBox2");
+
+
+            Ground = Game.Content.Load<Texture2D>(@"Textures\Ground");
+            Wall = Game.Content.Load<Texture2D>(@"Textures\Wall");
         }
 
         /// <summary>
@@ -236,7 +242,7 @@ namespace PhysicsLab
             Crate ground = new Crate(new Vector3(width, 4f, height));
             ground.Position = new Vector3(0f, -9f, 0f);
             ground.model = CrateModel;
-            ground.Texture = Game.Content.Load<Texture2D>(@"Textures\Ground");
+            ground.Texture = Ground;
             ground.SelectedTexture = null;
             ground.InverseMass = 0;
             ground.Lock();
@@ -245,7 +251,7 @@ namespace PhysicsLab
             Crate RightWall = new Crate(new Vector3(0.01f, length, height));
             RightWall.Position = new Vector3(width+0.01f, 5.01f, 0f);
             RightWall.model = CrateModel;
-            RightWall.Texture = Game.Content.Load<Texture2D>(@"Textures\Wall");
+            RightWall.Texture = Wall;
             RightWall.SelectedTexture = null;
             RightWall.InverseMass = 0;
             RightWall.Lock();
@@ -263,11 +269,30 @@ namespace PhysicsLab
             Crate LeftWall = new Crate(new Vector3(0.01f, length, height));
             LeftWall.Position = new Vector3(-(width+0.01f), 5.01f, 0f);
             LeftWall.model = CrateModel;
-            LeftWall.Texture = Game.Content.Load<Texture2D>(@"Textures\Wall");
+            LeftWall.Texture = Wall;
             LeftWall.SelectedTexture = null;
             LeftWall.InverseMass = 0;
             LeftWall.Lock();
             AddToRoom(LeftWall);
+
+            Crate Slope = new Crate(new Vector3(width / 4, length - length / 4, 0.01f));
+            Slope.Position = new Vector3(width - width / 4, length/4,  0f);
+            Slope.AddScaledOrientation(new Vector3(-0.9f,0,0));
+            Slope.model = CrateModel;
+            Slope.Texture = Ground;
+            Slope.SelectedTexture = null;
+            Slope.InverseMass = 0;
+            Slope.Lock();
+            AddToRoom(Slope);
+
+            Crate Roof = new Crate(new Vector3(width, 0.4f, height/4));
+            Roof.Position = new Vector3(0, length / 2+length/4, -(height - height/4));
+            Roof.model = CrateModel;
+            Roof.Texture = Ground;
+            Roof.SelectedTexture = null;
+            Roof.InverseMass = 0;
+            Roof.Lock();
+            AddToRoom(Roof);
         }
 
         /// <summary>

@@ -135,7 +135,7 @@ namespace PhysicsLab
             crate.Position = new Vector3(1f, -2f, 1f);
             basicLab.AddCrate(crate);
 
-            basicLab.CreateRoom(15f, 15f, 10f);
+            basicLab.CreateRoom(10f, 10f, 10f);
 
             basicLab.AddEffect(new Spring(ball, ball1, new Vector3(1, 1, 1), 10f, 2f, 0.995f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
