@@ -58,8 +58,8 @@ namespace PhysiXEngine
             this.body[0] = firstBody;
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
-            restitution = 0.4f;
-            friction = 0.1f; // TODO add a dynamic mechanism
+            restitution = ContactGenerator.restitution;
+            friction = ContactGenerator.friction;
 
         }
 
