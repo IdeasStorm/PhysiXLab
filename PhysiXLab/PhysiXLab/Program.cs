@@ -34,7 +34,11 @@ namespace Test
             //bridge.Run();
 
             RopeTest rope = new RopeTest();
-            rope.Run();
+            //rope.Run();
+
+            EnergyConservation b= new EnergyConservation();
+            b.Run();
+
         }
     }
 #endif
