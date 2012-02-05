@@ -391,6 +391,7 @@ namespace PhysiXEngine
                 {
 
                     contactDataList[index].revertState();
+                    contactDataList.RemoveAt(index);
                     positionIterations++;
                     continue;
                 }
