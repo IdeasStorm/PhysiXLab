@@ -112,6 +112,8 @@
   <ItemGroup>
     <Compile Include="Ball.cs" />
     <Compile Include="BasicLab.cs" />
+    <Compile Include="BCXMLPlayer.cs" />
+    <Compile Include="BCXMLPlayerTest.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Crate.cs" />
     <Compile Include="Drawable.cs" />

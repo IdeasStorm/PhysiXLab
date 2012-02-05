@@ -10,6 +10,35 @@ namespace PhysiXEngine
 {
     public class Body
     {
+        private static UInt32 GUIDCounter = 0;
+        private UInt32 _GUID;
+
+        public UInt32 GUID
+        {
+            private set
+            {
+                _GUID = value;
+            }
+            get
+            {
+                return _GUID;
+            }
+        }
+
+        public override string ToString()
+        {
+            return "IM=" + inverseMass.ToString() + '|' + GUID.ToString();
+        }
+
+        public Body(string S)
+        {
+            string[] Temp = S.Split('|');
+            this._GUID = UInt32.Parse(Temp[Temp.Length - 1]);
+            if (GUIDCounter <= _GUID)
+                GUIDCounter = _GUID + 1;
+            this.InverseMass = float.Parse(Temp[Temp.Length - 2].Substring(3));
+        }
+
         public bool HasFiniteMass { get; private set; }
         private float inverseMass;
         public float InverseMass
@@ -167,6 +196,8 @@ namespace PhysiXEngine
 
         public Body(float mass = 1f)
         {
+            _GUID = GUIDCounter;
+            GUIDCounter++;
             InertiaTensor = Matrix.Identity;
             Mass = mass;
             Awake();
@@ -203,6 +234,15 @@ namespace PhysiXEngine
             onSituationChanged(); //trigger situation changed
             clearAccumulators();
             // add damping 
+        }
+
+        public virtual void Update(string S)
+        {
+            string[] Info = S.Split('|');
+            position.X = float.Parse(Info[0]);
+            position.Y = float.Parse(Info[1]);
+            position.Z = float.Parse(Info[2]);
+            orientation.W = float.Parse(Info[3]);
         }
 
         public void AddScaledOrientation(Vector3 rotation,float scale=1)

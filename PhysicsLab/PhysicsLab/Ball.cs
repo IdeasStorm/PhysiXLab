@@ -21,6 +21,18 @@ namespace PhysicsLab
             : base(radius)
         {}
 
+        public Ball(Model model, Texture2D Texture, string S)
+            : base(S)
+        {
+            this.Texture = Texture;
+            this.model = model;
+        }
+
+        public override string ToString()
+        {
+            return "Ball|" + base.ToString();
+        }
+
         public void Draw(Camera camera)
         {
             Matrix[] transforms = new Matrix[model.Bones.Count];
