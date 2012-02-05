@@ -106,7 +106,10 @@ namespace PhysicsLab
 
             base.Initialize();
         }
-
+        float y, p;
+        bool inRotateMode = false;
+        float cameraSiteRadius = 20;
+        Vector3 cameraSiteCenter = Vector3.Zero;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -115,14 +118,24 @@ namespace PhysicsLab
         {
             // Move forward/backward
             if (Keyboard.GetState().IsKeyDown(Keys.W))
-                cameraPosition += cameraDirection * speed;
+                cameraSiteCenter += cameraDirection * speed;
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-                cameraPosition -= cameraDirection * speed;
+                cameraSiteCenter -= cameraDirection * speed;
             // Move side to side
             if (Keyboard.GetState().IsKeyDown(Keys.A))
-                cameraPosition += Vector3.Cross(cameraUp, cameraDirection) * speed;
+                cameraSiteCenter += Vector3.Cross(cameraUp, cameraDirection) * speed;
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-                cameraPosition -= Vector3.Cross(cameraUp, cameraDirection) * speed;
+                cameraSiteCenter -= Vector3.Cross(cameraUp, cameraDirection) * speed;
+            inRotateMode = (Mouse.GetState().MiddleButton==ButtonState.Pressed);
+            cameraSiteRadius = 10 - Mouse.GetState().ScrollWheelValue * 0.005f;
+            cameraPosition = cameraSiteCenter 
+                + Vector3.Transform(Vector3.Backward * cameraSiteRadius, Matrix.CreateFromYawPitchRoll(y,p,0));
+            if (inRotateMode)
+            {
+                y = y - (Mouse.GetState().X - prevMouseState.X) * 0.01f;
+                p = p - (Mouse.GetState().Y - prevMouseState.Y) * 0.01f;
+            }
+            cameraDirection = -cameraPosition;
             /*
             // Yaw rotation
             cameraDirection = Vector3.Transform(cameraDirection

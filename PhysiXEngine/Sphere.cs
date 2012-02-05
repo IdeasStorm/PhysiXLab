@@ -17,14 +17,11 @@ namespace PhysiXEngine
         /// </summary>
         /// <param name="radius">the radius of a sphere</param>
         /// <param name="mass">the mass of sphere</param>
-        public Sphere(float radius, float mass=1)
+        public Sphere(float radius, float mass = 1)
         {
             this.radius = radius;
             sphere = new BoundingSphere(Position, radius);
-            Mass = mass;
-            float coeff = 0.4f * Mass * radius * radius;
-            setInertiaTensorCoeffs(coeff, coeff, coeff);
-            UpdateMatices();
+            Mass = mass;            
         }
 
         public void SetRadius(float radius)
@@ -98,6 +95,18 @@ namespace PhysiXEngine
         public override Vector3 getHalfSize()
         {
             return new Vector3(radius, radius, radius);
+        }
+
+        public override void onMassChanged()
+        {
+            base.onMassChanged();
+            if (InverseMass == 0)
+            {
+                InverseInertiaTensor = new Matrix();
+                return;
+            }
+            float coeff = 0.4f * Mass * radius * radius;
+            setInertiaTensorCoeffs(coeff, coeff, coeff);
         }
     }
 }

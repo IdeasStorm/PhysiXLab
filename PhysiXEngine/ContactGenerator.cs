@@ -201,7 +201,7 @@ namespace PhysiXEngine
             // Check for exceeding friction
             float planarImpulse = (float)Math.Sqrt(Convert.ToDouble(impulseContact.Y * impulseContact.Y + impulseContact.Z * impulseContact.Z));
             
-            if (planarImpulse > impulseContact.X * contactData.friction)
+            if (planarImpulse > Math.Abs(impulseContact.X * contactData.friction))
             {
                 // We need to use dynamic friction
                 impulseContact.Y /= planarImpulse;
@@ -383,7 +383,8 @@ namespace PhysiXEngine
                 //}
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
-                contactDataList[index].applyPositionChange(linearChange, angularChange, max);                
+                contactDataList[index].FixPenetration(duration);
+                contactDataList[index].applyPositionChange(linearChange, angularChange, max);
                 foreach (Contact contact in contactDataList)
                 {
                     for (int b = 0; b < 2; b++)
@@ -393,10 +394,10 @@ namespace PhysiXEngine
                         {
                             if (contact.body[b] == contactDataList[index].body[d])
                             {
-                                deltaPosition = linearChange[d] 
-                                    + angularChange[d] + Vector3.Cross(angularChange[d],contact.relativeContactPosition[b]);
+                                deltaPosition = linearChange[d]
+                                    + angularChange[d] + Vector3.Cross(angularChange[d], contact.relativeContactPosition[b]);
 
-                                contact.Penetration += Vector3.Dot(deltaPosition, contact.ContactNormal) * ((b!=0) ? 1 : -1);
+                                contact.Penetration += Vector3.Dot(deltaPosition, contact.ContactNormal) * ((b != 0) ? 1 : -1);
                             }
                         }
                     }

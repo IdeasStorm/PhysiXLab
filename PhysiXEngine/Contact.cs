@@ -923,15 +923,15 @@ namespace PhysiXEngine
 
             // revert to the moment before collision moment
             chosen.RevertChanges();
+            
             // starting binary search loop
-            while ( !IsColliding() )
+            do
             {
                 //if ((PositionA - PositionB).Length() <= 0.00001) return;
-                chosen.Position += chosen.Velocity * duration * 0.01f;
-                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.01f);
-                
-            }
-            this.Penetration = 0;
+                chosen.Position += chosen.Velocity * duration * 0.1f;
+                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.1f);
+
+            } while (!this.Check());
             
         }
 

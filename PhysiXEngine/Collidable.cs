@@ -49,5 +49,11 @@ namespace PhysiXEngine
         }
 
         public abstract Vector3 getHalfSize();
+
+        public override void onMassChanged()
+        {
+            base.onMassChanged();
+            UpdateMatices();
+        }
     }
 }
