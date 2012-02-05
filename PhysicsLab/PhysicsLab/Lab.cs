@@ -26,6 +26,7 @@ namespace PhysicsLab
         bool spaceClicked = false;
         bool bClicked = false;
         bool cClicked = false;
+        bool pClicked = false;
         #endregion
 
         #region "Previous State"
@@ -51,6 +52,10 @@ namespace PhysicsLab
         /// the current body under cursor (is moving by mouse)
         /// </summary>
         Body bdy = null;
+        #endregion
+
+        #region "Helpful"
+        Ray ray;
         #endregion
 
         public Lab()
@@ -156,7 +161,7 @@ namespace PhysicsLab
 
             if (!bodySel)
             {
-                Ray ray = camera.GetMouseRay(cursorPosition, GraphicsDevice.Viewport);
+                ray = camera.GetMouseRay(cursorPosition, GraphicsDevice.Viewport);
                 if (!bodyMoving) bdy = basicLab.CheckIntersect(ray);
                 if (bdy != null)
                 {
@@ -239,6 +244,16 @@ namespace PhysicsLab
                 panel.CreateDialog(crate);
                 currentBody = crate;
                 cClicked = false;
+            }
+            if (keyboard.IsKeyDown(Keys.P))
+                pClicked = true;
+            if (keyboard.IsKeyUp(Keys.P) && pClicked)
+            {
+                Body body = basicLab.CreateBall(camera.cameraPosition);
+                panel.CreateDialog(body);
+                currentBody = body;
+                body.AddVelocity(ray.Direction * 25);
+                pClicked = false;
             }
         }
 
