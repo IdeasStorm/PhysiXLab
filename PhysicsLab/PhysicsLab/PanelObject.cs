@@ -18,8 +18,6 @@ namespace PhysicsLab
     /// </summary>
     public class PanelObject : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        //List<Panel> panels = new List<Panel>();
-        //Dictionary<Panel, Body> panels = new Dictionary<Panel, Body>();
         Panel panel;
 
         Body currentBody = null;
@@ -51,8 +49,16 @@ namespace PhysicsLab
             base.Initialize();
         }
 
+        public void Reset()
+        {
+            Initialize();
+            if (previousBody != null)
+                ((Drawable)previousBody).ShowPanel = false;
+        }
+
         public void CreateDialog(Body body)
         {
+            Reset();
             if (body as Ball != null)
                 panel.AddField("Radius", ((Ball)body).radius);
             panel.AddField("Mass", body.Mass);
@@ -131,8 +137,7 @@ namespace PhysicsLab
                     ((Drawable)previousBody).ShowPanel = false;
                 if (currentBody.InverseMass != 0)
                 {
-                    //RightMouseClicked = true;
-                    Initialize();
+                    Reset();
                     CreateDialog(currentBody);
                     ((Drawable)currentBody).ShowPanel = true;
                     previousBody = currentBody;
