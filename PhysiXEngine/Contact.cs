@@ -956,7 +956,9 @@ namespace PhysiXEngine
                 chosen = body[1];
             else
                 chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
-
+            this.revertState();
+            this.Check();
+            return;
             // revert to the moment before collision moment
             // starting binary search loop
             do
@@ -990,6 +992,7 @@ namespace PhysiXEngine
         /// </summary>
         public bool Check()
         {
+            Penetration = 0;
             if (WithPlane)
                 return plane.generateContacts(body[0], this);
             else
