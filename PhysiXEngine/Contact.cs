@@ -898,7 +898,7 @@ namespace PhysiXEngine
 
                     // applying changes
                     body[i].Position += linearChange[i];
-                    body[i].AddScaledOrientation(angularChange[i],0.5f);
+                    body[i].AddScaledOrientation(angularChange[i],1f);
 
                 }
             }
@@ -923,16 +923,16 @@ namespace PhysiXEngine
                 chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
 
             // revert to the moment before collision moment
-            chosen.RevertChanges();
-            
             // starting binary search loop
             do
             {
                 //if ((PositionA - PositionB).Length() <= 0.00001) return;
-                chosen.Position += chosen.Velocity * duration * 0.1f;
-                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.1f);
+                chosen.Position += chosen.Velocity * duration * 0.01f;
+                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.01f);
+                this.Check();
 
-            } while (!this.Check());
+            } while (this.Penetration > 0.001f);
+            this.InitializeAtMoment(duration);
             
         }
 
@@ -999,6 +999,16 @@ namespace PhysiXEngine
                     return true;
             }
             return false;
+        }
+
+        public void revertState()
+        {
+            Collidable chosen;
+            if (body[0] == null)
+                chosen = body[1];
+            else
+                chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
+            chosen.RevertChanges();
         }
     }
 }
