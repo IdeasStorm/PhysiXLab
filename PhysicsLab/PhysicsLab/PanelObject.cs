@@ -139,16 +139,18 @@ namespace PhysicsLab
         {
             if (mouse.RightButton == ButtonState.Pressed)
             {
-                if (previousBody != null)
-                    ((Drawable)previousBody).ShowPanel = false;
-                if (currentBody.InverseMass != 0)
+                if (currentBody != null)
                 {
-                    Reset();
-                    CreateDialog(currentBody);
-                    ((Drawable)currentBody).ShowPanel = true;
-                    previousBody = currentBody;
+                    if (previousBody != null)
+                        ((Drawable)previousBody).ShowPanel = false;
+                    if (currentBody.InverseMass != 0)
+                    {
+                        Reset();
+                        CreateDialog(currentBody);
+                        ((Drawable)currentBody).ShowPanel = true;
+                        previousBody = currentBody;
+                    }
                 }
-                
             }
         }
 
