@@ -100,7 +100,11 @@ namespace PhysiXEngine
                 return;
             }
             if (this.isLeaf() && other.isLeaf())
-                Potentials.Add(new Contact(this.Body, other.Body));
+            {
+                Contact temp = new Contact(this.Body, other.Body);
+                if (!temp.BothFixed())
+                    Potentials.Add(temp);
+            }
             else if (other.isLeaf() && !this.isLeaf())
             {
                 this.Children[0].FindPotentialCollisionsWith(Potentials, other);
@@ -115,6 +119,8 @@ namespace PhysiXEngine
             else
             {
                 other.Children[0].FindPotentialCollisionsWith(Potentials, this.Children[0]);
+                other.Children[0].FindPotentialCollisionsWith(Potentials, this.Children[1]);
+                other.Children[1].FindPotentialCollisionsWith(Potentials, this.Children[0]);
                 other.Children[1].FindPotentialCollisionsWith(Potentials, this.Children[1]);
                 this.FindPotentialCollisions(Potentials);
                 other.FindPotentialCollisions(Potentials);

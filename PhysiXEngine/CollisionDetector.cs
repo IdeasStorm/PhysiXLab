@@ -75,23 +75,23 @@ namespace PhysiXEngine
         /// </summary>
         public List<Contact> ReDetect()
         {
-            detections.Clear();
-            foreach (Collidable body0 in Shapes)
-            {
-                foreach (Collidable body1 in Shapes)
-                {
-                    if (body0 != body1)
-                    {
-                        Contact temp = new Contact(body0, body1);
-                        if (
-                            (!detections.Any((contact) => (contact.equals(temp)))) &&
-                            !temp.BothFixed()
-                           )
-                            detections.Add(temp);
-                    }
-                }
-            }
-            return detections;
+            //detections.Clear();
+            //foreach (Collidable body0 in Shapes)
+            //{
+            //    foreach (Collidable body1 in Shapes)
+            //    {
+            //        if (body0 != body1)
+            //        {
+            //            Contact temp = new Contact(body0, body1);
+            //            if (
+            //                //(!detections.Any((contact) =>  (temp.Equals(temp)))) &&
+            //                !temp.BothFixed()
+            //               )
+            //                detections.Add(temp);
+            //        }
+            //    }
+            //}
+            //return detections;
             didDetect = true;
             BVHNode Hierarchy = new BVHNode(null, Shapes.First.Value);
 
