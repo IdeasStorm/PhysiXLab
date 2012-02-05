@@ -281,7 +281,7 @@ namespace PhysiXEngine
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
-            if (contactDataList.Count == 0) return;
+            //if (contactDataList.Count == 0) return;
             this.contactDataList.RemoveAll((Contact contact) => { 
                 return !contact.Check(); 
             });
@@ -307,13 +307,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        public int velocityIterations = 1;
+        public int velocityIterations = 4;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        public int positionIterations = 8;
+        public int positionIterations = 4;
 
         //TODO modify above values
 
