@@ -30,11 +30,13 @@ namespace PhysiXEngine
         public void SetRadius(float radius)
         {
             this.radius = radius;
+            onSituationChanged();
         }
 
         protected override void updateBounding()
         {
             _sphere.Center = this.Position;
+            _sphere.Radius = radius;
         }
 
         public override ContactData generateContacts(Collidable other) 
