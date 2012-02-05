@@ -12,6 +12,23 @@ namespace PhysiXEngine
         private BoundingSphere _sphere;
         public BoundingSphere sphere { get { return _sphere; } protected set { _sphere = value; } }
 
+        public override string ToString()
+        {
+            return "Sphere|" + "R=" + radius.ToString() + '|' + base.ToString();
+        }
+
+        public Sphere(string S)
+            : base(S)
+        {
+            string[] Temp = S.Split('|');
+            this.radius = float.Parse(Temp[Temp.Length - 3].Substring(2));
+
+            sphere = new BoundingSphere(Position, radius);
+            float coeff = 0.4f * Mass * radius * radius;
+            setInertiaTensorCoeffs(coeff, coeff, coeff);
+            UpdateMatices();
+        }
+
         /// <summary>
         /// Creates a sphere
         /// </summary>

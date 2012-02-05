@@ -80,45 +80,6 @@ namespace PhysicsLab
             base.Initialize();
         }
 
-        void CreateRoom()
-        {
-            Crate ground = new Crate(new Vector3(10f, 4f, 10f));
-            ground.Position = new Vector3(0f, -9f, 0f);
-            ground.model = basicLab.CrateModel;
-            ground.Texture = Content.Load<Texture2D>(@"Textures\Ground");
-            ground.SelectedTexture = null;
-            ground.InverseMass = 0;
-            ground.Lock();
-            basicLab.AddToRoom(ground);
-
-            Crate RightWall = new Crate(new Vector3(0.01f, 10f, 10f));
-            RightWall.Position = new Vector3(10.01f, 5.01f, 0f);
-            RightWall.model = basicLab.CrateModel;
-            RightWall.Texture = Content.Load<Texture2D>(@"Textures\Wall");
-            RightWall.SelectedTexture = null;
-            RightWall.InverseMass = 0;
-            RightWall.Lock();
-            basicLab.AddToRoom(RightWall);
-
-            Crate FrontWall = new Crate(new Vector3(10f, 10f, 0.01f));
-            FrontWall.Position = new Vector3(0f, 5.01f, -10.01f);
-            FrontWall.model = basicLab.CrateModel;
-            FrontWall.Texture = Content.Load<Texture2D>(@"Textures\Wall");
-            FrontWall.SelectedTexture = null;
-            FrontWall.InverseMass = 0;
-            FrontWall.Lock();
-            basicLab.AddToRoom(FrontWall);
-
-            Crate LeftWall = new Crate(new Vector3(0.01f, 10f, 10f));
-            LeftWall.Position = new Vector3(-10.01f, 5.01f, 0f);
-            LeftWall.model = basicLab.CrateModel;
-            LeftWall.Texture = Content.Load<Texture2D>(@"Textures\Wall");
-            LeftWall.SelectedTexture = null;
-            LeftWall.InverseMass = 0;
-            LeftWall.Lock();
-            basicLab.AddToRoom(LeftWall);
-        }
-
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -174,7 +135,7 @@ namespace PhysicsLab
             crate.Position = new Vector3(1f, -2f, 1f);
             basicLab.AddCrate(crate);
 
-            CreateRoom();
+            basicLab.CreateRoom(10f, 10f, 10f);
 
             basicLab.AddEffect(new Spring(ball, ball1, new Vector3(1, 1, 1), 10f, 2f, 0.995f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
