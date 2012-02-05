@@ -356,7 +356,6 @@ namespace PhysiXEngine
             // the needed ammount to ressolve penetration
             float max;
             Vector3 deltaPosition;
-
             // iteratively resolve interpenetration in order of severity.
             positionIterationsUsed = 0;
             while (positionIterationsUsed < positionIterations)
@@ -422,9 +421,10 @@ namespace PhysiXEngine
             Vector3[] velocityChange, rotationChange;
             Vector3 cp;
 
+            int realVelocityIterations = Math.Min(velocityIterations,contactDataList.Count);
             // iteratively handle impacts in order of severity.
             velocityIterationsUsed = 0;
-            while(velocityIterationsUsed < velocityIterations) 
+            while(velocityIterationsUsed < realVelocityIterations) 
             {
                 // Find contact with maximum magnitude of probable velocity change.
                 float max = velocityEpsilon;
@@ -441,7 +441,7 @@ namespace PhysiXEngine
 
                 // Match the awake state at the contact
                 contactDataList[index].WakeUpPair();
-
+                
                 // Do the resolution on the contact that came out top.
                 ApplyVelocityChange(contactDataList[index],out velocityChange,out rotationChange);
 
@@ -501,8 +501,7 @@ namespace PhysiXEngine
                             //TODO move this to contact data & check params e.g duration
                         }
                     }
-                }
-                contactDataList[index].desiredDeltaVelocity = 0;
+                }                
                 velocityIterationsUsed++;
     }
         }
