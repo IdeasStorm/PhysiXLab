@@ -118,6 +118,7 @@
     <Compile Include="IMoveable.cs" />
     <Compile Include="Lab.cs" />
     <Compile Include="Panel.cs" />
+    <Compile Include="PanelObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
