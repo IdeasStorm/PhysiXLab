@@ -637,6 +637,7 @@ namespace PhysiXEngine
             {
                 // We've got a vertex of box two on a face of box one.
                 fillPointFaceBoxBox(one, two, toCentre, best, pen);
+                return true;
             }
             else if (best < 6)
             {
@@ -645,6 +646,7 @@ namespace PhysiXEngine
                 // one and two (and therefore also the vector between their 
                 // centres).
                 fillPointFaceBoxBox(two, one, toCentre * -1.0f, best - 3, pen);
+                return true;
             }
             else
             {
@@ -727,10 +729,9 @@ namespace PhysiXEngine
                 _Penetration = pen;
                 _ContactNormal = axis;
                 _ContactPoint = vertex;
-            }
-            if (CheckBoxBoxQuick(one, two) || CheckBoxBoxQuick(two, one))
                 return true;
-            return true;
+            }
+            
         }
         #endregion
 
@@ -808,7 +809,7 @@ namespace PhysiXEngine
         internal void applyPositionChange(Vector3[] linearChange, Vector3[] angularChange,float Penetration)
             //unused penetration
         {
-            float angularLimit = 0.01f;//0.1f;
+            float angularLimit = 0.1f;//0.1f;
             float[] angularMove = new float[2],
                     linearMove = new float[2];
 
@@ -820,7 +821,7 @@ namespace PhysiXEngine
             // We need to work out the inertia of each object in the direction
             // of the contact normal, due to angular inertia only. 
             for (int i = 0; i < 2; i++) {
-                if (body[i] != null && body[i].HasFiniteMass)
+                if (body[i] != null)
                 {
                     Matrix3 inverseInertiaTensor = body[i].InverseInertiaTensorWorld;
 
@@ -897,7 +898,7 @@ namespace PhysiXEngine
 
                     // applying changes
                     body[i].Position += linearChange[i];
-                    body[i].AddScaledOrientation(angularChange[i],1f);
+                    body[i].AddScaledOrientation(angularChange[i],0.5f);
 
                 }
             }
