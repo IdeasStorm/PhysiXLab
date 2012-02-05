@@ -281,7 +281,7 @@ namespace PhysiXEngine
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
-            if (contactDataList.Count == 0) return;
+            //if (contactDataList.Count == 0) return;
             this.contactDataList.RemoveAll((Contact contact) => { 
                 return !contact.Check(); 
             });
@@ -307,13 +307,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        public int velocityIterations = 1;
+        public int velocityIterations = 4;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        public int positionIterations = 8;
+        public int positionIterations = 4;
 
         //TODO modify above values
 
@@ -356,7 +356,6 @@ namespace PhysiXEngine
             // the needed ammount to ressolve penetration
             float max;
             Vector3 deltaPosition;
-
             // iteratively resolve interpenetration in order of severity.
             positionIterationsUsed = 0;
             while (positionIterationsUsed < positionIterations)
@@ -422,9 +421,10 @@ namespace PhysiXEngine
             Vector3[] velocityChange, rotationChange;
             Vector3 cp;
 
+            int realVelocityIterations = Math.Min(velocityIterations,contactDataList.Count);
             // iteratively handle impacts in order of severity.
             velocityIterationsUsed = 0;
-            while(velocityIterationsUsed < velocityIterations) 
+            while(velocityIterationsUsed < realVelocityIterations) 
             {
                 // Find contact with maximum magnitude of probable velocity change.
                 float max = velocityEpsilon;
@@ -441,7 +441,7 @@ namespace PhysiXEngine
 
                 // Match the awake state at the contact
                 contactDataList[index].WakeUpPair();
-
+                
                 // Do the resolution on the contact that came out top.
                 ApplyVelocityChange(contactDataList[index],out velocityChange,out rotationChange);
 
@@ -501,8 +501,7 @@ namespace PhysiXEngine
                             //TODO move this to contact data & check params e.g duration
                         }
                     }
-                }
-                contactDataList[index].desiredDeltaVelocity = 0;
+                }                
                 velocityIterationsUsed++;
     }
         }

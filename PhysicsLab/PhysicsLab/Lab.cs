@@ -227,12 +227,14 @@ namespace PhysicsLab
                         {
                             bodySel = true;
                             prevBody = bdy;
-                            ((IMoveable)bdy).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
+                            ((IMoveable)bdy).Translate(-camera.cameraDirection, cameraDelta.Y + cursorDelta.Y + cameraDelta.X + cursorDelta.X);
                         }
                         else
                         {
-                            ((IMoveable)bdy).Translate(Vector3.Right, cameraDelta.X + cursorDelta.X);
-                            ((IMoveable)bdy).Translate(Vector3.Down, cameraDelta.Y + cursorDelta.Y);
+                            Vector3 moveUnit = Vector3.Cross(camera.cameraUp, camera.cameraDirection);
+                            moveUnit.Normalize();
+                            ((IMoveable)bdy).Translate(-moveUnit, cameraDelta.X + cursorDelta.X);
+                            ((IMoveable)bdy).Translate(-camera.cameraUp, cameraDelta.Y + cursorDelta.Y);
                         }
                     }
                 }
@@ -244,7 +246,7 @@ namespace PhysicsLab
                 cursorDelta *= dest / 10f;
                 cameraDelta *= dest / 10f;
 
-                ((IMoveable)prevBody).Translate(Vector3.Backward, cameraDelta.Y + cursorDelta.Y);
+                ((IMoveable)prevBody).Translate(-camera.cameraDirection, cameraDelta.Y + cursorDelta.Y);
                 ((Drawable)prevBody).Selected = true;
             }
             if (keyboard.IsKeyUp(Keys.LeftControl)) bodySel = false;
