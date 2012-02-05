@@ -84,8 +84,8 @@ namespace PhysiXEngine
                     {
                         Contact temp = new Contact(body0, body1);
                         if (
-                            (detections.Select((contact) => (contact.Equals(temp))).Count() > 0) ||
-                            temp.BothFixed()
+                            //(!detections.Any((contact) =>  (temp.Equals(temp)))) &&
+                            !temp.BothFixed()
                            )
                             detections.Add(temp);
                     }
