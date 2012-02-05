@@ -293,6 +293,15 @@ namespace PhysicsLab
             Roof.InverseMass = 0;
             Roof.Lock();
             AddToRoom(Roof);
+
+            Crate Stop = new Crate(new Vector3(width/4, 1f, 0.1f));
+            Stop.Position = new Vector3(width - width / 4, -height/2 + 1, length);
+            Stop.model = CrateModel;
+            Stop.Texture = Ground;
+            Stop.SelectedTexture = null;
+            Stop.InverseMass = 0;
+            Stop.Lock();
+            AddToRoom(Stop);
         }
 
         /// <summary>
