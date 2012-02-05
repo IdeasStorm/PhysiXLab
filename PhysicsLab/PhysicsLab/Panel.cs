@@ -362,7 +362,7 @@ namespace PhysicsLab
             // TODO: Add your drawing code here
             if (Show)
             {
-                spriteBatch.Begin();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,SamplerState.LinearWrap,DepthStencilState.Default,RasterizerState.CullCounterClockwise);
                 Frm.Draw(spriteBatch);
                 foreach (Form frm in Panels.Values)
                 {
