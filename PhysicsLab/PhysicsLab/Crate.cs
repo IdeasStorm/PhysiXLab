@@ -26,11 +26,7 @@ namespace PhysicsLab
         public Crate(Vector3 halfSize)
             : base(halfSize)
         {
-            Vector3 squaredSize = halfSize * halfSize;
-            this.setInertiaTensorCoeffs(
-                0.3f*Mass*(squaredSize.Y+squaredSize.Z),
-                0.3f*Mass*(squaredSize.X + squaredSize.Z),
-                0.3f*Mass*(squaredSize.X + squaredSize.Y));
+
         }
 
         public void LoadContent(ContentManager content)

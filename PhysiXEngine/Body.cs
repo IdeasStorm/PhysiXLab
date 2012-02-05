@@ -22,6 +22,7 @@ namespace PhysiXEngine
             {
                 HasFiniteMass = (value != 0.0f);
                 inverseMass = value;
+                onMassChanged();
             }
         }
 
@@ -35,6 +36,7 @@ namespace PhysiXEngine
             {
                 HasFiniteMass = !float.IsInfinity(value);
                 inverseMass = 1.0f / value;
+                onMassChanged();
             }
         }
 
@@ -163,10 +165,10 @@ namespace PhysiXEngine
         //TODO add angular/linear damping if needed
 
 
-        public Body()
+        public Body(float mass = 1f)
         {
-            Mass = 1;
             InertiaTensor = Matrix.Identity;
+            Mass = mass;
             Awake();
             UpdateMatices();
         }
@@ -336,6 +338,11 @@ namespace PhysiXEngine
         {
             inverseInertiaTensor = new Matrix();
             InverseMass = 0;
+        }
+
+        public virtual void onMassChanged()
+        {
+            inverseMass = 1 / Mass;
         }
     }
 }

@@ -11,10 +11,11 @@ namespace PhysiXEngine
     {
         public Vector3 HalfSize { get; protected set; }        
 
-        public Box(Vector3 halfSize)
+        public Box(Vector3 halfSize,float mass = 1)
         {
             HalfSize = halfSize;
             updateBounding();
+            Mass = mass;
         }
 
         public override ContactData generateContacts(Collidable other)
@@ -78,6 +79,21 @@ namespace PhysiXEngine
         public override Vector3 getHalfSize()
         {
             return HalfSize;
+        }
+
+        public override void onMassChanged()
+        {
+            base.onMassChanged();
+            if (InverseMass == 0)
+            {
+                InverseInertiaTensor = new Matrix();
+                return;
+            }
+            Vector3 squaredSize = HalfSize * HalfSize;
+            this.setInertiaTensorCoeffs(
+                0.3f * Mass * (squaredSize.Y + squaredSize.Z),
+                0.3f * Mass * (squaredSize.X + squaredSize.Z),
+                0.3f * Mass * (squaredSize.X + squaredSize.Y));
         }
     }
 }
