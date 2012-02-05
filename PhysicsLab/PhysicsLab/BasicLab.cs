@@ -228,7 +228,46 @@ namespace PhysicsLab
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
+        }
+
+        public void CreateRoom(float width, float length, float height)
+        {
+            Crate ground = new Crate(new Vector3(width, 4f, height));
+            ground.Position = new Vector3(0f, -9f, 0f);
+            ground.model = CrateModel;
+            ground.Texture = Game.Content.Load<Texture2D>(@"Textures\Ground");
+            ground.SelectedTexture = null;
+            ground.InverseMass = 0;
+            ground.Lock();
+            AddToRoom(ground);
+
+            Crate RightWall = new Crate(new Vector3(0.01f, length, height));
+            RightWall.Position = new Vector3(width+0.01f, 5.01f, 0f);
+            RightWall.model = CrateModel;
+            RightWall.Texture = Game.Content.Load<Texture2D>(@"Textures\Wall");
+            RightWall.SelectedTexture = null;
+            RightWall.InverseMass = 0;
+            RightWall.Lock();
+            AddToRoom(RightWall);
+
+            Crate FrontWall = new Crate(new Vector3(width, length, 0.01f));
+            FrontWall.Position = new Vector3(0f, 5.01f, -(height + 0.01f));
+            FrontWall.model = CrateModel;
+            FrontWall.Texture = Game.Content.Load<Texture2D>(@"Textures\Wall");
+            FrontWall.SelectedTexture = null;
+            FrontWall.InverseMass = 0;
+            FrontWall.Lock();
+            AddToRoom(FrontWall);
+
+            Crate LeftWall = new Crate(new Vector3(0.01f, length, height));
+            LeftWall.Position = new Vector3(-(width+0.01f), 5.01f, 0f);
+            LeftWall.model = CrateModel;
+            LeftWall.Texture = Game.Content.Load<Texture2D>(@"Textures\Wall");
+            LeftWall.SelectedTexture = null;
+            LeftWall.InverseMass = 0;
+            LeftWall.Lock();
+            AddToRoom(LeftWall);
         }
 
         /// <summary>
