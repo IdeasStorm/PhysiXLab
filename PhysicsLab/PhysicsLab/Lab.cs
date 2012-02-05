@@ -167,7 +167,7 @@ namespace PhysicsLab
 
             Ball ball3 = new Ball(0.6f);
             ball3.Mass = 1f;
-            ball3.Position = new Vector3(2f, 8.5f, -9f);
+            ball3.Position = new Vector3(6f, 8.5f, -9f);
             ball3.model = basicLab.BallModel;
             ball3.Texture = basicLab.BallTexture;
             ball3.SelectedTexture = basicLab.SelectedBallTexture;
