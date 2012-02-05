@@ -17,28 +17,41 @@ namespace PhysicsLab
     /// </summary>
     public class Lab : Microsoft.Xna.Framework.Game
     {
+        #region "Main Component"
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        #endregion
 
+        #region "Boolean Field"
         bool spaceClicked = false;
+        bool bClicked = false;
+        bool cClicked = false;
+        #endregion
+
+        #region "Previous State"
         MouseState oldMouseState = new MouseState();
-        SpriteFont Font;
-
-        public Camera camera { get; protected set; }
         Vector3 previousCameraPosition = Vector3.Zero;
-        public BasicLab basicLab { get; set; }
         private Body prevBody = null;
-        private Body previousBody = null;
-        private Body currentBody = null;
-        private bool bodySel = false;
-        private Panel bodyPanel = null;
-        private Vector3 oldPos = Vector3.Zero;
-        private Vector3 oldVel = Vector3.Zero;
-        private Vector3 oldAcc = Vector3.Zero;
-        private bool RightMouseClicked = false;
+        #endregion
 
-        float timeOfGame = 0;
-        float timeToCreate = 100f;
+        #region "Game Component"
+        public Camera camera { get; protected set; }
+        public BasicLab basicLab { get; set; }
+        private PanelObject panel { get; set; }
+        #endregion
+
+        #region "Selected Body"
+        public Body currentBody = null;
+        private bool bodySel = false;
+        /// <summary>
+        /// indicates weather the bodu=y is being moved by mouse or not
+        /// </summary>
+        bool bodyMoving = false;
+        /// <summary>
+        /// the current body under cursor (is moving by mouse)
+        /// </summary>
+        Body bdy = null;
+        #endregion
 
         public Lab()
         {
@@ -54,19 +67,15 @@ namespace PhysicsLab
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            this.IsMouseVisible = true;
+
             basicLab = new BasicLab(this);
             Components.Add(basicLab);
-            bodyPanel = new Panel(this, new 
-                Vector2(Window.ClientBounds.Width - 255, 
-                Window.ClientBounds.Height - 255), 
-                250, 250);
-            Components.Add(bodyPanel);
+            panel = new PanelObject(this);
+            Components.Add(panel);
             camera = new Camera(this, new Vector3(0, 0, 20f),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
-
-            this.IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -118,9 +127,7 @@ namespace PhysicsLab
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            // TODO: use this.Content to load your game content here
-            Font = Content.Load<SpriteFont>(@"GUI\Arial");
-
+            
             Ball ball = new Ball(0.5f);
             ball.Position = new Vector3(2f, 0f, 0f);
             ball.model = basicLab.BallModel;
@@ -177,22 +184,11 @@ namespace PhysicsLab
         /// all content.
         /// </summary>
         protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
-        /// <summary>
-        /// indicates weather the bodu=y is being moved by mouse or not
-        /// </summary>
-        bool bodyMoving = false;
-        /// <summary>
-        /// the current body under cursor (is moving by mouse)
-        /// </summary>
-        Body bdy = null;
+        { }
 
         public void SelectedAndMoving(MouseState mouse, KeyboardState keyboard,
             Vector2 cursorPosition,Vector2 previousCursorPosition, float totalSecond)
         {
-            
             var cursorDelta = (cursorPosition - previousCursorPosition) * totalSecond;
             var cameraDelta = (camera.cameraPosition - previousCameraPosition) * totalSecond;
 
@@ -258,136 +254,29 @@ namespace PhysicsLab
             }
         }
 
-        protected void CreateDialog(Panel pnl, Body body)
-        {
-            if (body as Ball != null)
-                pnl.AddField("Radius", ((Ball)body).radius);
-            //TODO Add if Box
-            pnl.AddField("Mass", body.Mass);
-            pnl.AddLabel("Position", "Position");
-            pnl.AddXYZ(body.Position, "pos");
-            pnl.AddLabel("Velocity", "Velocity");
-            pnl.AddXYZ(body.Velocity, "vel");
-            pnl.AddLabel("Acceleration", "Acceleration");
-            pnl.AddXYZ(body.Acceleration, "acc");
-            pnl.AddOkButton();
-            pnl.AddCancelButton();
-            pnl.AddApplyButton();
-            currentBody = body;
-        }
-
         void Crate(Vector2 cursorPosition, KeyboardState keyboard, float time)
         {
             if (keyboard.IsKeyDown(Keys.B))
+                bClicked = true;
+            if (keyboard.IsKeyUp(Keys.B) && bClicked)
             {
-                timeOfGame += time;
-                if (timeOfGame > timeToCreate)
-                {
-                    timeOfGame = 0;
-                    Vector3 point = new Vector3(cursorPosition, 0.9f);
-                    point = GraphicsDevice.Viewport.Unproject(point, camera.projection, camera.view, Matrix.Identity);
-                    CreateDialog(bodyPanel, basicLab.CreateBall(point));
-                    RightMouseClicked = true;
-                    bodyPanel.Show = true;
-                }
+                Vector3 point = new Vector3(cursorPosition, 0.9f);
+                point = GraphicsDevice.Viewport.Unproject(point, camera.projection, camera.view, Matrix.Identity);
+                Body body = basicLab.CreateBall(point);
+                panel.CreateDialog(body);
+                currentBody = body;
+                bClicked = false;
             }
             if (keyboard.IsKeyDown(Keys.C))
+                cClicked = true;
+            if (keyboard.IsKeyUp(Keys.C) && cClicked)
             {
-                timeOfGame += time;
-                if (timeOfGame > timeToCreate)
-                {
-                    timeOfGame = 0;
-                    Vector3 point = new Vector3(cursorPosition, 0.9f);
-                    point = GraphicsDevice.Viewport.Unproject(point, camera.projection, camera.view, Matrix.Identity);
-                    basicLab.CreateCrate(point);
-                    //TODO Added Box
-                }
-            }
-        }
-
-
-        public void UpdateFeildPanel(Panel panel)
-        {
-            if (bodyPanel.Show)
-            {
-                if (oldPos != currentBody.Position)
-                {
-                    bodyPanel.SetVlaue("posX", currentBody.Position.X);
-                    bodyPanel.SetVlaue("posY", currentBody.Position.Y);
-                    bodyPanel.SetVlaue("posZ", currentBody.Position.Z);
-                    oldPos = currentBody.Position;
-                }
-                if (oldVel != currentBody.Velocity)
-                {
-                    bodyPanel.SetVlaue("velX", currentBody.Velocity.X);
-                    bodyPanel.SetVlaue("velY", currentBody.Velocity.Y);
-                    bodyPanel.SetVlaue("velZ", currentBody.Velocity.Z);
-                    oldVel = currentBody.Velocity;
-                }
-                if (oldAcc != currentBody.Acceleration)
-                {
-                    bodyPanel.SetVlaue("accX", currentBody.Acceleration.X);
-                    bodyPanel.SetVlaue("accY", currentBody.Acceleration.Y);
-                    bodyPanel.SetVlaue("accZ", currentBody.Acceleration.Z);
-                    oldAcc = currentBody.Acceleration;
-                }
-                if (currentBody as Ball != null)
-                    bodyPanel.SetVlaue("Radius", ((Ball)currentBody).radius);
-                //TODO Add if Box
-                //
-            }
-        }
-
-        void UpdateSel()
-        {
-            if (bodyPanel.Applied)
-                UpdateFeildPanel(bodyPanel);
-        }
-
-        private void PanelShow(MouseState mouse)
-        {
-            if (mouse.RightButton == ButtonState.Pressed)
-            {
-                if (previousBody != null)
-                    ((Drawable)previousBody).ShowPanel = false;
-                if (currentBody.InverseMass != 0)
-                {
-                    RightMouseClicked = false;
-                    RightMouseClicked = true;
-                    bodyPanel.ClearAll();
-                    bodyPanel.ResetAll();
-                    CreateDialog(bodyPanel, currentBody);
-                    ((Drawable)currentBody).ShowPanel = true;
-                    bodyPanel.Show = true;
-                }
-                previousBody = currentBody;
-            }
-        }
-
-        private void ApplyChanges()
-        {
-            currentBody.Mass = bodyPanel.GetVlaue("Mass");
-            currentBody.Position = new Vector3(bodyPanel.GetVlaue("posX"),
-                bodyPanel.GetVlaue("posY"), bodyPanel.GetVlaue("posZ"));
-            currentBody.SetVelocity(new Vector3(bodyPanel.GetVlaue("velX"),
-                bodyPanel.GetVlaue("velY"), bodyPanel.GetVlaue("velZ")));
-            currentBody.SetAcceleration(new Vector3(bodyPanel.GetVlaue("accX"),
-                bodyPanel.GetVlaue("accY"), bodyPanel.GetVlaue("accZ")));
-            if (currentBody as Ball != null)
-                ((Ball)currentBody).SetRadius(bodyPanel.GetVlaue("Radius"));
-            //TODO Added if Box
-
-            bodyPanel.Applied = true;
-        }
-
-        private void CheckPanelClosed()
-        {
-            if (currentBody != null && !bodyPanel.Show && RightMouseClicked)
-            {
-                ApplyChanges();
-                ((Drawable)currentBody).ShowPanel = false;
-                RightMouseClicked = false;
-                currentBody = null;
+                Vector3 point = new Vector3(cursorPosition, 0.9f);
+                point = GraphicsDevice.Viewport.Unproject(point, camera.projection, camera.view, Matrix.Identity);
+                Crate crate = basicLab.CreateCrate(point);
+                panel.CreateDialog(crate);
+                currentBody = crate;
+                cClicked = false;
             }
         }
 
@@ -402,7 +291,6 @@ namespace PhysicsLab
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
 
@@ -414,23 +302,9 @@ namespace PhysicsLab
             SelectedAndMoving(mouse, keyboard, cursorPosition, previousCursorPosition, 
                 (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            if (!basicLab.pause)
-                UpdateFeildPanel(bodyPanel);
-            if (bodyPanel.Show && !bodyPanel.Applied)
-                ApplyChanges();
-            PanelShow(mouse);
-            CheckPanelClosed();
-
-
             oldMouseState = mouse;
             previousCameraPosition = camera.cameraPosition;
             
-            /*if (currentBody != null)
-                ((Drawable)currentBody).ShowPanel = false;*/
-            
-                /*val
-                old
-                new*/
             base.Update(gameTime);
         }
 
@@ -442,7 +316,6 @@ namespace PhysicsLab
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             base.Draw(gameTime);
         }
     }
