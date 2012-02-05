@@ -18,18 +18,23 @@ namespace PhysicsLab
     /// </summary>
     public class PanelObject : Microsoft.Xna.Framework.DrawableGameComponent
     {
+        #region "Component"
         Panel panel;
-
         Body currentBody = null;
-        Body previousBody = null;
+        #endregion
 
+        #region "Boolean Field"
         bool BodyAdded = false;
+        #endregion
 
+        #region "Old State"
         Vector3 oldPos = Vector3.Zero;
         Vector3 oldVel = Vector3.Zero;
         Vector3 oldAcc = Vector3.Zero;
         Vector3 oldHlf = Vector3.Zero;
         float oldRad = 0f;
+        Body previousBody = null;
+        #endregion
 
         public PanelObject(Game game)
             : base(game)
