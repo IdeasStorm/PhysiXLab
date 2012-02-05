@@ -170,6 +170,7 @@ namespace PhysicsLab
             crate.model = basicLab.CrateModel;
             crate.Texture = basicLab.CrateTexture;
             crate.SelectedTexture = basicLab.SelectedCrateTexture;
+            crate.SelectedTexture_Panel = basicLab.SelectedCrateTexture2;
             crate.Position = new Vector3(1f, -2f, 1f);
             basicLab.AddCrate(crate);
 
