@@ -25,7 +25,7 @@ namespace PhysicsLab
         Body currentBody = null;
         Body previousBody = null;
 
-        bool RightMouseClicked = false;
+        bool BodyAdded = false;
 
         Vector3 oldPos = Vector3.Zero;
         Vector3 oldVel = Vector3.Zero;
@@ -51,7 +51,7 @@ namespace PhysicsLab
             base.Initialize();
         }
 
-        protected void CreateDialog(Body body)
+        public void CreateDialog(Body body)
         {
             if (body as Ball != null)
                 panel.AddField("Radius", ((Ball)body).radius);
@@ -72,9 +72,11 @@ namespace PhysicsLab
             panel.AddApplyButton();
             panel.Show = true;
             currentBody = body;
+            previousBody = currentBody;
+            BodyAdded = true;
         }
 
-        private void UpdateFeildPanel(/*Panel panel*/)
+        private void UpdateFeildPanel()
         {
             if (panel.Show)
             {
@@ -129,7 +131,7 @@ namespace PhysicsLab
                     ((Drawable)previousBody).ShowPanel = false;
                 if (currentBody.InverseMass != 0)
                 {
-                    RightMouseClicked = true;
+                    //RightMouseClicked = true;
                     Initialize();
                     CreateDialog(currentBody);
                     ((Drawable)currentBody).ShowPanel = true;
@@ -160,11 +162,11 @@ namespace PhysicsLab
 
         private void CheckPanelClosed()
         {
-            if (previousBody != null && !panel.Show && RightMouseClicked)
+            if (previousBody != null && !panel.Show && BodyAdded)
             {
                 ApplyChanges();
                 ((Drawable)previousBody).ShowPanel = false;
-                RightMouseClicked = false;
+                BodyAdded = false;
                 previousBody = null;
             }
         }
