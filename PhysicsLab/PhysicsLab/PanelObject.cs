@@ -80,6 +80,7 @@ namespace PhysicsLab
             currentBody = body;
             previousBody = currentBody;
             BodyAdded = true;
+            ((Drawable)body).ShowPanel = true;
         }
 
         private void UpdateFeildPanel()
