@@ -93,7 +93,7 @@ namespace PhysicsLab
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+            /*
             Ball ball = new Ball(0.5f);
             ball.Position = new Vector3(2f, 0f, 0f);
             ball.model = basicLab.BallModel;
@@ -143,6 +143,47 @@ namespace PhysicsLab
             basicLab.CreateRoom(10f, 10f, 10f);
 
             basicLab.AddEffect(new Spring(ball, ball1, new Vector3(1, 1, 1), 10f, 2f, 0.995f));
+            
+             */
+            basicLab.CreateRoom(10f, 10f, 10f);
+
+            Ball ball1 = new Ball(0.5f);
+            ball1.Mass = 1f;
+            ball1.Position = new Vector3(0f, 8.5f, -5.5f);
+            ball1.model = basicLab.BallModel;
+            ball1.Texture = basicLab.BallTexture;
+            ball1.SelectedTexture = basicLab.SelectedBallTexture;
+            ball1.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
+            basicLab.AddBall(ball1);
+
+            Ball ball2 = new Ball(0.5f);
+            ball2.Mass = 1f;
+            ball2.Position = new Vector3(-9f, 8.5f, -6f);
+            ball2.model = basicLab.BallModel;
+            ball2.Texture = basicLab.BallTexture;
+            ball2.SelectedTexture = basicLab.SelectedBallTexture;
+            ball2.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
+            basicLab.AddBall(ball2);
+
+            Ball ball3 = new Ball(0.6f);
+            ball3.Mass = 1f;
+            ball3.Position = new Vector3(2f, 8.5f, -9f);
+            ball3.model = basicLab.BallModel;
+            ball3.Texture = basicLab.BallTexture;
+            ball3.SelectedTexture = basicLab.SelectedBallTexture;
+            ball3.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
+            basicLab.AddBall(ball3);
+
+
+            Ball ball4 = new Ball(0.5f);
+            ball4.Mass = 5f;
+            ball4.Position = new Vector3(7f, 8.5f, -5f);
+            ball4.model = basicLab.BallModel;
+            ball4.Texture = basicLab.BallTexture;
+            ball4.SelectedTexture = basicLab.SelectedBallTexture;
+            ball4.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
+            basicLab.AddBall(ball4);
+
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
         }
 
