@@ -336,7 +336,7 @@ namespace PhysiXEngine
         /// interpenetrate visually. A good starting point is the default 
         /// of 0.01.
         /// </summary>
-        public float velocityEpsilon = 0.001f;
+        public float velocityEpsilon = 0.01f;
 
         /// <summary>
         /// To avoid instability penetrations 
@@ -345,7 +345,7 @@ namespace PhysiXEngine
         /// bodies may interpenetrate visually. A good starting point is 
         /// the default of0.01.
         /// </summary>
-        public float positionEpsilon = 0.001f;
+        public float positionEpsilon = 0.01f;
 
 
         void resolvePenetration(float duration)
@@ -383,8 +383,17 @@ namespace PhysiXEngine
                 //}
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
-                contactDataList[index].FixPenetration(duration);
-                contactDataList[index].applyPositionChange(linearChange, angularChange, max);
+                //contactDataList[index].FixPenetration(duration);
+                try
+                {
+                    contactDataList[index].applyPositionChange(linearChange, angularChange, max);
+                }
+                catch (Exception)
+                {
+
+                    contactDataList[index].revertState();
+                    continue;
+                }
                 foreach (Contact contact in contactDataList)
                 {
                     for (int b = 0; b < 2; b++)
