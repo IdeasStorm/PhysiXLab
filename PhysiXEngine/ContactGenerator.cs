@@ -10,7 +10,7 @@ namespace PhysiXEngine
     public class ContactGenerator : Effect
     {
         // static members
-        public static float friction = 0.1f;
+        public static float friction = 0.5f;
         public static float restitution = 0.2f;
 
         protected LinkedList<Collidable> bodies;

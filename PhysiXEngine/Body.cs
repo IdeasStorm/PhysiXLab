@@ -214,7 +214,8 @@ namespace PhysiXEngine
             LastFrameAcceleration = Acceleration;
             LastFrameAcceleration += forceAccumulator * inverseMass;
             AngularAcceleration = InverseInertiaTensorWorld.transform(torqueAccumulator);
-
+            Velocity -= Velocity * 0.001f;
+            Rotation -= Rotation * 0.001f;
             Velocity += LastFrameAcceleration * duration;
             Rotation += AngularAcceleration * duration;
             // debugging code
