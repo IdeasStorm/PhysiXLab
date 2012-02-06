@@ -10,8 +10,8 @@ namespace PhysiXEngine
     public class ContactGenerator : Effect
     {
         // static members
-        public static float friction = 0.5f;
-        public static float restitution = 0.2f;
+        public static float friction = 0.1f;
+        public static float restitution = 0.7f;
 
         protected LinkedList<Collidable> bodies;
         protected LinkedList<HalfSpace> planes;
@@ -426,10 +426,10 @@ namespace PhysiXEngine
             Vector3[] velocityChange, rotationChange;
             Vector3 cp;
 
-            //int realVelocityIterations = Math.Min(velocityIterations,contactDataList.Count);
+            int realVelocityIterations = Math.Min(velocityIterations,contactDataList.Count);
             // iteratively handle impacts in order of severity.
             velocityIterationsUsed = 0;
-            while(velocityIterationsUsed < velocityIterations) 
+            while(velocityIterationsUsed < realVelocityIterations) 
             {
                 // Find contact with maximum magnitude of probable velocity change.
                 float max = velocityEpsilon;
