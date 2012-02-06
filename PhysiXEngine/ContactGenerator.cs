@@ -204,8 +204,8 @@ namespace PhysiXEngine
 
             // Check for exceeding friction
             float planarImpulse = (float)Math.Sqrt(Convert.ToDouble(impulseContact.Y * impulseContact.Y + impulseContact.Z * impulseContact.Z));
-            
-            if (planarImpulse > Math.Abs(impulseContact.X * contactData.friction))
+
+            if ((planarImpulse > impulseContact.X * contactData.friction) && (planarImpulse != 0))
             {
                 // We need to use dynamic friction
                 impulseContact.Y /= planarImpulse;
@@ -253,7 +253,7 @@ namespace PhysiXEngine
             Vector3 impulse = contactData.ContactToWorld.transform(impulseContact);
 
             // Split in the impulse into linear and rotational components
-            Vector3 impulsiveTorqueOne = Vector3.Cross(contactData.relativeContactPosition[0], impulse);
+            Vector3 impulsiveTorqueOne = Vector3.Cross(impulse, contactData.relativeContactPosition[0]);
             rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorqueOne);
             
             velocityChange[0] = impulse * one.InverseMass;
