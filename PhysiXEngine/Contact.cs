@@ -842,9 +842,8 @@ namespace PhysiXEngine
         }
 
         internal void applyPositionChange(Vector3[] linearChange, Vector3[] angularChange,float Penetration)
-            //unused penetration
         {
-            float angularLimit = 0.1f;//0.1f;
+            float angularLimit = 1000f;//0.1f;
             float[] angularMove = new float[2],
                     linearMove = new float[2];
 
@@ -1026,7 +1025,7 @@ namespace PhysiXEngine
             return (body[0].InverseMass + body[1].InverseMass == 0);
         }
 
-        public bool equals(object obj)
+        public override bool Equals(object obj)
         {
             Contact other = obj as Contact;
             if (other != null)
@@ -1036,6 +1035,26 @@ namespace PhysiXEngine
                     return true;
             }
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash =0;
+            if (body[0] != null)
+                hash += body[0].GetHashCode() ;
+            if (body[1] != null)
+                hash += body[0].GetHashCode() ;
+            return hash;
+        }
+
+        public static bool operator ==(Contact c1,Contact c2)
+        {
+            return c1.GetHashCode() == c2.GetHashCode();
+        }
+
+        public static bool operator !=(Contact c1, Contact c2)
+        {
+            return c1.GetHashCode() != c2.GetHashCode();
         }
 
         public void revertState()
