@@ -183,7 +183,25 @@ namespace PhysicsLab
             ball4.SelectedTexture = basicLab.SelectedBallTexture;
             ball4.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
             basicLab.AddBall(ball4);
+            Ball FixedBall = new Ball(0.5f);
+            FixedBall.InverseMass = 0;
+            FixedBall.Position = new Vector3(1.5f, 8f, -2f);
+            FixedBall.model = basicLab.BallModel;
+            FixedBall.Texture = basicLab.BallTexture;
+            FixedBall.SelectedTexture = basicLab.SelectedBallTexture;
+            FixedBall.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
+            basicLab.AddBall(FixedBall);
 
+            Ball SBall = new Ball(0.5f);
+            SBall.Mass = 2f;
+            SBall.Position = new Vector3(1.5f, 0f, -2f);
+            SBall.model = basicLab.BallModel;
+            SBall.Texture = basicLab.BallTexture;
+            SBall.SelectedTexture = basicLab.SelectedBallTexture;
+            SBall.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
+            basicLab.AddBall(SBall);
+
+            basicLab.AddEffect(new Spring(SBall, FixedBall, new Vector3(1, 1, 1), 5f, 6f, 0.9f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
         }
 
