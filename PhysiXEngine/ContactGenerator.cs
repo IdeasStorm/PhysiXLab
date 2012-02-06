@@ -253,7 +253,7 @@ namespace PhysiXEngine
             Vector3 impulse = contactData.ContactToWorld.transform(impulseContact);
 
             // Split in the impulse into linear and rotational components
-            Vector3 impulsiveTorqueOne = Vector3.Cross(impulse, contactData.relativeContactPosition[0]);
+            Vector3 impulsiveTorqueOne = Vector3.Cross(contactData.relativeContactPosition[0],impulse);
             rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorqueOne);
             
             velocityChange[0] = impulse * one.InverseMass;
@@ -426,10 +426,10 @@ namespace PhysiXEngine
             Vector3[] velocityChange, rotationChange;
             Vector3 cp;
 
-            int realVelocityIterations = Math.Min(velocityIterations,contactDataList.Count);
+            //int realVelocityIterations = Math.Min(velocityIterations,contactDataList.Count);
             // iteratively handle impacts in order of severity.
             velocityIterationsUsed = 0;
-            while(velocityIterationsUsed < realVelocityIterations) 
+            while(velocityIterationsUsed < velocityIterations) 
             {
                 // Find contact with maximum magnitude of probable velocity change.
                 float max = velocityEpsilon;
