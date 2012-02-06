@@ -43,10 +43,7 @@ namespace PhysicsLab
         public float speed = 1f;
         public bool pause = true;
         private bool tClicked = false;
-        private bool Init = false;
         private bool Changed = false;
-        private float oldF = 0f;
-        private float oldR = 0f;
         private Vector3 oldG = Vector3.Zero;
         #endregion
 
@@ -211,7 +208,7 @@ namespace PhysicsLab
         public override void Initialize()
         {
             panel = new Panel(this.Game, new Vector2(Game.Window.ClientBounds.Width / 2 - 200 / 2,
-                Game.Window.ClientBounds.Height / 2 - 130 / 2), 220, 130);
+                Game.Window.ClientBounds.Height / 2 - 150 / 2), 220, 150);
 
             Game.Components.Add(panel);
 
@@ -322,28 +319,19 @@ namespace PhysicsLab
 
         void CreatePanel()
         {
-            //if (oldF != ContactGenerator.friction)
             Initialize();
             panel.AddField("Friction", ContactGenerator.friction);
-            //if (oldR != ContactGenerator.restitution)
             panel.AddField("Restitution", ContactGenerator.restitution);
+            panel.AddLabel("Gravity", "Gravity");
             panel.AddXYZ(((Gravity)effects.Last<PhysiXEngine.Effect>()).gravity, "gev");
             panel.AddOkButton();
+            panel.AddCancelButton();
             pause = true;
-            /*
-            if (oldG != ((Gravity)effects.Last<PhysiXEngine.Effect>()).gravity)
-            {
-                oldG.X = panel.GetVlaue("grvX");
-                panel.SetVlaue("grvY", ((Gravity)effects.Last<PhysiXEngine.Effect>()).gravity.Y);
-                panel.SetVlaue("grvZ", ((Gravity)effects.Last<PhysiXEngine.Effect>()).gravity.Z);
-            }
-            //((Gravity)effects.Last<PhysiXEngine.Effect>()).gravity.X
-             */
             panel.Show = true;
         }
 
 
-        void GetValue()
+        private void GetValue()
         {
             if (!panel.Show && Changed)
             {
