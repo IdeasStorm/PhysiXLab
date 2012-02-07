@@ -1025,7 +1025,7 @@ namespace PhysiXEngine
             return (body[0].InverseMass + body[1].InverseMass == 0);
         }
 
-        public override bool Equals(object obj)
+        public bool equals(object obj)
         {
             Contact other = obj as Contact;
             if (other != null)
@@ -1035,26 +1035,6 @@ namespace PhysiXEngine
                     return true;
             }
             return false;
-        }
-
-        public override int GetHashCode()
-        {
-            int hash =0;
-            if (body[0] != null)
-                hash += body[0].GetHashCode() ;
-            if (body[1] != null)
-                hash += body[0].GetHashCode() ;
-            return hash;
-        }
-
-        public static bool operator ==(Contact c1,Contact c2)
-        {
-            return c1.GetHashCode() == c2.GetHashCode();
-        }
-
-        public static bool operator !=(Contact c1, Contact c2)
-        {
-            return c1.GetHashCode() != c2.GetHashCode();
         }
 
         public void revertState()

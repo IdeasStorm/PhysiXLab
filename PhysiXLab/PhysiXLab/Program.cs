@@ -18,7 +18,7 @@ namespace Test
             //fr.Run();
             FrictionTest fr = new FrictionTest();
             SpringTest sp = new SpringTest();
-            //fr.Run();
+            fr.Run();
             //sp.Run();
 
             BoxAndBoxTest bab = new BoxAndBoxTest();
@@ -37,7 +37,7 @@ namespace Test
             //rope.Run();
 
             EnergyConservation b= new EnergyConservation();
-            b.Run();
+            //b.Run();
 
         }
     }
