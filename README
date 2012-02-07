@@ -1,0 +1,39 @@
+PhysiXLab is a Mechanical Lab where you can test Objects interactions
+Based on the Book "Physics Engine Development"
+
+used XNA as a Graphics tool / Mathematics tool (Vectors,Matrices ...)
+
+currently we support :
+
+- Collisions .
+- Adding Forces by Extneding Class Field ,Constraint or the base Effect.
+- Adding Impulse Generators by Extendign ImpulseGenerator
+
+'''Basic Usage as a Physics Engine'''
+{{{
+#!Csharp
+void Initialize() {
+	Sphere b1 = new Sphere(2.5f); // initiating & setting radius
+	Sphere b2 = new Sphere(5);
+	Box box	  = new Box(new Vector3(3,3,3)); // setting halfSize
+	ContactGenerator cg = new ContactGenerator(); // collision detection + resolution
+	cg.AddBody(b1);
+	cg.AddBody(b2);
+	cg.AddBody(box);
+}
+
+void Update(GameTime gameTime)
+{
+	float duration = gameTime.ElapsedGameTime.Milliseconds / 1000f;
+	b1.Update(duration);
+	b2.Update(duration);
+	cg.Update(duration);
+}
+
+void Draw(GameTime gameTime)
+{
+	// your draw logic
+}
+
+
+}}}
