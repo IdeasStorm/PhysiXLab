@@ -17,7 +17,8 @@ namespace PhysiXEngine.Helpers
             this.Bodies = Bodies;
             reader = new XmlTextReader(FilePath);
 
-            // Reading The <Experiment> Element
+            // Reading The <Declaration> and <Experiment> Elements
+            reader.Read();
             reader.Read();
         }
 
@@ -33,28 +34,29 @@ namespace PhysiXEngine.Helpers
                 return;
 
             // Now we have a new Cycle
-            XmlDocument Doc = new XmlDocument();
-            Doc.Load(reader.ReadInnerXml());
-            XmlNode Removes = Doc.ChildNodes[0];
-            XmlNode Adds = Doc.ChildNodes[1];
-            XmlNode Updates = Doc.ChildNodes[2];
+            XmlElement Root = (new XmlDocument()).CreateElement("Root");
+            Root.InnerXml = reader.ReadInnerXml();
+
+            XmlNode Removes = Root.ChildNodes[0];
+            XmlNode Adds = Root.ChildNodes[1];
+            XmlNode Updates = Root.ChildNodes[2];
             if (Removes.HasChildNodes)
                 foreach (XmlNode Node in Removes.ChildNodes)
                 {
-                    UInt32 GUID = UInt32.Parse(Node.Value);
-                    Bodies.Remove(getBodyByGUID(GUID));
+                    Bodies.Remove(GetBodyByGUID(UInt32.Parse(Node.InnerText.Substring(2))));
                 }
             if (Adds.HasChildNodes)
                 foreach (XmlNode Node in Adds.ChildNodes)
                 {
-                    Bodies.Add(NewBody(Node.Value));
+                    Bodies.Add(NewBody(Node.InnerText));
                 }
             if (Updates.HasChildNodes)
                 foreach (XmlNode Node in Updates.ChildNodes)
                 {
-                    getBodyByGUID(UInt32.Parse(Node.Name)).Update(Node.Value);
+                    GetBodyByGUID(UInt32.Parse(Node.Name.Substring(2))).Update(Node.InnerText);
                 }
-            reader.Read();  // Read </Cycle>
+
+            // No Need to read </Cycle> because ReadInnerXml() already does it.
         }
 
         /// <summary>
@@ -74,12 +76,18 @@ namespace PhysiXEngine.Helpers
             else return null;
         }
 
-        private Body getBodyByGUID(UInt32 GUID)
+        private Body GetBodyByGUID(UInt32 GUID)
         {
             for (int i = 0; i < Bodies.Count; i++)
                 if (Bodies[i].GUID == GUID)
                     return Bodies[i];
             return null;
         }
+
+        public void Stop()
+        {
+            reader.Close();
+        }
+
     }
 }

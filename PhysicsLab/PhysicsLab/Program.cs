@@ -10,10 +10,14 @@ namespace PhysicsLab
         /// </summary>
         static void Main(string[] args)
         {
-            using (Lab game = new Lab())
-            {
-                game.Run();
-            }
+            //using (Lab game = new Lab())
+            //{
+            //    game.Run();
+            //}
+            BCXMLPlayerTest other = new BCXMLPlayerTest();
+            other.Run();
+            //Lab O = new Lab();
+            //O.Run();
         }
     }
 #endif

@@ -22,8 +22,8 @@ namespace PhysicsLab
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        List<Body> Bodies = new List<Body>(10);
-        XMLRecorder recorder;
+        List<Body> Bodies = new List<Body>();
+        BCXMLPlayer player;
         Model BallModel;
         Model CrateModel;
         Camera camera;
@@ -45,16 +45,11 @@ namespace PhysicsLab
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            for (int i = 0; i < 10; i++)
-            {
-                Ball b = new Ball((float)(1 + (i * 0.1)));
-                b.Mass = 10 * i;
-                b.Position = new Vector3(50, 40f + 5 * i, 50f);
-                Bodies.Add(b);
-            }
 
             camera = new Camera(this, new Vector3(0, 0, 0.1f), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
+
+            player = new BCXMLPlayer(Bodies, @"D:\Lab.xml");
 
             base.Initialize();
         }
@@ -70,12 +65,11 @@ namespace PhysicsLab
 
             // TODO: use this.Content to load your game content here
 
-            BallModel = this.Content.Load<Model>(@"Models\ball");
-            BallTexture = this.Content.Load<Texture2D>(@"Textures\texBall");
+            player.BallModel = BallModel = this.Content.Load<Model>(@"Models\ball");
+            player.BallTexture = BallTexture = this.Content.Load<Texture2D>(@"Textures\texBall");
 
-            CrateModel = this.Content.Load<Model>(@"Models\box");
-            CrateTexture = this.Content.Load<Texture2D>(@"Textures\texBox");
-            recorder = new XMLRecorder(Bodies);
+            player.CrateModel = CrateModel = this.Content.Load<Model>(@"Models\box");
+            player.CrateTexture = CrateTexture = this.Content.Load<Texture2D>(@"Textures\texBox");
         }
 
         /// <summary>
@@ -100,6 +94,8 @@ namespace PhysicsLab
 
             // TODO: Add your update logic here
 
+            player.Update();
+
             base.Update(gameTime);
         }
 
@@ -113,7 +109,16 @@ namespace PhysicsLab
 
             // TODO: Add your drawing code here
 
+            foreach (Body B in Bodies)
+                (B as Drawable).Draw(camera);
+
             base.Draw(gameTime);
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            player.Stop();
+            base.OnExiting(sender, args);
         }
     }
 }

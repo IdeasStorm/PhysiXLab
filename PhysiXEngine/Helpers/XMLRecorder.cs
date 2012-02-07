@@ -20,19 +20,17 @@ namespace PhysiXEngine.Helpers
             }
         }
 
-        private XmlDocument Doc;
-        private XmlElement Root;
+        private XmlTextWriter writer;
         private List<Body> Bodies;
-        private UInt32 LastGUID = 0;
+        private Int64 LastGUID = -1;
         private List<Pair> LastCycleGUIDs;
 
-        public XMLRecorder(List<Body> Bodies)
+        public XMLRecorder(List<Body> Bodies, string FilePath)
         {
-            Doc = new XmlDocument();
-            XmlDeclaration decl = Doc.CreateXmlDeclaration("1.0", string.Empty, string.Empty);
-            Doc.AppendChild(decl);
-            Root = Doc.CreateElement("Experiment");
-            Doc.AppendChild(Root);
+            writer = new XmlTextWriter(FilePath, null);
+            XmlDocument Doc = new XmlDocument();
+            Doc.CreateXmlDeclaration("1.0", string.Empty, string.Empty).WriteTo(writer);
+            writer.WriteStartElement("Experiment");
 
             this.Bodies = Bodies;
             LastCycleGUIDs = new List<Pair>(Bodies.Count);
@@ -50,14 +48,15 @@ namespace PhysiXEngine.Helpers
             for (int i = 0; i < LastCycleGUIDs.Count; i++)
                 LastCycleGUIDs[i].Found = false;
 
-            UInt32 NewLastGUID = LastGUID;
+            XmlDocument Doc = new XmlDocument();
+            Int64 NewLastGUID = LastGUID;
             XmlElement Cycle = Doc.CreateElement("Cycle");
             XmlElement Adds = Doc.CreateElement("Adds");
             XmlElement Removes = Doc.CreateElement("Removes");
             XmlElement Updates = Doc.CreateElement("Updates");
             foreach (Body B in Bodies)
             {
-                XmlElement NewInfo = Doc.CreateElement(B.GUID.ToString());
+                XmlElement NewInfo = Doc.CreateElement("ID" + B.GUID.ToString());
                 NewInfo.InnerText = B.Position.X.ToString()
                                   + '|' + B.Position.Y.ToString()
                                   + '|' + B.Position.Z.ToString()
@@ -99,12 +98,16 @@ namespace PhysiXEngine.Helpers
             Cycle.AppendChild(Removes);
             Cycle.AppendChild(Adds);
             Cycle.AppendChild(Updates);
-            Root.AppendChild(Cycle);
+            Doc.AppendChild(Cycle);
+            Doc.WriteTo(writer);
         }
 
-        public void SaveToFile(string FilePath)
+        /// <summary>
+        /// Note: once stopped, The Recorder cannot be resumed.
+        /// </summary>
+        public void Stop()
         {
-            Doc.Save(FilePath);
+            writer.Close();
         }
 
     }

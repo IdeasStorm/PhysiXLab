@@ -23,7 +23,7 @@ namespace PhysicsLab
         #endregion
 
         #region "Physics Components"
-        private List<Body> bodys = new List<Body>();
+        public List<Body> bodys = new List<Body>();
         private List<Body> room = new List<Body>();
         private List<PhysiXEngine.Effect> effects = new List<PhysiXEngine.Effect>();
         private ContactGenerator cg = new ContactGenerator();

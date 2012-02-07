@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using PhysiXEngine;
+using PhysiXEngine.Helpers;
 
 namespace PhysicsLab
 {
@@ -20,6 +21,10 @@ namespace PhysicsLab
         #region "Main Component"
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        #endregion
+
+        #region "XML Recorder"
+        XMLRecorder Recorder;
         #endregion
 
         #region "Boolean Field"
@@ -76,6 +81,8 @@ namespace PhysicsLab
             camera = new Camera(this, new Vector3(0, 0, 20f),
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
+
+            Recorder = new XMLRecorder(basicLab.bodys,@"D:\Lab.xml");
 
             base.Initialize();
         }
@@ -252,6 +259,8 @@ namespace PhysicsLab
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                this.Exit();
 
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
@@ -266,6 +275,7 @@ namespace PhysicsLab
 
             oldMouseState = mouse;
             previousCameraPosition = camera.cameraPosition;
+            Recorder.Update();
             
             base.Update(gameTime);
         }
@@ -279,6 +289,12 @@ namespace PhysicsLab
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            Recorder.Stop();
+            base.OnExiting(sender, args);
         }
     }
 }
