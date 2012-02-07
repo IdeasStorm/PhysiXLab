@@ -87,7 +87,7 @@ namespace PhysicsLab
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
 
-            Recorder = new XMLRecorder(basicLab.bodys,@"D:\Lab.xml");
+            //Recorder = new XMLRecorder(basicLab.bodys,@"D:\Lab.xml");
 
             base.Initialize();
         }
@@ -361,7 +361,7 @@ namespace PhysicsLab
 
             oldMouseState = mouse;
             previousCameraPosition = camera.cameraPosition;
-            Recorder.Update();
+            //Recorder.Update();
             
             base.Update(gameTime);
         }
@@ -379,7 +379,7 @@ namespace PhysicsLab
 
         protected override void OnExiting(object sender, EventArgs args)
         {
-            Recorder.Stop();
+            //Recorder.Stop();
             base.OnExiting(sender, args);
         }
     }

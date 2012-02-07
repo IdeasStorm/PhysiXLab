@@ -15,9 +15,9 @@ namespace PhysicsLab
             //    game.Run();
             //}
             BCXMLPlayerTest other = new BCXMLPlayerTest();
-            other.Run();
-            //Lab O = new Lab();
-            //O.Run();
+            //other.Run();
+            Lab O = new Lab();
+            O.Run();
         }
     }
 #endif

@@ -49,7 +49,7 @@ namespace PhysicsLab
             camera = new Camera(this, new Vector3(0, 0, 0.1f), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
 
-            player = new BCXMLPlayer(Bodies, @"D:\Lab.xml");
+            //player = new BCXMLPlayer(Bodies, @"D:\Lab.xml");
 
             base.Initialize();
         }
