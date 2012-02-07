@@ -266,7 +266,7 @@ namespace Test
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             fixedBall.Draw(camera);
-            ball.Draw(camera);
+            //ball.Draw(camera);
             crate.Draw(camera);
             base.Draw(gameTime);
         }
