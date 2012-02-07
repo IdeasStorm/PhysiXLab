@@ -42,6 +42,13 @@ namespace PhysicsLab
         public Model CrateModel;
         public float speed = 1f;
         public bool pause = true;
+        private bool tClicked = false;
+        private bool Changed = false;
+        private Vector3 oldG = Vector3.Zero;
+        #endregion
+
+        #region "Game Component"
+        Panel panel = null;
         #endregion
 
         public BasicLab(Game game)
@@ -200,6 +207,11 @@ namespace PhysicsLab
         /// </summary>
         public override void Initialize()
         {
+            panel = new Panel(this.Game, new Vector2(Game.Window.ClientBounds.Width / 2 - 200 / 2,
+                Game.Window.ClientBounds.Height / 2 - 150 / 2), 220, 150);
+
+            Game.Components.Add(panel);
+
             base.Initialize();
         }
 
@@ -226,6 +238,7 @@ namespace PhysicsLab
 
             Ground = Game.Content.Load<Texture2D>(@"Textures\Ground");
             Wall = Game.Content.Load<Texture2D>(@"Textures\Wall");
+            base.LoadContent();
         }
 
         /// <summary>
@@ -293,8 +306,43 @@ namespace PhysicsLab
             Roof.InverseMass = 0;
             Roof.Lock();
             AddToRoom(Roof);
+
+            Crate Stop = new Crate(new Vector3(width/4, 1f, 0.1f));
+            Stop.Position = new Vector3(width - width / 4, -height/2 + 1, length);
+            Stop.model = CrateModel;
+            Stop.Texture = Ground;
+            Stop.SelectedTexture = null;
+            Stop.InverseMass = 0;
+            Stop.Lock();
+            AddToRoom(Stop);
         }
 
+        void CreatePanel()
+        {
+            Initialize();
+            panel.AddField("Friction", ContactGenerator.friction);
+            panel.AddField("Restitution", ContactGenerator.restitution);
+            panel.AddLabel("Gravity", "Gravity");
+            panel.AddXYZ(((Gravity)effects.Last<PhysiXEngine.Effect>()).gravity, "gev");
+            panel.AddOkButton();
+            panel.AddCancelButton();
+            pause = true;
+            panel.Show = true;
+        }
+
+
+        private void GetValue()
+        {
+            if (!panel.Show && Changed)
+            {
+                ContactGenerator.friction = panel.GetVlaue("Friction");
+                ContactGenerator.restitution = panel.GetVlaue("Restitution");
+                ((Gravity)effects.Last<PhysiXEngine.Effect>()).gravity = new Vector3(
+                    panel.GetVlaue("gevX"), panel.GetVlaue("gevY"), panel.GetVlaue("gevZ")
+                    );
+                Changed = false;
+            }
+        }
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -306,17 +354,27 @@ namespace PhysicsLab
             duration *= speed;
             if (!pause)
             {
-                foreach (PhysiXEngine.Effect ef in effects)
-                {
-                    ef.Update(duration);
-                }
                 foreach (Body bdy in bodys)
                 {
                     bdy.Update(duration);
                 }
+                foreach (PhysiXEngine.Effect ef in effects)
+                {
+                    ef.Update(duration);
+                }
                 cg.Update(duration);
             }
 
+            if (Keyboard.GetState().IsKeyDown(Keys.T))
+                tClicked = true;
+            if (Keyboard.GetState().IsKeyUp(Keys.T) && tClicked)
+            {
+                CreatePanel();
+                Changed = true;
+                tClicked = false;
+            }
+            GetValue();
+            
             base.Update(gameTime);
         }
 

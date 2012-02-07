@@ -9,6 +9,10 @@ namespace PhysiXEngine
 {
     public class ContactGenerator : Effect
     {
+        // static members
+        public static float friction = 0.1f;
+        public static float restitution = 0.7f;
+
         protected LinkedList<Collidable> bodies;
         protected LinkedList<HalfSpace> planes;
         protected List<Contact> contactDataList;
@@ -200,8 +204,8 @@ namespace PhysiXEngine
 
             // Check for exceeding friction
             float planarImpulse = (float)Math.Sqrt(Convert.ToDouble(impulseContact.Y * impulseContact.Y + impulseContact.Z * impulseContact.Z));
-            
-            if (planarImpulse > Math.Abs(impulseContact.X * contactData.friction))
+
+            if ((planarImpulse > impulseContact.X * contactData.friction) && (planarImpulse != 0))
             {
                 // We need to use dynamic friction
                 impulseContact.Y /= planarImpulse;
@@ -249,7 +253,7 @@ namespace PhysiXEngine
             Vector3 impulse = contactData.ContactToWorld.transform(impulseContact);
 
             // Split in the impulse into linear and rotational components
-            Vector3 impulsiveTorqueOne = Vector3.Cross(contactData.relativeContactPosition[0], impulse);
+            Vector3 impulsiveTorqueOne = Vector3.Cross(contactData.relativeContactPosition[0],impulse);
             rotationChange[0] = inverseInertiaTensor[0].transform(impulsiveTorqueOne);
             
             velocityChange[0] = impulse * one.InverseMass;
@@ -281,7 +285,7 @@ namespace PhysiXEngine
             // CollisionDetector collisionGenerator = new CollisionDetector(world, bodies);
             CollisionDetector collisionGenerator = new CollisionDetector(bodies,planes);
             this.contactDataList= collisionGenerator.ReDetect();
-            if (contactDataList.Count == 0) return;
+            //if (contactDataList.Count == 0) return;
             this.contactDataList.RemoveAll((Contact contact) => { 
                 return !contact.Check(); 
             });
@@ -307,13 +311,13 @@ namespace PhysiXEngine
         /// Holds the number of iterations to perform when resolving
         /// velocity. 
         /// </summary>
-        public int velocityIterations = 1;
+        public int velocityIterations = 4;
 
         /// <summary>
         /// Holds the number of iterations to perform when resolving
         /// position. 
         /// </summary>
-        public int positionIterations = 8;
+        public int positionIterations = 4;
 
         //TODO modify above values
 
@@ -356,7 +360,6 @@ namespace PhysiXEngine
             // the needed ammount to ressolve penetration
             float max;
             Vector3 deltaPosition;
-
             // iteratively resolve interpenetration in order of severity.
             positionIterationsUsed = 0;
             while (positionIterationsUsed < positionIterations)
@@ -384,9 +387,18 @@ namespace PhysiXEngine
                 // wake up the slept body of the pair
                 contactDataList[index].WakeUpPair();
                 //contactDataList[index].FixPenetration(duration);
-                
+                try
+                {
                     contactDataList[index].applyPositionChange(linearChange, angularChange, max);
-                
+                }
+                catch (Exception)
+                {
+
+                    contactDataList[index].revertState();
+                    contactDataList.RemoveAt(index);
+                    positionIterations++;
+                    continue;
+                }
                 foreach (Contact contact in contactDataList)
                 {
                     for (int b = 0; b < 2; b++)
@@ -414,9 +426,10 @@ namespace PhysiXEngine
             Vector3[] velocityChange, rotationChange;
             Vector3 cp;
 
+            int realVelocityIterations = Math.Min(velocityIterations,contactDataList.Count);
             // iteratively handle impacts in order of severity.
             velocityIterationsUsed = 0;
-            while(velocityIterationsUsed < velocityIterations) 
+            while(velocityIterationsUsed < realVelocityIterations) 
             {
                 // Find contact with maximum magnitude of probable velocity change.
                 float max = velocityEpsilon;
@@ -433,70 +446,34 @@ namespace PhysiXEngine
 
                 // Match the awake state at the contact
                 contactDataList[index].WakeUpPair();
-
+                
                 // Do the resolution on the contact that came out top.
                 ApplyVelocityChange(contactDataList[index],out velocityChange,out rotationChange);
 
                 // With the change in velocity of the two bodies, the update of 
                 // contact velocities means that some of the relative closing 
                 // velocities need recomputing.
-                for (int i = 0; i < contactDataList.Count; i++)
+
+                foreach (Contact c in contactDataList)
                 {
-                    if (contactDataList[i].body[0] != null)
+                    for (int b = 0; b < 2; b++)
                     {
-                        if (contactDataList[i].body[0] == contactDataList[index].body[0])
+                        for (int d = 0; d < 2; d++)
                         {
-                            cp = Vector3.Cross(rotationChange[0],contactDataList[i].relativeContactPosition[0]);
-
-                            cp += velocityChange[0];
-
-                            contactDataList[i].contactVelocity += 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
-                        }
-                        else if (contactDataList[i].body[0]==contactDataList[index].body[1])
-                        {
-                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[0]);
-
-                            cp += velocityChange[1];
-
-                            contactDataList[i].contactVelocity += 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
-                        }
-                    }
-
-                    if (contactDataList[i].body[1] != null )
-                    {
-                        if (contactDataList[i].body[1]==contactDataList[index].body[0])
-                        {
-                            cp = Vector3.Cross(rotationChange[0], contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[0];
-
-                            contactDataList[i].contactVelocity -= 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
-                        }
-                        else if (contactDataList[i].body[1]==contactDataList[index].body[1])
-                        {
-                            cp = Vector3.Cross(rotationChange[1], contactDataList[i].relativeContactPosition[1]);
-
-                            cp += velocityChange[1];
-
-                            contactDataList[i].contactVelocity -= 
-                                contactDataList[i].ContactToWorld.transformTranspose(cp);
-                            contactDataList[i].CalculateDeltaVelocity(duration);
-                            //TODO move this to contact data & check params e.g duration
+                            if (c.body[b] == contactDataList[index].body[d])
+                            {
+                                Vector3 deletaVelocity = velocityChange[d]
+                                    + Vector3.Cross(rotationChange[d], c.relativeContactPosition[b]);
+                                // second or first ?
+                                c.contactVelocity += c.ContactToWorld.transformTranspose(deletaVelocity) * ((b != 0) ? -1 : 1);
+                                c.CalculateDeltaVelocity(duration);
+                            }
                         }
                     }
                 }
-                contactDataList[index].desiredDeltaVelocity = 0;
+
                 velocityIterationsUsed++;
-    }
+            }
         }
         #endregion
 

@@ -16,6 +16,7 @@ namespace PhysiXEngine
         public BoundingSphere Volume;
         public Collidable Body;
         public BVHNode Parent;
+        public bool DidInternalDetections = false;
 
         public BVHNode(BVHNode Parent, Collidable Body)
         {
@@ -68,6 +69,9 @@ namespace PhysiXEngine
 
         public void FindPotentialCollisions(List<Contact> Potentials)
         {
+            if (DidInternalDetections)
+                return;
+            DidInternalDetections = true;
             if (this.isLeaf())
                 return;
             this.Children[0].FindPotentialCollisionsWith(Potentials, this.Children[1]);

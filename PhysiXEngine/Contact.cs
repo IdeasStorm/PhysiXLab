@@ -58,8 +58,8 @@ namespace PhysiXEngine
             this.body[0] = firstBody;
             this.body[1] = secondBody;
             ContactToWorld = new Matrix3();
-            restitution = 0.7f;
-            friction = 0.1f; // TODO add a dynamic mechanism
+            restitution = ContactGenerator.restitution;
+            friction = ContactGenerator.friction;
 
         }
 
@@ -842,9 +842,8 @@ namespace PhysiXEngine
         }
 
         internal void applyPositionChange(Vector3[] linearChange, Vector3[] angularChange,float Penetration)
-            //unused penetration
         {
-            float angularLimit = 0.1f;//0.1f;
+            float angularLimit = 1000f;//0.1f;
             float[] angularMove = new float[2],
                     linearMove = new float[2];
 
@@ -956,18 +955,18 @@ namespace PhysiXEngine
                 chosen = body[1];
             else
                 chosen = (this.body[0].Velocity.Length() > this.body[1].Velocity.Length()) ? body[0] : body[1];
-
+            this.revertState();
+            this.Check();
+            return;
             // revert to the moment before collision moment
             // starting binary search loop
             do
             {
                 //if ((PositionA - PositionB).Length() <= 0.00001) return;
-                chosen.Position += chosen.Velocity * duration * 0.01f;
-                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.01f);
-                this.Check();
-
-            } while (this.Penetration > 0.001f);
-            this.InitializeAtMoment(duration);
+                chosen.Position += chosen.Velocity * duration * 0.1f;
+                chosen.Orientation = chosen.Orientation.AddScaledVector(chosen.Rotation, duration * 0.1f);
+            } while (!this.Check());
+            //this.InitializeAtMoment(duration);
             
         }
 
@@ -992,6 +991,7 @@ namespace PhysiXEngine
         /// </summary>
         public bool Check()
         {
+            Penetration = 0;
             if (WithPlane)
                 return plane.generateContacts(body[0], this);
             else
@@ -1025,12 +1025,13 @@ namespace PhysiXEngine
             return (body[0].InverseMass + body[1].InverseMass == 0);
         }
 
-        public override bool Equals(object obj)
+        public bool equals(object obj)
         {
             Contact other = obj as Contact;
             if (other != null)
             {
-                if ((other.body[0] == body[0]) && (other.body[1] == body[1]))
+                if ( ((other.body[0] == body[0]) && (other.body[1] == body[1]))
+                    || ((other.body[0] == body[1] ) && (other.body[1]==body[0]) ) )
                     return true;
             }
             return false;

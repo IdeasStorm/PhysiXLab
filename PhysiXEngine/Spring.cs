@@ -60,9 +60,9 @@ namespace PhysiXEngine
             force *= magnitude;
             bodys[1].AddForce(force, ows);
             if (bodys[0].InverseMass != 0)
-                bodys[0].AddVelocity(Vector3.Multiply(bodys[0].Velocity, (C - 1f) * bodys[0].Mass));
+                bodys[0].AddForce(Vector3.Multiply(bodys[0].Velocity, (C - 1f) * bodys[0].Mass));
             if (bodys[1].InverseMass != 0)
-                bodys[1].AddVelocity(Vector3.Multiply(bodys[1].Velocity, (C - 1f) * bodys[1].Mass));
+                bodys[1].AddForce(Vector3.Multiply(bodys[1].Velocity, (C - 1f) * bodys[0].Mass));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace PhysiXEngine
         /// <summary>
         /// acceleration of the gravity
         /// </summary>
-        private Vector3 gravity{get;set;}
+        public Vector3 gravity{get;set;}
 
         /// <summary>
         /// Creates the effect with the given acceleration 

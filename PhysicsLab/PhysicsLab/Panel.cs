@@ -349,6 +349,8 @@ namespace PhysicsLab
                     frm.Update(mouseState, keyboardState);
                 }
                 Frm.Update(mouseState, keyboardState);
+                if (keyboardState.IsKeyDown(Keys.Escape))
+                    Show = false;
             }
             base.Update(gameTime);
         }

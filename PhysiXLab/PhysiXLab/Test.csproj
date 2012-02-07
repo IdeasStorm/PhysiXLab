@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
+    <Compile Include="EnergyConservation.cs" />
     <Compile Include="Border.cs" />
     <Compile Include="BoxAndBoxTest.cs" />
     <Compile Include="Bridge.cs" />

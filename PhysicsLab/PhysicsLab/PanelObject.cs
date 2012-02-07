@@ -77,7 +77,7 @@ namespace PhysicsLab
             panel.AddLabel("Velocity", "Velocity");
             panel.AddXYZ(body.Velocity, "vel");
             panel.AddLabel("Acceleration", "Acceleration");
-            panel.AddXYZ(body.Acceleration, "acc");
+            panel.AddXYZ(body.LastFrameAcceleration, "acc");
             panel.AddOkButton();
             panel.AddCancelButton();
             panel.AddApplyButton();
@@ -106,12 +106,12 @@ namespace PhysicsLab
                     panel.SetVlaue("velZ", previousBody.Velocity.Z);
                     oldVel = previousBody.Velocity;
                 }
-                if (oldAcc != previousBody.Acceleration)
+                if (oldAcc != previousBody.LastFrameAcceleration)
                 {
-                    panel.SetVlaue("accX", previousBody.Acceleration.X);
-                    panel.SetVlaue("accY", previousBody.Acceleration.Y);
-                    panel.SetVlaue("accZ", previousBody.Acceleration.Z);
-                    oldAcc = previousBody.Acceleration;
+                    panel.SetVlaue("accX", previousBody.LastFrameAcceleration.X);
+                    panel.SetVlaue("accY", previousBody.LastFrameAcceleration.Y);
+                    panel.SetVlaue("accZ", previousBody.LastFrameAcceleration.Z);
+                    oldAcc = previousBody.LastFrameAcceleration;
                 }
                 if (previousBody as Ball != null)
                 {

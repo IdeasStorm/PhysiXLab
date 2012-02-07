@@ -38,8 +38,8 @@ namespace PhysicsLab
 
         // Camera vectors to rotate and Move Camera
         public Vector3 cameraPosition { get; protected set; }
-        Vector3 cameraDirection;
-        Vector3 cameraUp;
+        public Vector3 cameraDirection;
+        public Vector3 cameraUp;
 
         //speed of camera
         float speed = 0.1f;
@@ -118,24 +118,28 @@ namespace PhysicsLab
         {
             // Move forward/backward
             if (Keyboard.GetState().IsKeyDown(Keys.W))
-                cameraSiteCenter += cameraDirection * speed;
+                cameraSiteCenter += Vector3.Up * speed;
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-                cameraSiteCenter -= cameraDirection * speed;
+                cameraSiteCenter -= Vector3.Up * speed;
             // Move side to side
             if (Keyboard.GetState().IsKeyDown(Keys.A))
-                cameraSiteCenter += Vector3.Cross(cameraUp, cameraDirection) * speed;
+                cameraSiteCenter += Vector3.Left * speed;
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-                cameraSiteCenter -= Vector3.Cross(cameraUp, cameraDirection) * speed;
+                cameraSiteCenter += Vector3.Right * speed;
             inRotateMode = (Mouse.GetState().MiddleButton==ButtonState.Pressed);
             cameraSiteRadius = 10 - Mouse.GetState().ScrollWheelValue * 0.005f;
-            cameraPosition = cameraSiteCenter 
-                + Vector3.Transform(Vector3.Backward * cameraSiteRadius, Matrix.CreateFromYawPitchRoll(y,p,0));
+            Matrix camTransform = Matrix.CreateTranslation(Vector3.Backward * cameraSiteRadius)
+                * Matrix.CreateFromYawPitchRoll(y, p, 0)
+                * Matrix.CreateTranslation(cameraSiteCenter);
+            cameraPosition = Vector3.Transform(Vector3.Zero,camTransform);
+            //cameraPosition = cameraSiteCenter 
+            //    + Vector3.Transform(Vector3.Backward * cameraSiteRadius, Matrix.CreateFromYawPitchRoll(y,p,0));
             if (inRotateMode)
             {
                 y = y - (Mouse.GetState().X - prevMouseState.X) * 0.01f;
                 p = p - (Mouse.GetState().Y - prevMouseState.Y) * 0.01f;
             }
-            cameraDirection = -cameraPosition;
+            cameraDirection = cameraSiteCenter - cameraPosition;
             /*
             // Yaw rotation
             cameraDirection = Vector3.Transform(cameraDirection
