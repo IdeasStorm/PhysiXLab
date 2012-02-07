@@ -155,7 +155,7 @@ namespace PhysicsLab
             basicLab.CreateRoom(10f, 10f, 10f);
 
             Ball ball1 = new Ball(0.5f);
-            ball1.InverseInertiaTensor = new Matrix();
+            //ball1.InverseInertiaTensor = new Matrix();
             ball1.Mass = 1f;
             ball1.Position = new Vector3(0f, 8.5f, -5.5f);
             ball1.model = basicLab.BallModel;
@@ -166,7 +166,7 @@ namespace PhysicsLab
 
             Ball ball2 = new Ball(0.5f);
             ball2.Mass = 1f;
-            ball2.InverseInertiaTensor = new Matrix();
+            //ball2.InverseInertiaTensor = new Matrix();
             ball2.Position = new Vector3(-9f, 8.5f, -6f);
             ball2.model = basicLab.BallModel;
             ball2.Texture = basicLab.BallTexture;
@@ -176,7 +176,7 @@ namespace PhysicsLab
 
             Ball ball3 = new Ball(0.6f);
             ball3.Mass = 1f;
-            ball3.InverseInertiaTensor = new Matrix();
+            //ball3.InverseInertiaTensor = new Matrix();
             ball3.Position = new Vector3(6f, 8.5f, -9f);
             ball3.model = basicLab.BallModel;
             ball3.Texture = basicLab.BallTexture;
@@ -187,7 +187,7 @@ namespace PhysicsLab
 
             Ball ball4 = new Ball(0.5f);
             ball4.Mass = 5f;
-            ball4.InverseInertiaTensor = new Matrix();
+            //ball4.InverseInertiaTensor = new Matrix();
             ball4.Position = new Vector3(7f, 8.5f, -5f);
             ball4.model = basicLab.BallModel;
             ball4.Texture = basicLab.BallTexture;
@@ -197,7 +197,7 @@ namespace PhysicsLab
 
             Ball FixedBall = new Ball(0.5f);
             FixedBall.InverseMass = 0;
-            FixedBall.InverseInertiaTensor = new Matrix();
+            //FixedBall.InverseInertiaTensor = new Matrix();
             FixedBall.Position = new Vector3(1.5f, 8f, -2f);
             FixedBall.model = basicLab.BallModel;
             FixedBall.Texture = basicLab.BallTexture;
@@ -207,7 +207,7 @@ namespace PhysicsLab
 
             Ball SBall = new Ball(0.5f);
             SBall.Mass = 2f;
-            SBall.InverseInertiaTensor = new Matrix();
+            //SBall.InverseInertiaTensor = new Matrix();
             SBall.Position = new Vector3(1.5f, 0f, -2f);
             SBall.model = basicLab.BallModel;
             SBall.Texture = basicLab.BallTexture;
