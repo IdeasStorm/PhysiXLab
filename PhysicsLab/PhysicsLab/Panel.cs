@@ -60,6 +60,7 @@ namespace PhysicsLab
 
         public bool Show = false;
         public bool Applied = true;
+        public bool Clicked = false;
 
         private Dictionary<String, float> Fields;
         private Dictionary<String, Form> Panels;
@@ -105,6 +106,11 @@ namespace PhysicsLab
         void Changed(Control sender)
         {
             Applied = true;
+        }
+
+        void MouseDown(Control sender)
+        {
+            Clicked = true; 
         }
 
         public void NewForm()
@@ -183,6 +189,7 @@ namespace PhysicsLab
                 TextBoxes.Add(myText);
                 Frm.AddControl(myText);
                 TextBoxes.Last<TextBox>().onChange += new EHandler(Changed);
+                TextBoxes.Last<TextBox>().onMouseDown += new EHandler(MouseDown);
             }
             else
             {

@@ -156,21 +156,24 @@ namespace PhysicsLab
 
         private void ApplyChanges()
         {
-            previousBody.Mass = panel.GetVlaue("Mass");
-            previousBody.Position = new Vector3(panel.GetVlaue("posX"),
-                panel.GetVlaue("posY"), panel.GetVlaue("posZ"));
-            previousBody.SetVelocity(new Vector3(panel.GetVlaue("velX"),
-                panel.GetVlaue("velY"), panel.GetVlaue("velZ")));
-            previousBody.SetAcceleration(new Vector3(panel.GetVlaue("accX"),
-                panel.GetVlaue("accY"), panel.GetVlaue("accZ")));
-            if (previousBody as Ball != null)
-                ((Ball)previousBody).SetRadius(panel.GetVlaue("Radius"));
-            if (previousBody as Box != null)
+            if (panel.Clicked)
             {
-                ((Box)previousBody).SetHalfSize(
-                    new Vector3(panel.GetVlaue("hlfX"), panel.GetVlaue("hlfY"), panel.GetVlaue("hlfZ")));
+                previousBody.Mass = panel.GetVlaue("Mass");
+                previousBody.Position = new Vector3(panel.GetVlaue("posX"),
+                    panel.GetVlaue("posY"), panel.GetVlaue("posZ"));
+                previousBody.SetVelocity(new Vector3(panel.GetVlaue("velX"),
+                    panel.GetVlaue("velY"), panel.GetVlaue("velZ")));
+                previousBody.SetAcceleration(new Vector3(panel.GetVlaue("accX"),
+                    panel.GetVlaue("accY"), panel.GetVlaue("accZ")));
+                if (previousBody as Ball != null)
+                    ((Ball)previousBody).SetRadius(panel.GetVlaue("Radius"));
+                if (previousBody as Box != null)
+                {
+                    ((Box)previousBody).SetHalfSize(
+                        new Vector3(panel.GetVlaue("hlfX"), panel.GetVlaue("hlfY"), panel.GetVlaue("hlfZ")));
+                }
+                panel.Applied = true;
             }
-            panel.Applied = true;
         }
 
         private void CheckPanelClosed()
