@@ -51,3 +51,20 @@ Contents
 		
 *PhysiXLab 
 	Which is an interactive place to interacts with objects based on PhysiXEngine
+
+Control of Lab
+===========
+*Press B to create new Ball .
+*Press C to create new Crate .
+*Press P to throw Ball .
+*Press T to change constant of program .
+*Press Space to start physics .
+*Right Click on object to see panel of object .
+	*Press OK to save data .
+	*Press Cancel to Undo changes .
+	*Press Apply to change data without close panel .
+	*Press escape to Undo User Change .
+*Left Click on object to move it .
+*Middle Button of mouse to Move camera .
+*W, S, D and A to Move Camera Up, Down, Right and Left .
+*Scroll bar of mouse to move camera to backward and forward .
