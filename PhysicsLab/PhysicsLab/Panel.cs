@@ -176,6 +176,7 @@ namespace PhysicsLab
                 }
             }
             TextBoxes.Last<TextBox>().onChange += new EHandler(Changed);
+            TextBoxes.Last<TextBox>().onMouseDown += new EHandler(MouseDown);
         }
 
         public void AddTextBox(String textBoxName = "txt", String value = "", String PanelName = "MainPanel",
