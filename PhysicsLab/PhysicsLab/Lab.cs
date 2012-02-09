@@ -204,7 +204,7 @@ namespace PhysicsLab
             FixedBall.SelectedTexture = basicLab.SelectedBallTexture;
             FixedBall.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
             basicLab.AddBall(FixedBall);
-
+            /*
             Ball SBall = new Ball(0.5f);
             SBall.Mass = 2f;
             //SBall.InverseInertiaTensor = new Matrix();
@@ -214,11 +214,21 @@ namespace PhysicsLab
             SBall.SelectedTexture = basicLab.SelectedBallTexture;
             SBall.SelectedTexture_Panel = basicLab.SelectedBallTexture2;
             basicLab.AddBall(SBall);
+            */
+            Crate crate = new PhysicsLab.Crate(new Vector3(1, 1, 1));
+            crate.Mass = 1f;
+            crate.Position = new Vector3(1.5f, 0f, -2f);
+            crate.model = basicLab.CrateModel;
+            crate.Texture = basicLab.CrateTexture;
+            crate.SelectedTexture = basicLab.SelectedCrateTexture;
+            crate.SelectedTexture_Panel = basicLab.SelectedCrateTexture2;
+            basicLab.AddCrate(crate);
 
             //basicLab.AddEffect(new Spring(SBall, FixedBall, new Vector3(1, 1, 1), 5f, 6f, 0.9f));
-            basicLab.AddEffect(new Spring(SBall, FixedBall, new Vector3(1, 1, 1), 5f, 1f, 0.9f));
-            basicLab.AddEffect(new Spring(SBall, ball1, new Vector3(1, 1, 1), 5f, 1f, 0.9f));
-            basicLab.AddEffect(new Spring(ball1, ball2, new Vector3(1, 1, 1), 5f, 1f, 0.9f));
+            basicLab.AddEffect(new Spring(crate, FixedBall, 5f, 6f, 0.9f, new Vector3(0.5f, 0.5f, 0.5f)));
+            //basicLab.AddEffect(new Spring(SBall, FixedBall, new Vector3(1, 1, 1), 5f, 1f, 0.9f));
+            //basicLab.AddEffect(new Spring(SBall, ball1, new Vector3(1, 1, 1), 5f, 1f, 0.9f));
+            //basicLab.AddEffect(new Spring(ball1, ball2, new Vector3(1, 1, 1), 5f, 1f, 0.9f));
             basicLab.AddEffect(new Gravity(new Vector3(0, -10f, 0)));
         }
 

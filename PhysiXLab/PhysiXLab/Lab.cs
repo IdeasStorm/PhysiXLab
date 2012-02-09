@@ -116,7 +116,7 @@ namespace Test
                     b.Position = new Vector3(0, -100f, 0);
                     //b.AddForce(new Vector3(10f, 5f, 0));
                     //spring.AddBody(b);
-                    spring = new Spring(b, dummy, dummy.Position, 0.3f, 20f, 0.995f);
+                    //spring = new Spring(b, dummy, dummy.Position, 0.3f, 20f, 0.995f);
                     //crate.AddForce(new Vector3(12,32,3),new Vector3(2,2,3));
                     crate.AngularAcceleration = new Vector3(0.001f,0f,0f);
                 }

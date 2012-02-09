@@ -14,6 +14,12 @@ namespace PhysiXEngine
          */
         public Vector3 otherConnectionPoint { get; private set; }
 
+        /**
+         * The point of connection of the spring to the object,
+         * in that object's local coordinates.
+         */
+        public Vector3 ConnectionPoint { get; private set; }
+
         /** Holds the sprint constant. */
         public float springConstant { get; private set; }
 
@@ -23,8 +29,8 @@ namespace PhysiXEngine
         public float C { get; private set; }
 
         /** Creates a new spring with the given parameters. */
-        public Spring(Body first, Body other, Vector3 otherConnectionPoint,
-            float springConstant, float restLength, float C) : 
+        public Spring(Body first, Body other, float springConstant, float restLength, float C, 
+            Vector3 ConnectionPoint = new Vector3(), Vector3 otherConnectionPoint = new Vector3()) : 
             base(
             /** The particle at the first end of the spring. */
             first,
@@ -32,6 +38,7 @@ namespace PhysiXEngine
             other)
         {
             this.otherConnectionPoint = otherConnectionPoint;
+            this.ConnectionPoint = ConnectionPoint;
             this.springConstant = springConstant;
             this.restLength = restLength;
             this.C = C;
@@ -42,8 +49,10 @@ namespace PhysiXEngine
         {
             //TODO Add GetPointInWorldSpace for box
             // Calculate the two ends in world space
-            Vector3 lws = bodys[0].Position;
-            Vector3 ows = bodys[1].Position;
+            //Vector3 lws = bodys[0].Position;
+            Vector3 lws = bodys[0].GetPointInWorldSpace(ConnectionPoint);
+            //Vector3 ows = bodys[1].Position;
+            Vector3 ows = bodys[1].GetPointInWorldSpace(otherConnectionPoint);
 
             // Calculate the vector of the spring
             Vector3 force = lws - ows;
