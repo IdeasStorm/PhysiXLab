@@ -44,6 +44,7 @@ namespace PhysiXEngine
             this.C = C;
         }
 
+
         /** Applies the spring force to the given rigid body. */
         protected override void Affect()
         {
@@ -53,7 +54,6 @@ namespace PhysiXEngine
             Vector3 lws = bodys[0].GetPointInWorldSpace(ConnectionPoint);
             //Vector3 ows = bodys[1].Position;
             Vector3 ows = bodys[1].GetPointInWorldSpace(otherConnectionPoint);
-
             // Calculate the vector of the spring
             Vector3 force = lws - ows;
 
@@ -69,9 +69,15 @@ namespace PhysiXEngine
             force *= magnitude;
             bodys[1].AddForce(force, ows);
             if (bodys[0].InverseMass != 0)
-                bodys[0].AddForce(Vector3.Multiply(bodys[0].Velocity, (C - 1f) * bodys[0].Mass));
+            {
+                bodys[0].AddForceAtPoint(bodys[0].Velocity * (C - 1f) * bodys[0].Mass, lws);
+                bodys[0].Rotation += bodys[0].Rotation * (C - 1f);
+            }
             if (bodys[1].InverseMass != 0)
-                bodys[1].AddForce(Vector3.Multiply(bodys[1].Velocity, (C - 1f) * bodys[0].Mass));
+            {
+                bodys[1].AddForce(bodys[1].Velocity * (C - 1f) * bodys[1].Mass, ows);
+                bodys[1].Rotation += bodys[1].Rotation * (C - 1f);
+            }
         }
     }
 }
