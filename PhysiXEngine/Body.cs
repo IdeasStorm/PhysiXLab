@@ -204,6 +204,9 @@ namespace PhysiXEngine
             UpdateMatices();
         }
 
+        float angularDamping = 0.2f;
+        float linearDamping = 1f;
+
         /// <summary>
         /// updates the body to the next state
         /// </summary>
@@ -214,10 +217,10 @@ namespace PhysiXEngine
             LastFrameAcceleration = Acceleration;
             LastFrameAcceleration += forceAccumulator * inverseMass;
             AngularAcceleration = InverseInertiaTensorWorld.transform(torqueAccumulator);
-            Velocity -= Velocity * 0.001f;
-            Rotation -= Rotation * 0.001f;
             Velocity += LastFrameAcceleration * duration;
             Rotation += AngularAcceleration * duration;
+            Velocity *= (float) Math.Pow(linearDamping, duration);
+            Rotation *= (float) Math.Pow(angularDamping, duration);
             // debugging code
             //if (float.IsNaN(position.X) || float.IsNaN(orientation.X))
             //{
@@ -255,13 +258,13 @@ namespace PhysiXEngine
 
         protected void UpdateMatices()
         {
-            PhysiXEngine.Helpers.ExtensionMethods.normalized(ref orientation);
+            orientation.Normalize();
 
             // Calculate the transform matrix for the body.
             TransformMatrix = Matrix.CreateFromQuaternion(Orientation) *  Matrix.CreateTranslation(Position);
             
             // Calculate the inertiaTensor in world space.
-            InverseInertiaTensorWorld = TransformMatrix * InverseInertiaTensor;
+            InverseInertiaTensorWorld = Matrix.Transform(inverseInertiaTensor, orientation);
         }
 
         private void clearAccumulators()
@@ -302,11 +305,10 @@ namespace PhysiXEngine
         public void AddForceAtPoint(Vector3 force, Vector3 point)
         {
             // Convert to coordinates relative to center of mass.
-            Vector3 pt = point;
-            pt -= Position;            
+            point -= Position;
 
             forceAccumulator += force;
-            torqueAccumulator += Vector3.Cross(pt , force);
+            torqueAccumulator += Vector3.Cross(point, force);
         }
 
         /// <summary>
@@ -334,7 +336,7 @@ namespace PhysiXEngine
             matrix.M13 = matrix.M31 = -ixz;
             matrix.M23 = matrix.M32 = -iyz;
             matrix.M44 = 1;
-            InverseInertiaTensor = Matrix.Invert(matrix);
+            InverseInertiaTensor = Matrix.Invert(Matrix.Transpose(matrix));
         }
 
         /// <summary>
