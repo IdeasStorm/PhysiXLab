@@ -107,6 +107,7 @@
     <Compile Include="FrictionTest.cs" />
     <Compile Include="Lab.cs" />
     <Compile Include="Panel.cs" />
+    <Compile Include="PointToPointTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="DrawingSphere.cs" />
