@@ -104,7 +104,6 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Crate.cs" />
     <Compile Include="Collisions.cs" />
-    <Compile Include="EnergyConservation.cs" />
     <Compile Include="FrictionTest.cs" />
     <Compile Include="Lab.cs" />
     <Compile Include="Panel.cs" />
