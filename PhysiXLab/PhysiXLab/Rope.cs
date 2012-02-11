@@ -27,7 +27,7 @@ namespace Test
         public Rope(float length,ContactGenerator cg,Game game,Gravity gravity)
         {
             Balls = new List<Ball>();
-            int n = (int)length * 6;
+            uint n = (uint)length * 6;
 
             this.g = gravity;
             this.cg=cg;
@@ -59,6 +59,11 @@ namespace Test
             b.InverseInertiaTensor = new Matrix();
             //cg.AddConductor(new Rod(Balls[(Balls.Count - 1)/2], b, 0.1f));
             //cg.AddConductor(new Rod(b,Balls[(Balls.Count - 1) / 2], 0.1f));
+           
+            //cg.velocityIterations = n*10;
+            //cg.positionIterations = n * 10;
+            //cg.friction = 0;
+            //cg.restitution = 0.1f;
 
             for (int i = 0; i < n-1; i++)
             {

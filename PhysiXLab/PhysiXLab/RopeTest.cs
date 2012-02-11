@@ -95,6 +95,15 @@ namespace Test
                 g.AddBody(ball);
             }
 
+            if(Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+            {
+                ball.AddForce(Vector3.Up * -10);
+            }
+
+            if(Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+            {
+                ball.AddForce(Vector3.Up * 10);
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.I))
             {
@@ -120,7 +129,6 @@ namespace Test
             ball.Update(duration);
             
             cg.Update(duration);
-
             base.Update(gameTime);
         }
 
