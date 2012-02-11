@@ -22,7 +22,7 @@ namespace Test
             //sp.Run();
 
             PointToPointTest ptp = new PointToPointTest();
-            ptp.Run();
+            //ptp.Run();
 
             BoxAndBoxTest bab = new BoxAndBoxTest();
             //bab.Run();
