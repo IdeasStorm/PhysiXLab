@@ -73,7 +73,7 @@ namespace Test
 
             cg.AddBody(fixedBall2);
             cg.AddBody(ball2);
-            cg.AddConductor(new Cable(fixedBall2, ball2, 10, 0.7f));
+            cg.AddConductor(new Rod(fixedBall2, ball2, 3));
 
             camera = new Camera(this, new Vector3(0, 0, 0.1f),
                 Vector3.Zero, Vector3.Up);
