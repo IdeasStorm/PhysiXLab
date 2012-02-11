@@ -46,7 +46,7 @@ namespace Test
 
             cg = new ContactGenerator();
             cg.AddBody(fixedCrate);
-            cg.AddBody(crate);
+            //cg.AddBody(crate);
             
             cg.AddJoint(new PhysiXEngine.Joint(fixedCrate,crate,new Vector3(0,0,0),new Vector3(0.1f, 0.1f, 0.1f),0.15f));
 
@@ -54,9 +54,9 @@ namespace Test
                 Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             g = new Gravity(new Vector3(0f, -10f, 0f));
-
-            fixedCrate.InverseMass = 0;
-            fixedCrate.InverseInertiaTensor = new Matrix();
+            //g.AddBody(crate);
+            //zfixedCrate.InverseMass = 0;
+            //fixedCrate.InverseInertiaTensor = new Matrix();
             //crate.InverseInertiaTensor = new Matrix();
             base.Initialize();
         }
@@ -83,9 +83,21 @@ namespace Test
             {
                 crate.AddForce(Vector3.Down * 10);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
                 crate.AddForce(Vector3.Up*10);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                crate.AddForce(Vector3.Down * 10);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                crate.AddForce(Vector3.Left * 10);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                crate.AddForce(Vector3.Right * 10);
             }
 
             g.Update(duration);
