@@ -86,10 +86,10 @@ namespace Test
 
             }
 
-            cg.velocityIterations = numberOfballs ;
-            cg.positionIterations = numberOfballs*10 ;
-            cg.friction = .1f;
-            cg.restitution = 0.7f;
+            //cg.velocityIterations = numberOfballs ;
+            //cg.positionIterations = numberOfballs*10 ;
+            //cg.friction = .1f;
+            //cg.restitution = 0.7f;
 
             camera = new Camera(this, new Vector3(0, 0, 0.1f), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
