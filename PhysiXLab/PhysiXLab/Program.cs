@@ -18,8 +18,11 @@ namespace Test
             //fr.Run();
             FrictionTest fr = new FrictionTest();
             SpringTest sp = new SpringTest();
-            fr.Run();
+            //fr.Run();
             //sp.Run();
+
+            PointToPointTest ptp = new PointToPointTest();
+            ptp.Run();
 
             BoxAndBoxTest bab = new BoxAndBoxTest();
             //bab.Run();
