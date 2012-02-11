@@ -99,6 +99,10 @@ namespace Test
                
             }
 
+            //cg.velocityIterations = 8;
+            //cg.friction = 0;
+            //cg.restitution = 0.5f;
+
             for (int i = 0; i < 4; i++)
             {
                 cg.AddConductor(new Rod(balls[i], balls[i + 1], 1));
@@ -151,7 +155,7 @@ namespace Test
 
             if (Keyboard.GetState().IsKeyDown(Keys.I))
             {
-                balls[choice].AddForce(Vector3.UnitZ * 10);
+                balls[choice].AddForce(Vector3.UnitZ * -10);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.K))
             {
