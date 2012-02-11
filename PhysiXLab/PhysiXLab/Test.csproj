@@ -102,6 +102,7 @@
     <Compile Include="BoxAndBoxTest.cs" />
     <Compile Include="Bridge.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="EnergyConservation.cs" />
     <Compile Include="Crate.cs" />
     <Compile Include="Collisions.cs" />
     <Compile Include="FrictionTest.cs" />
