@@ -42,6 +42,9 @@ namespace Test
             EnergyConservation b= new EnergyConservation();
             //b.Run();
 
+            RagDoll rog = new RagDoll();
+            rog.Run();
+
         }
     }
 #endif

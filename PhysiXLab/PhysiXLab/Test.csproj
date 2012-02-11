@@ -115,7 +115,7 @@
     <Compile Include="RayIndicator.cs" />
     <Compile Include="RestingTest.cs" />
     <Compile Include="RodAndCableTest.cs" />
-    <Compile Include="RogDoll.cs" />
+    <Compile Include="RagDoll.cs" />
     <Compile Include="Rope.cs" />
     <Compile Include="RopeTest.cs" />
     <Compile Include="SpringTest.cs" />
