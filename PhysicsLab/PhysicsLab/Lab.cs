@@ -32,6 +32,8 @@ namespace PhysicsLab
         bool bClicked = false;
         bool cClicked = false;
         bool pClicked = false;
+        bool gClicked = false;
+        public bool WaitForOther = false;
         #endregion
 
         #region "Previous State"
@@ -342,6 +344,19 @@ namespace PhysicsLab
                 currentBody = body;
                 body.AddVelocity(ray.Direction * 25);
                 pClicked = false;
+            }
+            if (keyboard.IsKeyDown(Keys.G))
+            {
+                if (panel.BodyAdded)
+                {
+                    gClicked = true;
+                    WaitForOther = true;
+                }
+            }
+            if (keyboard.IsKeyUp(Keys.G) && gClicked)
+            {
+                panel.SpringActivated();
+                gClicked = false;
             }
         }
 
