@@ -12,20 +12,20 @@ using PhysiXEngine;
 
 namespace Test
 {
-    class EnergyConservation : Microsoft.Xna.Framework.Game
+    class BallsTrain : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
 
         #region "testing components"
+        Ball fixedBall;
         Ball[] balls;
-        Ball[] fixedBalls;
         ContactGenerator cg;
         Camera camera;
         Gravity g;
-        uint numberOfballs=4;
+        uint numberOfballs = 4;
         #endregion
 
-        public EnergyConservation()
+        public BallsTrain()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -38,40 +38,42 @@ namespace Test
         protected override void Initialize()
         {
             balls = new Ball[numberOfballs];
-            fixedBalls = new Ball[numberOfballs];
+            fixedBall = new Ball(0.5f);
             Model mod = Content.Load<Model>(@"ball");
             Texture2D tex = Content.Load<Texture2D>(@"basic_material");
 
-            g = new Gravity(Vector3.Down * 10);
+            g = new Gravity(Vector3.Down * 1);
+            fixedBall.InverseMass = 0;
+            fixedBall.InverseInertiaTensor = new Matrix();
+
+            fixedBall.model = mod;
+           
 
             for (int i = 0; i < numberOfballs; i++)
             {
-                balls[i] = new Ball(0.249f);
-                fixedBalls[i] = new Ball(0.249f);
+                balls[i] = new Ball(0.1f);
+                
 
                 balls[i].model = mod;
-                fixedBalls[i].model = mod;
+                
 
-                balls[i].Mass = 1;
-                fixedBalls[i].InverseMass = 0;
-                fixedBalls[i].InverseInertiaTensor = new Matrix();
+                balls[i].Mass = 10;
+                
                 balls[i].InverseInertiaTensor = new Matrix();
 
 
                 balls[i].Texture = tex;
-                fixedBalls[i].Texture = tex;
+                fixedBall.Texture = tex;
             }
 
-            balls[0].Position = new Vector3(-0.25f, 0, 0);
-            balls[1].Position = new Vector3(0.50f, 0, 0);
-            balls[2].Position = new Vector3(1.00f, 0, 0);
-            balls[3].Position = new Vector3(1.50f, 0, 0);
+            balls[0].Position = new Vector3(-0.25f, -1, 0);
+            balls[1].Position = new Vector3(0.50f, -1, 0);
+            balls[2].Position = new Vector3(1.00f, -1, 0);
+            balls[3].Position = new Vector3(1.50f, -1, 0);
 
 
-            fixedBalls[0].Position = new Vector3(0, 1f, 0);
-            fixedBalls[1].Position = new Vector3(0.50f, 1f, 0);
-            fixedBalls[2].Position = new Vector3(1.00f, 1f, 0);
-            fixedBalls[3].Position = new Vector3(1.50f, 1f, 0);
+            fixedBall.Position = new Vector3(0, 0f, 0);
+            
 
 
             cg = new ContactGenerator();
@@ -79,18 +81,18 @@ namespace Test
             for (int i = 0; i < numberOfballs; i++)
             {
                 cg.AddBody(balls[i]);
-                cg.AddBody(fixedBalls[i]);
-                cg.AddConductor(new Rod(fixedBalls[i], balls[i], 3));
+                //cg.AddBody(fixedBall);
+                cg.AddConductor(new Rod(fixedBall, balls[i], 2));
 
             }
 
-            //cg.velocityIterations = numberOfballs + 2;
-            //cg.friction = 0.0001f;
-            //cg.restitution = 1;
+            cg.velocityIterations = numberOfballs ;
+            cg.positionIterations = numberOfballs*10 ;
+            cg.friction = .1f;
+            cg.restitution = 0.7f;
 
             camera = new Camera(this, new Vector3(0, 0, 0.1f), Vector3.Zero, Vector3.Up);
             Components.Add(camera);
-
             base.Initialize();
         }
 
@@ -112,37 +114,32 @@ namespace Test
             #region enter valu of chice
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.D1))
-                choice = 1;
-            if (keyState.IsKeyDown(Keys.D2))
-                choice = 2;
-            if (keyState.IsKeyDown(Keys.D3))
-                choice = 3;
-            if (keyState.IsKeyDown(Keys.D4))
-                choice = 4;
-            if (keyState.IsKeyDown(Keys.D5))
-                choice = 5;
-            if (keyState.IsKeyDown(Keys.D6))
-                choice = 6;
-            if (keyState.IsKeyDown(Keys.D7))
-                choice = 7;
-            if (keyState.IsKeyDown(Keys.D8))
-                choice = 8;
-            if (keyState.IsKeyDown(Keys.D9))
-                choice = 9;
-            if (keyState.IsKeyDown(Keys.D0))
                 choice = 0;
+            if (keyState.IsKeyDown(Keys.D2))
+                choice = 1;
+            if (keyState.IsKeyDown(Keys.D3))
+                choice = 2;
+            if (keyState.IsKeyDown(Keys.D4))
+                choice = 3;
             if (keyState.IsKeyDown(Keys.Space))
                 grav = true;
             #endregion
 
-            
+            if (Keyboard.GetState().IsKeyDown(Keys.I))
+            {
+                balls[choice].AddForce(Vector3.UnitZ * -10);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.K))
+            {
+                balls[choice].AddForce(Vector3.UnitZ * 10);
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.J))
             {
-                balls[choice].AddForce(Vector3.Left * 10);
+                balls[choice].AddForce(Vector3.Left * 100);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.L))
             {
-                balls[choice].AddForce(Vector3.Right * 10);
+                balls[choice].AddForce(Vector3.Right * 100);
             }
             if (grav)
                 for (int i = 0; i < numberOfballs; i++)
@@ -151,7 +148,7 @@ namespace Test
             g.Update(duration);
             for (int i = 0; i < numberOfballs; i++)
             {
-                fixedBalls[i].Update(duration);
+                fixedBall.Update(duration);
                 balls[i].Update(duration);
             }
             cg.Update(duration);
@@ -164,7 +161,7 @@ namespace Test
             for (int i = 0; i < numberOfballs; i++)
             {
                 balls[i].Draw(camera);
-                fixedBalls[i].Draw(camera);
+                fixedBall.Draw(camera);
             }
             base.Draw(gameTime);
         }
