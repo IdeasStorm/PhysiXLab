@@ -97,12 +97,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
+    <Compile Include="BallsTrain.cs" />
     <Compile Include="Border.cs" />
     <Compile Include="BoxAndBoxTest.cs" />
     <Compile Include="Bridge.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Crate.cs" />
     <Compile Include="Collisions.cs" />
+    <Compile Include="EnergyConservation.cs" />
     <Compile Include="FrictionTest.cs" />
     <Compile Include="Lab.cs" />
     <Compile Include="Panel.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="RayIndicator.cs" />
     <Compile Include="RestingTest.cs" />
     <Compile Include="RodAndCableTest.cs" />
+    <Compile Include="RogDoll.cs" />
     <Compile Include="Rope.cs" />
     <Compile Include="RopeTest.cs" />
     <Compile Include="SpringTest.cs" />
