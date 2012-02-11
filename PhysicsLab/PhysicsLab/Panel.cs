@@ -18,7 +18,7 @@ namespace PhysicsLab
     /// </summary>
     public class Panel : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        public Panel(Game game, Vector2 position, int width, int height)
+        public Panel(Game game, Vector2 position, float width, float height)
             : base(game)
         {
             // TODO: Construct any child components here
@@ -36,9 +36,9 @@ namespace PhysicsLab
             _TexBoxPosition = new Vector2(95, 15);
         }
 
-        protected Vector2 Position;
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public Vector2 Position;
+        public float Width { get; set; }
+        public float Height { get; set; }
 
         private Form Frm;
 
@@ -116,7 +116,7 @@ namespace PhysicsLab
         public void NewForm()
         {
             Frm = new Form("MyForm", "",
-                new Rectangle((int)Position.X, (int)Position.Y, Width, Height),
+                new Rectangle((int)Position.X, (int)Position.Y, (int)Width, (int)Height),
                 PanelTexture, Font, Color.Black);
         }
 
@@ -305,6 +305,11 @@ namespace PhysicsLab
         {
             AddButton("Cancel", "Cancel", panelName, new Vector2(Width - 80, Height - 30), 70, 20);
             Buttons.Last<Button>().onClick += new EHandler(CancelButtonClicked);
+        }
+
+        public void Close()
+        {
+            Show = false;
         }
 
         public float GetVlaue(String fieldName)
