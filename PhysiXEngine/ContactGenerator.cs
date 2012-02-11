@@ -96,16 +96,11 @@ namespace PhysiXEngine
             frameDuration = duration;
             calculateContactInformations(duration);
             resolvePenetration(duration);
+            foreach (Contact contact in contactDataList)
+            {
+                contact.InitializeAtMoment(duration);
+            }
             resolveCollisonVelocity(duration);
-        }
-
-        public void Affect(Contact contactData)
-        {
-            // Calculating Desired Delta Velocity
-            contactData.InitializeAtMoment(frameDuration);
-            //float deltaVelocity = CalculateDeltaVelocity(contactData);
-
-
         }
 
         private Vector3 CalculateFrictionlessImpulse(Contact contactData, Matrix3[] inverseInertiaTensor)
@@ -297,25 +292,18 @@ namespace PhysiXEngine
                 return !contact.Check(); 
             });
 
-
-            // initializing contacts
-            foreach (Contact contactData in contactDataList)
-            {
-                contactData.InitializeAtMoment(duration); 
-            }
-
             foreach (Link con in conductorList)
             {
                 Contact temp = new Contact(con.body[0], con.body[1]);
                 if (con.Check(temp))
-                   contactDataList.Add(temp);
+                    contactDataList.Add(temp);
             }
 
             foreach (Joint joint in jointList)
             {
                 Contact contact=new Contact(null,null);
                 if (joint.addContact(contact))
-                    contactDataList.Add(contact);
+                    contactDataList.Add(contact);                
             }
         }
 
