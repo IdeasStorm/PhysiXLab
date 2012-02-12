@@ -112,6 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="DrawingSphere.cs" />
+    <Compile Include="RagDollSpheres.cs" />
     <Compile Include="RayIndicator.cs" />
     <Compile Include="RestingTest.cs" />
     <Compile Include="RodAndCableTest.cs" />

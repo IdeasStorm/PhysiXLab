@@ -43,7 +43,10 @@ namespace Test
             //b.Run();
 
             RagDoll rog = new RagDoll();
-            rog.Run();
+            //rog.Run();
+
+            RagDollSpheres ragsph= new RagDollSpheres();
+            ragsph.Run();
 
         }
     }
