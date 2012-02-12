@@ -204,7 +204,7 @@ namespace PhysiXEngine
             UpdateMatices();
         }
 
-        float angularDamping = 1f;
+        float angularDamping = 0.2f;
         float linearDamping = 1f;
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace PhysiXEngine
         {
             Quaternion newOrientation = new Quaternion();
             newOrientation.X = rotation.X;
-            newOrientation.Y = rotation.Z;
+            newOrientation.Y = rotation.Y;
             newOrientation.Z = rotation.Z;
             //orientation = orientation.AddScaledVector(rotation, scale);
             orientation += newOrientation * orientation * (scale / 2);

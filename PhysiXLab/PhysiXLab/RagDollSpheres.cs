@@ -303,7 +303,7 @@ namespace Test
                 balls[i].model = model;
                 balls[i].Texture = texture;
                 cg.AddBody(balls[i]);
-                balls[i].Mass = 1;
+                //balls[i].Mass = 1;
             }
 
 
