@@ -22,7 +22,9 @@ namespace Test
         int NUM_BALLS = 15;
         //Crate[] crates;
         Ball[] balls;
+        Ball[] fixedBalls;
         Joint[] joints;
+        Crate ground;
 
         ContactGenerator cg;
         Camera camera;
@@ -52,6 +54,9 @@ namespace Test
 
             joints = new Joint[NUM_JOINTS];
             balls = new Ball[NUM_BALLS];
+            fixedBalls = new Ball[4];
+            ground = new Crate(new Vector3(10, 1, 10));
+
             #region oldcode
             /*
             //Arms
@@ -223,9 +228,13 @@ namespace Test
             balls[12] = new Ball(0.05f);
             balls[13] = new Ball(0.05f);
             balls[14] = new Ball(0.05f);
+            fixedBalls[0] = new Ball(0.05f);
+            fixedBalls[1] = new Ball(0.05f);
+            fixedBalls[2] = new Ball(0.05f);
+            fixedBalls[3] = new Ball(0.05f);
             #endregion
 
-            #region newBall
+            #region position
             balls[0].Position = new Vector3(0, 0.6f, 0);
             balls[1].Position = new Vector3(0, 0.3f, 0);
             balls[2].Position = new Vector3(0, -0.05f, 0);
@@ -243,6 +252,13 @@ namespace Test
             balls[12].Position = new Vector3(-0.1f, -.25f, 0);
             balls[13].Position = new Vector3(-0.1f, -.4f, 0);
             balls[14].Position = new Vector3(-0.1f, -.55f, 0);
+
+            fixedBalls[0].Position = new Vector3(0.7f, 0.6f, 0);
+            fixedBalls[1].Position = new Vector3(-0.7f, 0.6f, 0);
+            fixedBalls[2].Position = new Vector3(0.7f, -1, 0);
+            fixedBalls[3].Position = new Vector3(-0.7f, -1, 0);
+
+            ground.Position = new Vector3(0, -3, 0);
             #endregion
             #region Masses
             balls[0].Mass = 5;
@@ -306,16 +322,28 @@ namespace Test
                 //balls[i].Mass = 1;
             }
 
+            for (int i = 0; i < 4; i++)
+            {
+                fixedBalls[i].Lock();
+                fixedBalls[i].model = model;
+                fixedBalls[i].Texture = texture;
+            }
+
+            cg.AddConductor(new Cable(balls[5], fixedBalls[0], (balls[5].Position - fixedBalls[0].Position).Length(), 0.5f));
+            cg.AddConductor(new Cable(balls[8], fixedBalls[1], (balls[8].Position - fixedBalls[1].Position).Length(), 0.5f));
+            cg.AddConductor(new Cable(balls[11], fixedBalls[2], (balls[11].Position - fixedBalls[2].Position).Length(), 0.5f));
+            cg.AddConductor(new Cable(balls[14], fixedBalls[3], (balls[14].Position - fixedBalls[3].Position).Length(), 0.5f));
+
+            ground.Lock();
 
             for (int i = 0; i < NUM_JOINTS; i++)
                 cg.AddJoint(joints[i]);
-
+            cg.AddBody(ground);
                 camera = new Camera(this, new Vector3(0, 0, 0.1f),
                     Vector3.Zero, Vector3.Up);
             Components.Add(camera);
             g = new Gravity(new Vector3(0f, -1f, 0f));
 
-            balls[0].InverseMass = 0;
 
             base.Initialize();
         }
@@ -324,7 +352,7 @@ namespace Test
         {
             //for (int i = 0; i < NUM_CRATES; i++)
             //crates[i].LoadContent(Content);
-
+            ground.LoadContent(Content);
             base.LoadContent();
         }
 
@@ -371,19 +399,23 @@ namespace Test
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                balls[choice].AddForce(Vector3.Up);
+                //balls[choice].AddForce(Vector3.Up);
+                fixedBalls[choice].Position += Vector3.Up/100;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                balls[choice].AddForce(Vector3.Down);
+                //balls[choice].AddForce(Vector3.Down);
+                fixedBalls[choice].Position += Vector3.Down/100;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                balls[choice].AddForce(Vector3.Left);
+                //balls[choice].AddForce(Vector3.Left);
+                fixedBalls[choice].Position += Vector3.Left/100;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                balls[choice].AddForce(Vector3.Right);
+                //balls[choice].AddForce(Vector3.Right);
+                fixedBalls[choice].Position += Vector3.Right/100;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
@@ -394,10 +426,10 @@ namespace Test
                 //balls[6].AddForce(Vector3.Down);
                 balls[0].AddForce(Vector3.Down*2);
 
-                balls[11].AddForce(Vector3.Down);
-                balls[14].AddForce(Vector3.Down);
-                balls[5].AddForce(Vector3.Right);
-                balls[8].AddForce(Vector3.Left);
+                balls[11].AddForce(Vector3.Down*3);
+                balls[14].AddForce(Vector3.Down*2);
+                balls[5].AddForce(Vector3.Down);
+                balls[8].AddForce(Vector3.Down);
             }
 
 
@@ -416,6 +448,11 @@ namespace Test
             g.Update(duration);
             for (int i = 0; i < NUM_BALLS; i++)
                 balls[i].Update(duration);
+
+            for (int i = 0; i < 4; i++)
+                fixedBalls[i].Update(duration);
+
+            ground.Update(duration);
             cg.Update(duration);
 
             base.Update(gameTime);
@@ -427,6 +464,10 @@ namespace Test
             for (int i = 0; i < NUM_BALLS; i++)
                 balls[i].Draw(camera);
 
+            for (int i = 0; i < 4; i++)
+                fixedBalls[i].Draw(camera);
+            
+            ground.Draw(camera);
             base.Draw(gameTime);
         }
     }
