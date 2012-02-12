@@ -21,12 +21,12 @@ namespace PhysiXEngine
         public Vector3 ConnectionPoint { get; private set; }
 
         /** Holds the sprint constant. */
-        public float springConstant { get; private set; }
+        public float springConstant { get; set; }
 
         /** Holds the rest length of the spring. */
-        public float restLength { get; private set; }
+        public float restLength { get; set; }
 
-        public float C { get; private set; }
+        public float C { get; set; }
 
         /** Creates a new spring with the given parameters. */
         public Spring(Body first, Body other, float springConstant, float restLength, float C, 
