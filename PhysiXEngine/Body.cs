@@ -204,7 +204,7 @@ namespace PhysiXEngine
             UpdateMatices();
         }
 
-        float angularDamping = 0.2f;
+        float angularDamping = 1f;
         float linearDamping = 1f;
 
         /// <summary>
@@ -237,7 +237,6 @@ namespace PhysiXEngine
 
             onSituationChanged(); //trigger situation changed
             clearAccumulators();
-            // add damping 
         }
 
         public virtual void Update(string S)
@@ -251,8 +250,12 @@ namespace PhysiXEngine
 
         public void AddScaledOrientation(Vector3 rotation,float scale=1)
         {
-            //orientation *= Quaternion.CreateFromYawPitchRoll(rotation.Y * scale, rotation.X * scale, rotation.Z * scale);
-            orientation = orientation.AddScaledVector(rotation, scale);
+            Quaternion newOrientation = new Quaternion();
+            newOrientation.X = rotation.X;
+            newOrientation.Y = rotation.Z;
+            newOrientation.Z = rotation.Z;
+            //orientation = orientation.AddScaledVector(rotation, scale);
+            orientation += newOrientation * orientation * (scale / 2);
             onSituationChanged();
         }
 
