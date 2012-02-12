@@ -64,6 +64,7 @@ Control of Lab
 	*Press Cancel to Undo changes .
 	*Press Apply to change data without close panel .
 	*Press escape to Undo User Change .
+*Right Click on object the Press G then Right Click on onther object to Add Spring between them
 *Left Click on object to move it .
 *Middle Button of mouse to Move camera .
 *W, S, D and A to Move Camera Up, Down, Right and Left .

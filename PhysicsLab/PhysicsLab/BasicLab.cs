@@ -132,11 +132,23 @@ namespace PhysicsLab
 
         public void AddEffect(PhysiXEngine.Effect effect)
         {
-            effects.Add(effect);
+
             if (effect as Gravity != null)
             {
                 foreach (Body bdy in bodys)
                     ((Gravity)effect).AddBody(bdy);
+                effects.Add(effect);
+            }
+            else if (effects.Count > 0)
+            {
+                PhysiXEngine.Effect ef = effects.Last<PhysiXEngine.Effect>();
+                effects.Remove(ef);
+                effects.Add(effect);
+                effects.Add(ef);
+            }
+            else
+            {
+                effects.Add(effect);
             }
         }
 
@@ -199,6 +211,11 @@ namespace PhysicsLab
             else
                 throw new Exception();
             return crate;
+        }
+
+        public void CrateSpring(Body one, Body two)
+        {
+            AddEffect(new Spring(one, two, 5f, 6f, 0.9f));
         }
 
         /// <summary>

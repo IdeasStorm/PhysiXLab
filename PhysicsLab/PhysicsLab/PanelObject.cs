@@ -21,10 +21,11 @@ namespace PhysicsLab
         #region "Component"
         Panel panel;
         Body currentBody = null;
+        Panel spPanel;
         #endregion
 
         #region "Boolean Field"
-        bool BodyAdded = false;
+        public bool BodyAdded { get; private set; }
         #endregion
 
         #region "Old State"
@@ -51,6 +52,8 @@ namespace PhysicsLab
                 Game.Window.ClientBounds.Height - 285),
                 250, 280);
             Game.Components.Add(panel);
+            spPanel = new Panel(this.Game, new Vector2(10, 10), 140, 40);
+            Game.Components.Add(spPanel);
             base.Initialize();
         }
 
@@ -134,6 +137,12 @@ namespace PhysicsLab
             }
         }
 
+        public void SpringActivated()
+        {
+            spPanel.AddLabel("adsp", "Add Spring Activated");
+            spPanel.Show = true;
+        }
+
 
         private void PanelShow(MouseState mouse)
         {
@@ -143,15 +152,31 @@ namespace PhysicsLab
                 {
                     if (currentBody.InverseMass != 0)
                     {
-                        if (previousBody != null)
-                            ((Drawable)previousBody).ShowPanel = false;
-                        Reset();
-                        CreateDialog(currentBody);
-                        ((Drawable)currentBody).ShowPanel = true;
-                        previousBody = currentBody;
+                        if (((Lab)Game).WaitForOther)
+                        {
+                            ((Lab)Game).basicLab.CrateSpring(previousBody, currentBody);
+                            ((Lab)Game).WaitForOther = false;
+                            spPanel.Close();
+                        }
+                        else
+                        {
+                            if (previousBody != null)
+                                ((Drawable)previousBody).ShowPanel = false;
+                            Reset();
+                            CreateDialog(currentBody);
+                            ((Drawable)currentBody).ShowPanel = true;
+                            previousBody = currentBody;
+                        }
                     }
                 }
             }
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            
+
         }
 
         private void ApplyChanges()
