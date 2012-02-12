@@ -20,8 +20,9 @@ namespace PhysicsLab
     {
         #region "Component"
         Panel panel;
-        Body currentBody = null;
         Panel spPanel;
+        Panel springPanel;
+        Body currentBody = null;
         #endregion
 
         #region "Boolean Field"
@@ -33,9 +34,19 @@ namespace PhysicsLab
         Vector3 oldVel = Vector3.Zero;
         Vector3 oldAcc = Vector3.Zero;
         Vector3 oldHlf = Vector3.Zero;
+        float oldC = 0f;
+        float oldrestLength = 0f;
+        float oldConstant = 0f;
         float oldRad = 0f;
         Body previousBody = null;
+        Spring currentSpring = null;
         #endregion
+
+        enum Type
+        {
+            Body, Spring
+        };
+        Type type = Type.Body;
 
         public PanelObject(Game game)
             : base(game)
@@ -54,6 +65,12 @@ namespace PhysicsLab
             Game.Components.Add(panel);
             spPanel = new Panel(this.Game, new Vector2(10, 10), 140, 40);
             Game.Components.Add(spPanel);
+            springPanel = new Panel(this.Game, 
+                new Vector2(10, 
+                    Game.Window.ClientBounds.Height - (((Lab)Game).basicLab.springs.Count * 20 + 35)),
+                    100, ((Lab)Game).basicLab.springs.Count * 20 + 20);
+            springPanel.Height += 15;
+            Game.Components.Add(springPanel);
             base.Initialize();
         }
 
@@ -89,49 +106,80 @@ namespace PhysicsLab
             previousBody = currentBody;
             BodyAdded = true;
             ((Drawable)body).ShowPanel = true;
+            type = Type.Body;
+        }
+
+        public void CreateSpringPanel()
+        {
+            Reset();
+            foreach (String str in ((Lab)Game).basicLab.springs.Keys)
+                springPanel.AddButton(str, str);//, "MainPanel", springPanel.ButtonPosition, 70, 20);
+            springPanel.Show = true;
+            type = Type.Spring;
         }
 
         private void UpdateFeildPanel()
         {
             if (panel.Show)
             {
-                if (oldPos != previousBody.Position)
+                if (type == Type.Body)
                 {
-                    panel.SetVlaue("posX", previousBody.Position.X);
-                    panel.SetVlaue("posY", previousBody.Position.Y);
-                    panel.SetVlaue("posZ", previousBody.Position.Z);
-                    oldPos = previousBody.Position;
-                }
-                if (oldVel != previousBody.Velocity)
-                {
-                    panel.SetVlaue("velX", previousBody.Velocity.X);
-                    panel.SetVlaue("velY", previousBody.Velocity.Y);
-                    panel.SetVlaue("velZ", previousBody.Velocity.Z);
-                    oldVel = previousBody.Velocity;
-                }
-                if (oldAcc != previousBody.LastFrameAcceleration)
-                {
-                    panel.SetVlaue("accX", previousBody.LastFrameAcceleration.X);
-                    panel.SetVlaue("accY", previousBody.LastFrameAcceleration.Y);
-                    panel.SetVlaue("accZ", previousBody.LastFrameAcceleration.Z);
-                    oldAcc = previousBody.LastFrameAcceleration;
-                }
-                if (previousBody as Ball != null)
-                {
-                    if (oldRad != ((Ball)previousBody).radius)
+                    if (oldPos != previousBody.Position)
                     {
-                        panel.SetVlaue("Radius", ((Ball)previousBody).radius);
-                        oldRad = ((Ball)previousBody).radius;
+                        panel.SetVlaue("posX", previousBody.Position.X);
+                        panel.SetVlaue("posY", previousBody.Position.Y);
+                        panel.SetVlaue("posZ", previousBody.Position.Z);
+                        oldPos = previousBody.Position;
+                    }
+                    if (oldVel != previousBody.Velocity)
+                    {
+                        panel.SetVlaue("velX", previousBody.Velocity.X);
+                        panel.SetVlaue("velY", previousBody.Velocity.Y);
+                        panel.SetVlaue("velZ", previousBody.Velocity.Z);
+                        oldVel = previousBody.Velocity;
+                    }
+                    if (oldAcc != previousBody.LastFrameAcceleration)
+                    {
+                        panel.SetVlaue("accX", previousBody.LastFrameAcceleration.X);
+                        panel.SetVlaue("accY", previousBody.LastFrameAcceleration.Y);
+                        panel.SetVlaue("accZ", previousBody.LastFrameAcceleration.Z);
+                        oldAcc = previousBody.LastFrameAcceleration;
+                    }
+                    if (previousBody as Ball != null)
+                    {
+                        if (oldRad != ((Ball)previousBody).radius)
+                        {
+                            panel.SetVlaue("Radius", ((Ball)previousBody).radius);
+                            oldRad = ((Ball)previousBody).radius;
+                        }
+                    }
+                    else if (previousBody as Box != null)
+                    {
+                        if (oldHlf != ((Box)previousBody).HalfSize)
+                        {
+                            panel.SetVlaue("hlfX", ((Box)previousBody).HalfSize.X);
+                            panel.SetVlaue("hlfY", ((Box)previousBody).HalfSize.Y);
+                            panel.SetVlaue("hlfZ", ((Box)previousBody).HalfSize.Z);
+                            oldHlf = ((Box)previousBody).HalfSize;
+                        }
                     }
                 }
-                else if (previousBody as Box != null)
+                else if (type == Type.Spring)
                 {
-                    if (oldHlf != ((Box)previousBody).HalfSize)
+                    if (oldC != currentSpring.C)
                     {
-                        panel.SetVlaue("hlfX", ((Box)previousBody).HalfSize.X);
-                        panel.SetVlaue("hlfY", ((Box)previousBody).HalfSize.Y);
-                        panel.SetVlaue("hlfZ", ((Box)previousBody).HalfSize.Z);
-                        oldHlf = ((Box)previousBody).HalfSize;
+                        panel.SetVlaue("C", currentSpring.C);
+                        oldC = currentSpring.C;
+                    }
+                    if (oldrestLength != currentSpring.restLength)
+                    {
+                        panel.SetVlaue("RestLength", currentSpring.restLength);
+                        oldrestLength = currentSpring.restLength;
+                    }
+                    if (oldConstant != currentSpring.springConstant)
+                    {
+                        panel.SetVlaue("Constant", currentSpring.springConstant);
+                        oldConstant = currentSpring.springConstant;
                     }
                 }
             }
@@ -183,19 +231,28 @@ namespace PhysicsLab
         {
             if (panel.Clicked)
             {
-                previousBody.Mass = panel.GetVlaue("Mass");
-                previousBody.Position = new Vector3(panel.GetVlaue("posX"),
-                    panel.GetVlaue("posY"), panel.GetVlaue("posZ"));
-                previousBody.SetVelocity(new Vector3(panel.GetVlaue("velX"),
-                    panel.GetVlaue("velY"), panel.GetVlaue("velZ")));
-                previousBody.SetAcceleration(new Vector3(panel.GetVlaue("accX"),
-                    panel.GetVlaue("accY"), panel.GetVlaue("accZ")));
-                if (previousBody as Ball != null)
-                    ((Ball)previousBody).SetRadius(panel.GetVlaue("Radius"));
-                if (previousBody as Box != null)
+                if (type == Type.Body)
                 {
-                    ((Box)previousBody).SetHalfSize(
-                        new Vector3(panel.GetVlaue("hlfX"), panel.GetVlaue("hlfY"), panel.GetVlaue("hlfZ")));
+                    previousBody.Mass = panel.GetVlaue("Mass");
+                    previousBody.Position = new Vector3(panel.GetVlaue("posX"),
+                        panel.GetVlaue("posY"), panel.GetVlaue("posZ"));
+                    previousBody.SetVelocity(new Vector3(panel.GetVlaue("velX"),
+                        panel.GetVlaue("velY"), panel.GetVlaue("velZ")));
+                    previousBody.SetAcceleration(new Vector3(panel.GetVlaue("accX"),
+                        panel.GetVlaue("accY"), panel.GetVlaue("accZ")));
+                    if (previousBody as Ball != null)
+                        ((Ball)previousBody).SetRadius(panel.GetVlaue("Radius"));
+                    if (previousBody as Box != null)
+                    {
+                        ((Box)previousBody).SetHalfSize(
+                            new Vector3(panel.GetVlaue("hlfX"), panel.GetVlaue("hlfY"), panel.GetVlaue("hlfZ")));
+                    }
+                }
+                else if (type == Type.Spring)
+                {
+                    currentSpring.C = panel.GetVlaue("C");
+                    currentSpring.restLength = panel.GetVlaue("RestLength");
+                    currentSpring.springConstant = panel.GetVlaue("Constant");
                 }
                 panel.Applied = true;
             }
@@ -209,6 +266,32 @@ namespace PhysicsLab
                 ((Drawable)previousBody).ShowPanel = false;
                 BodyAdded = false;
                 previousBody = null;
+            }
+            if (type == Type.Spring)
+                ApplyChanges();
+        }
+
+        void CrateSpringPanel()
+        {
+            if (springPanel.springClicked != "")
+            {
+                currentSpring = ((Lab)Game).basicLab.springs[springPanel.springClicked];
+                Reset();
+                panel.AddField("Constant", currentSpring.springConstant);
+                panel.AddField("RestLength", currentSpring.restLength);
+                panel.AddField("C", currentSpring.C);
+                panel.AddOkButton();
+                panel.AddCancelButton();
+                panel.AddApplyButton();
+                panel.Show = true;
+            }
+        }
+
+        void SpringPanelPanel()
+        {
+            if (springPanel.springClicked != null)
+            {
+                CrateSpringPanel();
             }
         }
 
@@ -225,6 +308,7 @@ namespace PhysicsLab
                 ApplyChanges();
             UpdateFeildPanel();
             CheckPanelClosed();
+            SpringPanelPanel();
 
             base.Update(gameTime);
         }
