@@ -163,8 +163,10 @@ namespace PhysicsLab
                     panel.GetVlaue("posY"), panel.GetVlaue("posZ"));
                 previousBody.SetVelocity(new Vector3(panel.GetVlaue("velX"),
                     panel.GetVlaue("velY"), panel.GetVlaue("velZ")));
-                previousBody.SetAcceleration(new Vector3(panel.GetVlaue("accX"),
-                    panel.GetVlaue("accY"), panel.GetVlaue("accZ")));
+                //previousBody.SetAcceleration(new Vector3(panel.GetVlaue("accX"),
+                //    panel.GetVlaue("accY"), panel.GetVlaue("accZ")));
+                //TODO add another field for Acceleration
+                // Don't use SetAcceleration !!
                 if (previousBody as Ball != null)
                     ((Ball)previousBody).SetRadius(panel.GetVlaue("Radius"));
                 if (previousBody as Box != null)
