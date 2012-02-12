@@ -26,6 +26,7 @@ namespace PhysicsLab
         public List<Body> bodys = new List<Body>();
         private List<Body> room = new List<Body>();
         private List<PhysiXEngine.Effect> effects = new List<PhysiXEngine.Effect>();
+        public Dictionary<String, Spring> springs = new Dictionary<String, Spring>();
         private ContactGenerator cg = new ContactGenerator();
         #endregion
 
@@ -45,6 +46,7 @@ namespace PhysicsLab
         private bool tClicked = false;
         private bool Changed = false;
         private Vector3 oldG = Vector3.Zero;
+        private int numOfSpring = 0;
         #endregion
 
         #region "Game Component"
@@ -149,6 +151,11 @@ namespace PhysicsLab
             else
             {
                 effects.Add(effect);
+            }
+            if (effect as Spring != null)
+            {
+                numOfSpring++;
+                springs.Add("Spring" + numOfSpring, (Spring)effect);
             }
         }
 

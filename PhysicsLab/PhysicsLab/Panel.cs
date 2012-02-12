@@ -65,6 +65,8 @@ namespace PhysicsLab
         private Dictionary<String, float> Fields;
         private Dictionary<String, Form> Panels;
 
+        public String springClicked { get; private set; }
+
         SpriteBatch spriteBatch;
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
@@ -113,6 +115,12 @@ namespace PhysicsLab
             Clicked = true; 
         }
 
+        void SpringClicked(Control sender)
+        {
+            springClicked = sender.Name;
+            Show = false;
+        }
+
         public void NewForm()
         {
             Frm = new Form("MyForm", "",
@@ -138,6 +146,8 @@ namespace PhysicsLab
                     myFrm.AddControl(myButton);
                 }
             }
+            if (buttonName.Contains("String"))
+                myButton.onClick += new EHandler(SpringClicked);
         }
 
         public void AddButton(String buttonName = "Btn", String buttonText = "Button",
@@ -150,6 +160,8 @@ namespace PhysicsLab
                 ButtonTexture, Font, Color.Black);
                 Buttons.Add(myButton);
                 Frm.AddControl(myButton);
+                if (buttonName.Contains("Spring"))
+                    myButton.onClick += new EHandler(SpringClicked);
             }
             else
             {

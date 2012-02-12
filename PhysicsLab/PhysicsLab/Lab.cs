@@ -33,6 +33,7 @@ namespace PhysicsLab
         bool cClicked = false;
         bool pClicked = false;
         bool gClicked = false;
+        bool iClicked = false;
         public bool WaitForOther = false;
         #endregion
 
@@ -357,6 +358,13 @@ namespace PhysicsLab
             {
                 panel.SpringActivated();
                 gClicked = false;
+            }
+            if (keyboard.IsKeyDown(Keys.I))
+                iClicked = true;
+            if (keyboard.IsKeyUp(Keys.G) && iClicked)
+            {
+                panel.CreateSpringPanel();
+                iClicked = false;
             }
         }
 
