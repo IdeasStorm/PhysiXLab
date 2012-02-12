@@ -176,7 +176,7 @@ namespace Test
 
 
             //Head and shoulders :)
-            joints[0] = new Joint(crates[0], crates[5], new Vector3(0, -0.05f, 0), new Vector3(0, 0.05f, 0), 0.05f);
+            joints[0] = new Joint(crates[0], crates[5], new Vector3(0, -0.05f, -0.05f), new Vector3(0, 0.05f, 0), 0.05f);
 
             //right arm
             joints[1] = new Joint(crates[1], crates[2], new Vector3(0, -0.1f, 0.05f), new Vector3(0, 0.15f, 0), 0.05f);
@@ -222,7 +222,7 @@ namespace Test
             Components.Add(camera);
             g = new Gravity(new Vector3(0f, -1f, 0f));
 
-            crates[0].InverseMass = 0;
+            //crates[0].InverseMass = 0;
             //crates[7].InverseMass = 0;
             //crates[6].InverseInertiaTensor = new Matrix();
 
@@ -239,6 +239,7 @@ namespace Test
 
         //bool spaceClicked=false;
         //int counter = 0;
+        int choice;
         Vector3 temp = Vector3.Zero;
         /// <summary>
         /// Allows the game component to update itself.
@@ -253,18 +254,59 @@ namespace Test
             //        g.AddBody(crates[i]);
             //}
 
+            #region enter valu of chice
+            KeyboardState keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.D1))
+                choice = 1;
+            if (keyState.IsKeyDown(Keys.D2))
+                choice = 2;
+            if (keyState.IsKeyDown(Keys.D3))
+                choice = 3;
+            if (keyState.IsKeyDown(Keys.D4))
+                choice = 4;
+            if (keyState.IsKeyDown(Keys.D5))
+                choice = 5;
+            if (keyState.IsKeyDown(Keys.D6))
+                choice = 6;
+            if (keyState.IsKeyDown(Keys.D7))
+                choice = 7;
+            if (keyState.IsKeyDown(Keys.D8))
+                choice = 8;
+            if (keyState.IsKeyDown(Keys.D9))
+                choice = 9;
+            if (keyState.IsKeyDown(Keys.D0))
+                choice = 0;
+            #endregion
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                crates[choice].AddForce(Vector3.Up);
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-               // for (int i = 0; i < NUM_CRATES; i++)
-                 //   crates[i].AddForce(Vector3.Down / 10);
-                crates[0].InverseMass = 1;
-                //crates[6].AddForce(Vector3.Down);
-                crates[0].AddForce(Vector3.Down);
-                crates[1].AddForce(Vector3.Down);
-                crates[3].AddForce(Vector3.Down);
-                crates[8].AddForce(Vector3.Down);
-                crates[10].AddForce(Vector3.Down);
+                crates[choice].AddForce(Vector3.Down);
             }
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                crates[choice].AddForce(Vector3.Left );
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                crates[choice].AddForce(Vector3.Right );
+            }
+
+            //if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            //{
+            //   // for (int i = 0; i < NUM_CRATES; i++)
+            //     //   crates[i].AddForce(Vector3.Down / 10);
+            //    crates[0].InverseMass = 1;
+            //    crates[6].AddForce(Vector3.Down);
+            //    crates[0].AddForce(Vector3.Down);
+            //    crates[1].AddForce(Vector3.Down);
+            //    crates[3].AddForce(Vector3.Down);
+            //    crates[8].AddForce(Vector3.Down);
+            //    crates[10].AddForce(Vector3.Down);
+            //}
 
             
             //if (Keyboard.GetState().IsKeyDown(Keys.B))
